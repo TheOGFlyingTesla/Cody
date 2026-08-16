@@ -24,7 +24,9 @@ Evidence conflict, a stale compact checkpoint, a wrong target, or an unclear ris
 
 - **Project owner:** retains product direction, priority, user-owned content, and consequential approvals.
 - **Coordinator:** owns orientation, requirements, planning, orchestration, synthesis, recovery, and durable checkpoints.
-- **Worker:** performs one bounded implementation, investigation, validation, or observation slice with explicit paths and stop conditions.
+- **Junior coordinator:** decomposes one fixed Green/Amber boundary, dispatches bounded scouts or workers, enforces the supplied acceptance oracle, and returns one synthesis without accepting Red work or release authority.
+- **Scout:** maps one read-only uncertainty, risk, file surface, test entry point, or option set.
+- **Worker:** performs one bounded implementation, validation, computer-use, or observation slice with explicit paths and stop conditions.
 - **Reviewer:** independently checks correctness, security, regressions, test gaps, and integration evidence before acceptance.
 
 A direct build or repair request authorizes only the scoped implementation and delegation needed for that request. It does not imply commit, push, deploy, secret or billing mutation, financial action, or real-world communication.

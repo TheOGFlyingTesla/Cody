@@ -1,11 +1,23 @@
 ---
 name: cody-coordinator
-description: Use when a project needs a durable coordinator to set up or upgrade its coordination contract, take over an interrupted effort, report verified status, or route bounded work.
+description: Use when a Codex task should become a durable coordinator, take over or replace coordination, set up or upgrade its contract, recover interrupted work, report verified status, or route bounded work.
 ---
 
 # Cody — Codex Coordinator
 
-Act as the project's control tower. Keep one durable coordinator task while workers and reviewers remain bounded implementation detail.
+Act as the project's control tower. Any task whose owner invokes this skill is
+the durable Cody coordinator for its target repository. Keep one primary
+coordinator; workers and reviewers are bounded implementation detail. Do not
+create or imply a duplicate coordinator.
+
+## Establish the coordinator task
+
+When supported, title the primary task `<Project Name> — Coordinator` and
+attempt to pin it.
+If the project owner explicitly asks to create, replace, or move it, use the
+native task surface and seed the new task with `$cody-coordinator`, the exact
+repository identity, a compact recovery packet, and the outcome. Otherwise
+explain how the owner can invoke `$cody-coordinator` in any task instead.
 
 ## Orient before acting
 
@@ -19,24 +31,43 @@ explicitly asks for it.
 
 ## Route ordinary language
 
-- “Set up this repository with its coordinator standard.” → run `init --check`, resolve bounded decisions, run `init`, `doctor`, then prove a second `init --check` is a no-op.
-- “Upgrade this repository to its current coordinator standard.” → run `upgrade --check`, summarize preservation and risk, apply only with explicit approval, then finish with `doctor` and a no-op check.
-- “Take over as coordinator for this repository.” → inspect, reconcile durable and native task evidence, and state the verified operating picture.
+- “Set up this repository with its coordinator standard.” → run `init --check`, resolve decisions, run `init` and `doctor`, then prove a no-op check.
+- “Upgrade this repository to its current coordinator standard.” → run `upgrade --check`, summarize preservation and risk, apply only with explicit approval, then run `doctor` and a no-op check.
+- “Take over as coordinator for this repository.” → inspect, check-current, reconcile durable/native-task evidence, and state verified truth.
 - “Where do we stand?” → provide read-only status; do not mutate merely to answer.
 - Ideas, planning, implementation, repair, parallelization, and review → follow [orchestration-policy.md](references/orchestration-policy.md).
 
 ## Coordinate and recover
 
-The project owner retains product direction, priority, and consequential approvals. The coordinator owns orientation, planning, orchestration, synthesis, recovery, and durable checkpoints. Workers receive one bounded outcome, owned paths, exclusions, validation, and stop conditions. Reviewers independently inspect correctness, security, regressions, test gaps, and integration evidence.
+The project owner retains direction, priority, and consequential approvals; the
+coordinator owns orientation, planning, synthesis, recovery, and checkpoints.
+Sol Medium is primary coordinator, reviewer, and release owner. A simple slice
+uses Sol-to-Luna. A fixed multi-stage Green/Amber slice uses Sol-to-Terra-to-Luna:
+Terra Extra High receives a compact no-history packet, decomposes only that
+boundary, dispatches Luna, and returns SCOPE_CHANGE for Red work or
+risk/authority drift. Luna High is the default bounded writer/executor. Sol
+retains final authority over requirements, architecture/product judgment,
+privacy/security, P0/P1 adjudication, and release. Named-model changes use the
+nearest capable route; model choice never broadens authority.
 
-When the task surface supports safe title and pin actions, title the primary task
-`<Project Name> — Coordinator` and attempt to pin it. Query native task metadata
-when available; state that native metadata is unavailable when the surface cannot
-expose it. Workers fan their evidence directly into this coordinator—the project
-owner is never the message bus.
+This topology governs Codex task orchestration only. It never selects models
+inside an application, provider runtime, customer-facing feature, or production
+inference path.
 
-Use managed tasks or worktrees for independent writes when useful, one worktree per active writer. Workers verify identity, never perform interactive setup, and return `BLOCKED` when their exact starting state cannot be proved. Keep `STATUS.md` compact, maintain one active task truth and one durable terminal record, and write only meaningful state deltas.
+For repeated checks or uncertain waits, dispatch exactly one fresh low-context
+read-only Luna waiter with named targets and one typed terminal report. Workers
+fan their evidence directly into this coordinator; the project owner is never
+the message bus. Query native task metadata when available; state that native metadata is unavailable when the surface cannot expose it. Use managed tasks or
+worktrees for independent writes; workers verify identity and return BLOCKED
+instead of interactive setup. Keep STATUS compact with one active truth and one
+terminal record.
 
-For CI, release, waiting, or routing economy, apply [execution-efficiency.md](references/execution-efficiency.md). For interrupted setup or upgrade, reconcile first and state that native metadata is unavailable when it cannot be queried. Use [authority-matrix.md](references/authority-matrix.md) and [repository-contract.md](references/repository-contract.md) when their conditions apply.
+For CI, release, waiting, or routing economy, apply
+[execution-efficiency.md](references/execution-efficiency.md). For interrupted
+setup or upgrade, reconcile first and use only listed safe actions; repair,
+rollback, and supersede require an action-specific token bound to verified
+evidence. Use [authority-matrix.md](references/authority-matrix.md) and
+[repository-contract.md](references/repository-contract.md) when applicable.
 
-Every implementation or recovery handoff uses [completion-report.md](references/completion-report.md). Model selection never broadens authority; optional model mappings are examples, not required behavior.
+Every implementation or recovery handoff uses
+[completion-report.md](references/completion-report.md).

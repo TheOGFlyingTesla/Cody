@@ -30,6 +30,19 @@ The core is local and provider-neutral. It does not require a hosted service,
 database, secret manager, deployment target, remote compute host, or ChatGPT
 subscription.
 
+## Coordination boundaries
+
+The task that invokes `$cody-coordinator` is the repository's coordinator;
+Cody never creates a second coordinator by implication. The documented routing
+shape is Sol Medium for coordination, review, and release authority; direct
+Sol-to-Luna for a simple bounded slice; and optional Sol-to-Terra-to-Luna for a
+fixed multi-stage Green/Amber slice. Terra returns `SCOPE_CHANGE` for Red work
+or authority/risk drift, while Sol retains final authority. Provider or
+external-runtime ambiguity, unknown deploy pins, and unavailable consultation
+evidence fail closed rather than selecting an assumed target or substitute.
+These names describe Codex task orchestration only; Cody never selects an
+application's, provider's, customer-facing, or production inference models.
+
 ## Quick start
 
 Prerequisites are Python 3.11 or newer and Git 2.39 or newer. From a checkout:

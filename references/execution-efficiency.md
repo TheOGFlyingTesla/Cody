@@ -17,8 +17,8 @@ Exhaustive matrices are opt-in unless changed paths exercise their distinct risk
 Before a remote diagnostic or release mutation:
 
 1. validate scripts locally, including the exact shell and module-loading form;
-2. derive the candidate from the immutable merged commit, then re-read every required direct and workload SHA pin; fail before mutation when any pin differs;
-3. prove service, environment, candidate, schema, and provider/config readiness;
+2. derive the candidate from the immutable merged commit, then re-read every required direct and workload SHA pin; fail before mutation when any pin differs and expose only the approved correction path;
+3. prove service, environment, candidate, schema, and provider/config readiness; external-runtime or provider ambiguity fails closed rather than assuming a vendor or target;
 4. use a tested dependency-closed drain/resume operation when background work must stop;
 5. record a structured attempt with stage, candidate, effect count, terminal status, and safe failure code.
 
@@ -30,7 +30,26 @@ A proven pre-effect tooling failure may continue with a materially corrected att
 
 Write durable status only at meaningful state transitions. One owner writes the active truth; registries and dashboards link to it instead of copying narratives. Prefer one worker and one reviewer, bounded tool output, event-driven check-ins, and structured memos instead of copied transcripts.
 
-Treat model routing as measured resource control. Use role-based capability assignments, count prompt and synthesis overhead, retries, rejected packets, duplicated context, waiting samples, optional consultation, and final review together. Record exact token or credit usage when exposed; otherwise mark it unavailable and measure packet/output bytes, turns, reasoning level, compactions, elapsed time, repair rounds, and reloaded coordinator context. Keep the route only when total consumption falls without increasing defects, gate disagreement, or coordinator rework.
+Treat model routing as measured resource control. Sol Medium is the primary
+coordinator, reviewer, and release owner; a simple packet goes Sol-to-Luna.
+For a fixed multi-stage Green/Amber packet, Sol may route
+Sol-to-Terra-to-Luna, where Terra Extra High is a bounded junior coordinator and
+Luna High performs bounded scout, worker, executor, or waiter work. Terra
+returns `SCOPE_CHANGE` for Red discovery or risk/authority drift. Model names
+never broaden authority and unavailable names use the nearest capable route.
+This topology governs Codex task orchestration only, never application or
+provider-runtime model routing. Sol reviews 100% of Terra conclusions and every
+resulting diff.
+
+Count prompt and synthesis overhead, retries, rejected packets, duplicated
+context, waiting samples, optional consultation, and final review by Sol together.
+Record exact token or credit usage when exposed; otherwise mark it unavailable
+and measure packet/output bytes, turns, reasoning level, compactions, elapsed
+time, repair rounds, and reloaded coordinator context. Store a compact
+`routing_efficiency` receipt with the topology, usage availability, proxies,
+repairs, disagreements, incidents, and outcome. Keep the route only when total
+consumption falls without increasing defects, gate disagreement, or coordinator
+rework.
 
 Do not impose a numeric repair-round cutoff. Continue review and repair while the failing set shrinks or new proof closes a named finding. Reslice or escalate when the same causal failure repeats without progress, a class-level repair fails again, or the packet becomes ambiguous.
 
@@ -38,7 +57,14 @@ Count any post-dispatch interactive approval request as a setup failure. Backgro
 
 ## Waiting and polling budget
 
-Waiting is execution, not coordination. Prefer a native blocking/event wait. When only polling is available or the wait may span multiple checks, create one fresh low-context read-only worker. It receives no broad project history or mutation authority, verifies only named targets, uses native waits or adaptive backoff, enforces a wall-clock horizon, and returns one compact `READY_FOR_REVIEW`, `BLOCKED`, `FAILED`, or `CANCELLED` event. The coordinator may perform one initial read and one terminal spot-check; unchanged repeated checks are a coordination defect.
+Waiting is execution, not coordination. Prefer a native blocking/event wait.
+When only polling is available or the wait may span multiple checks, create
+exactly one fresh low-context read-only Luna High waiter. It receives no broad
+project history, mutation authority, or release authority; verifies only named
+targets; uses native waits or adaptive backoff; enforces a wall-clock horizon;
+and returns one compact `READY_FOR_REVIEW`, `BLOCKED`, `FAILED`, or `CANCELLED`
+event. The coordinator may perform one initial read and one terminal spot-check;
+unchanged repeated checks are a coordination defect.
 
 Compaction remains encouraged for short-term pressure relief. A compacted coordinator task must not resume routine polling with restored history. After about 20–30 turns or two compactions, checkpoint and rotate at the next safe boundary.
 

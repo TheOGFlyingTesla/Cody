@@ -15,7 +15,9 @@ treated as part of the current contract.
 - There is no built-in hosted coordinator, API, database, deployment system,
   remote-compute adapter, secret manager, or provider integration.
 - Optional ChatGPT or model consultation is not required for core coordination.
-  Cody does not promise access to a particular model, plan, or reasoning mode.
+  Cody does not promise access to a particular model, plan, or reasoning mode;
+  an unavailable consultation is recorded as unavailable, not represented as
+  substitute evidence.
 - The repository contract does not replace project-specific policies, branch
   protection, code review, backups, or operational runbooks.
 - A passing local check cannot prove that an external system, task surface, or
@@ -24,6 +26,7 @@ treated as part of the current contract.
   platforms without a compatibility window.
 - Unpublished private predecessor formats and their fixtures are intentionally
   outside the public compatibility contract.
+- Version 2.5 migration behavior is intentionally outside this public contract.
 
 If a use case depends on any of these capabilities, document it as a separate
 proposal rather than assuming a silent fallback.

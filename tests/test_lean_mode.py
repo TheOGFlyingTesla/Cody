@@ -44,7 +44,7 @@ class LeanModeContractTests(unittest.TestCase):
             "routine continuation",
             "recovery or conflicting evidence",
             "setup, upgrade, migration, destructive, or high-risk",
-            "route by capability and role, never by a model name",
+            "route by capability and role",
             "state-delta-only",
             "one active task truth",
             "one durable terminal record",
@@ -119,6 +119,57 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertIn("fail before mutation", efficiency)
         self.assertIn("contracts-only or partial harness checks never substitute for release certification", efficiency)
         self.assertIn("reconcile first", combined)
+
+    def test_public_topology_and_fail_closed_boundaries_are_executable(self) -> None:
+        skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8").casefold()
+        metadata = (SKILL_ROOT / "agents/openai.yaml").read_text(
+            encoding="utf-8"
+        ).casefold()
+        orchestration = (
+            SKILL_ROOT / "references/orchestration-policy.md"
+        ).read_text(encoding="utf-8").casefold()
+        efficiency = (
+            SKILL_ROOT / "references/execution-efficiency.md"
+        ).read_text(encoding="utf-8").casefold()
+        authority = (
+            SKILL_ROOT / "references/authority-matrix.md"
+        ).read_text(encoding="utf-8").casefold()
+        managed = (
+            SKILL_ROOT / "assets/repo-template/AGENTS.managed.md"
+        ).read_text(encoding="utf-8").casefold()
+        runtime = " ".join(
+            "\n".join(
+                (skill, metadata, orchestration, efficiency, authority, managed)
+            ).split()
+        )
+
+        for required in (
+            "sol-to-luna",
+            "sol-to-terra-to-luna",
+            "terra extra high",
+            "terra returns `scope_change`",
+            "sol retains",
+            "governs codex task orchestration only",
+            "sol reviews 100% of terra conclusions and every resulting diff",
+            "directly to their dispatching coordinator",
+            "exactly one fresh low-context read-only luna high waiter",
+            "no full-history fork",
+            "approved correction path",
+            "external-runtime or provider ambiguity fails closed",
+            "only when listed safe",
+            "action-specific token",
+            "use $cody-coordinator to make this task",
+            "do not create or imply a duplicate coordinator",
+            "chatgpt pro when it is visibly available",
+            "strongest available chatgpt model",
+            "evidence unavailable",
+            "never claim substitute evidence",
+            "inspect, check-current, reconcile",
+        ):
+            self.assertIn(required, runtime)
+
+        self.assertNotIn("version 2.5", runtime)
+        self.assertNotIn("gpt-5.6", runtime)
 
     def test_standard_322_has_a_wip_preserving_upgrade_route(self) -> None:
         repo = self.temp / "standard-322-project"
@@ -228,6 +279,7 @@ class LeanModeContractTests(unittest.TestCase):
                 "high-risk-routing",
                 "unchanged-heartbeat",
                 "mechanical-scout-routing",
+                "topology-and-runtime-ambiguity",
                 "oversized-wip-routing",
             }.issubset(cases)
         )

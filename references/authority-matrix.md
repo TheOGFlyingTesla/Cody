@@ -7,8 +7,10 @@
 | Edit product code for requested build/fix | Exact user scope | Bounded paths, validation, preserve unrelated WIP |
 | Delegate write work | Same exact build/fix scope | Nonoverlapping ownership, direct fan-in, stop conditions |
 | Create a managed worktree | When useful for authorized work | Record base/branch identity; no orphan control branch |
+| Recover an interrupted run | Original immutable authority | `reconcile` first; choose only a listed safe action |
 | Commit | Not implied | Explicit permission in current request/instructions |
 | Push, merge, deploy, production/external-service/billing mutation | Forbidden by implication | Separate explicit authority and preflight |
+| Resolve provider or external runtime | Never by assumption | Evidence-discovered target and readiness; ambiguity fails closed |
 | Secrets/credentials | Never expose or copy | Explicit secret workflow; generated records remain secret-free |
 | Real email/message/call/trade/payment | Forbidden by implication | Separate explicit consequential-action approval |
 
@@ -18,4 +20,8 @@ Proceed with reversible read-only discovery and normal implementation steps insi
 
 Repository setup authorizes coordinator files and, for an empty non-Git folder, sterile `git init` without a commit. A non-empty non-Git folder requires the emitted repository-boundary decision token.
 
-Recovery reuses original immutable authority for verified resume/rollback. Rollback, repair, and supersede require an action-specific token bound to the journal, repository/Git identity, lock, and current hashes. A token confirms reviewed state; it never authorizes guessed bytes.
+Recovery begins with `reconcile`. Resume, rollback, repair, or supersede is
+allowed only when listed safe by its evidence. Rollback, repair, and supersede
+require an action-specific token bound to the journal, repository/Git identity,
+lock, and current hashes. A token confirms reviewed state; it never authorizes
+guessed bytes.

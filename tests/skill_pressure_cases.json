@@ -131,6 +131,17 @@
       ]
     },
     {
+      "case": "topology-and-runtime-ambiguity",
+      "outcome": "pass",
+      "observed_choices": [
+        "Routed a simple bounded slice from Sol to Luna and a fixed multi-stage Green/Amber slice from Sol to Terra to Luna with no full-history fork.",
+        "Returned SCOPE_CHANGE to Sol when Terra discovered Red work or authority/risk drift; Sol retained final release and P0/P1 authority.",
+        "Dispatched exactly one low-context Luna waiter for repeated checks and fanned its typed terminal report directly to the coordinator.",
+        "Failed before mutation when a deploy pin mismatched and exposed only the approved correction path.",
+        "Stopped on provider or external-runtime ambiguity rather than assuming a target."
+      ]
+    },
+    {
       "case": "oversized-wip-routing",
       "outcome": "pass",
       "observed_choices": [

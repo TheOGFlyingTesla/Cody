@@ -23,7 +23,7 @@ Only the marked coordinator block in root `AGENTS.md` is managed. Preserve every
 
 Operational documents use progressive disclosure. `STATUS.md` and the active work item are routine entry points; registries, WIP ledgers, handoff manifests, plans, and historical decisions are routed evidence, not a mandatory reading set. Large hand-maintained documents expose a compact index and link narrow appendices. Generated migration journals, immutable reports, and other cold evidence remain byte-stable unless a scoped migration requires otherwise.
 
-Every mutating coordinator run has an atomic JSON journal and terminal human report under `MIGRATIONS/`. Journals contain relative paths and hashes, never raw secret values or absolute local paths.
+Every mutating coordinator run has an atomic JSON journal and terminal human report under `MIGRATIONS/`. Journals contain relative paths and hashes, never raw secret values or absolute local paths. Recovery starts with `reconcile` and exposes only evidence-listed safe actions; repair, rollback, and supersede require action-specific tokens bound to the verified record.
 
 ## Validation commands
 

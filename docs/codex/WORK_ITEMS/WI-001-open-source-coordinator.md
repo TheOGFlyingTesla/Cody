@@ -85,5 +85,11 @@ Active on `feat/open-source-coordinator` from
 `d77974b8757850c24794d7a9e97bbdd43b671e77`. Orientation, the Terra/Luna
 portability audit, and a privacy-safe ChatGPT Pro consultation are complete.
 The frozen design is a clean, coordinator-only, provider-neutral root skill;
-the private predecessor compatibility layer has been removed, public docs and
-behavioral evidence are present, and final release proof is in progress.
+the private predecessor compatibility layer has been removed. The current
+uncommitted repair restores the explicit Sol Medium → Terra Extra High → Luna
+High task-orchestration topology, takeover/current-version gates, recovery and
+provider fail-closed boundaries, mandatory Sol review, executable contract
+checks, and a normal-environment installer smoke. The full 135-test suite,
+deterministic bundle build, isolated install, skill validation, doctor, blind
+forward use, and focused independent re-review pass. Commit, release
+replacement, hosted CI, and final published-SHA verification remain pending.

@@ -21,6 +21,26 @@ Project-specific values should be discovered from the repository or supplied
 by its owner. Cody does not require a hosting provider, database, deployment
 target, secret manager, remote machine, or model account.
 
+## Capability routing
+
+Cody's coordination topology is explicit but advisory about names: Sol Medium
+holds primary coordination, review, and release authority; Terra Extra High is
+optional for a fixed multi-stage Green/Amber boundary; and Luna High is the
+default bounded scout, worker, executor, and waiter. A simple slice is
+Sol-to-Luna; a suitable multi-stage slice is Sol-to-Terra-to-Luna. Named-model
+availability never changes role authority: use the nearest capable route and
+record unavailable model evidence honestly.
+
+This topology configures Codex task orchestration only. It does not configure
+application, provider-runtime, customer-facing, or production inference model
+routing.
+
+ChatGPT consultation is optional and advisory. Prefer visibly available
+ChatGPT Pro; otherwise use the strongest available ChatGPT model at the highest
+supported reasoning level. If the surface or mode cannot be verified, stop the
+consultation, label it unavailable, do not claim substitute evidence, and
+continue unrelated core work.
+
 ## Command-line options
 
 The launcher accepts:

@@ -17,6 +17,8 @@ fail-closed blocker for unsupported native mutation; see
 | Upgrades preserve project documents and become no-ops after completion | `tests/test_upgrade_v30.py` and `tests/test_upgrade_v31.py` |
 | Release bundles are deterministic, allowlisted, checksum-bound, and safely extracted | `tests/test_cli_release.py` |
 | Coordination pressure cases retain bounded routing, explicit authority, and silent unchanged heartbeats | `tests/test_lean_mode.py` and `tests/skill_pressure_cases.json` |
+| Executable contract checks require Sol-to-Luna and Sol-to-Terra-to-Luna routing, Terra escalation, Sol final authority, direct fan-in, one low-context waiter, and no implied duplicate coordinator | `tests/test_lean_mode.py` and `tests/skill_pressure_cases.json` |
+| Executable contract checks require deploy-pin mismatch and unknown provider/external-runtime ambiguity to fail closed | `tests/test_lean_mode.py` and `tests/skill_pressure_cases.json` |
 
 Run the same suite used by CI:
 

@@ -628,6 +628,37 @@ class InstallerTests(unittest.TestCase):
             env=self.environment,
         )
 
+    def test_installer_does_not_mutate_its_verified_bundle_with_bytecode(self) -> None:
+        environment = {
+            key: value
+            for key, value in self.environment.items()
+            if key not in {"PYTHONDONTWRITEBYTECODE", "PYTHONPYCACHEPREFIX"}
+        }
+        bundle = self.temp / "verified-bundle"
+        shutil.copytree(
+            RELEASE_ROOT,
+            bundle,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
+
+        result = subprocess.run(
+            [
+                "python3",
+                str(bundle / "scripts/install_skill.py"),
+                "--release-root",
+                str(bundle),
+                "--check",
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            env=environment,
+        )
+
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertFalse(list(bundle.rglob("__pycache__")))
+        self.assertFalse(list(bundle.rglob("*.pyc")))
+
     def test_first_install_exact_noop_and_uninstall_token(self) -> None:
         checked = self.run_installer("--check")
         self.assertEqual(0, checked.returncode, checked.stdout)

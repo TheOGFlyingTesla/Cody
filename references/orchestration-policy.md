@@ -33,31 +33,66 @@ coordinator must correct the packet or managed starting state.
 
 Use `/plan` when requirements, ownership, or validation need to be explicit. Use the persistent goal mechanism for long-running work that must survive compaction. Keep goals concrete and mark them complete only after validation and review gates pass.
 
-Route by capability and role, never by a model name:
+Route by capability and role; model names make the current topology explicit.
+The explicit topology is Sol Medium as primary coordinator, reviewer, and
+release owner; Terra Extra High as an optional junior coordinator only for a
+fixed multi-stage Green/Amber boundary; and Luna High as the default bounded
+scout, worker, executor, and waiter. A simple slice goes directly
+Sol-to-Luna. A suitable multi-stage slice goes Sol-to-Terra-to-Luna, with Terra
+receiving a compact no-history packet.
 
-- the coordinator and reviewer use the strongest balanced reasoning available for judgment, synthesis, risk classification, and exact-diff review;
-- workers use the least costly capable model that can satisfy the fixed packet and deterministic oracle;
-- a stronger model is an exception for a bounded slice that genuinely needs it or after a proved capability failure;
-- model choice never broadens authority, and an unavailable model falls back to the nearest capable route without claiming stronger evidence.
+Terra may decompose only the supplied Green/Amber boundary, dispatch bounded
+Luna work, enforce the supplied acceptance oracle, and return one structured
+synthesis. Terra returns `SCOPE_CHANGE` to Sol immediately for Red work,
+risk/authority drift, or implementation judgment that cannot be separated from
+the packet. Sol retains requirements, risk classification, architecture/product
+judgment, privacy/security/identity review, concurrency and destructive
+decisions, P0/P1 adjudication, exact-diff review, final synthesis, and release.
+
+Model names express this topology, not authority. If names or availability
+change, use the nearest capable route without claiming unavailable-model
+evidence. An unavailable capability never silently grants a stronger worker or
+coordinator role.
+
+This topology governs Codex task orchestration only. It never enables or
+selects Sol, Terra, or Luna inside the application, provider runtime,
+customer-facing model routing, or production inference path.
 
 ## Risk and review
 
-- **Green:** the coordinator writes the packet; a worker implements and runs focused proof; the reviewer checks the compact diff and evidence.
-- **Amber:** the coordinator fixes the boundary and acceptance oracle; a worker implements the mechanically testable slice; the coordinator or risk-appropriate reviewer verifies it.
-- **Red:** the coordinator owns diagnosis, invariants, security/transaction judgment, exact-diff review, and release. A worker may implement only a causally understood, mechanically specified repair slice.
+- **Green:** Sol writes the packet; Luna High implements and runs focused proof; Sol reviews the compact diff and evidence.
+- **Amber:** Sol fixes the boundary and acceptance oracle; Luna High implements the mechanically testable slice; a risk-appropriate reviewer may add evidence, but Sol verifies the result.
+- **Red:** Sol owns diagnosis, invariants, security/transaction judgment, exact-diff review, and release. Luna may implement only a causally understood, mechanically specified repair slice.
 
 Use the write/review loop: coordinator packet → worker implementation and proof → reviewer exact-diff review → precise repair packet when needed → worker repair and proof → repeat while each round closes a named finding and makes concrete, evidence-backed progress. There is no arbitrary repair-round limit. Stop, reslice, or escalate when the same causal failure repeats without progress, a class-level repair fails again, scope or authority changes, evidence conflicts, or judgment can no longer be separated from implementation.
+
+Sol reviews 100% of Terra conclusions and every resulting diff. Terra never
+accepts a release gate or substitutes its synthesis for Sol's exact-diff review.
 
 Each round makes concrete, evidence-backed progress or the coordinator stops and
 reslices. Reconcile first when interrupted state or durable evidence conflicts.
 
 ## Task mesh, waiting, and consultation
 
-Use a hub-and-spoke mesh. Workers report to the coordinator; they do not form a peer message bus. Check-ins are event-driven and typed: `BLOCKED`, `SCOPE_CHANGE`, `READY_FOR_REVIEW`, `FAILED`, or `CANCELLED`. Prefer a native blocking/event wait. If repeated checks or an uncertain-duration wait is unavoidable, dispatch one fresh low-context read-only worker with exact targets, safety boundaries, a wall-clock horizon, and one terminal report. The coordinator does not poll unchanged state.
+Use a hub-and-spoke mesh. Workers report directly to their dispatching
+coordinator; they do not form a peer message bus. Check-ins are event-driven and
+typed: `BLOCKED`, `SCOPE_CHANGE`, `READY_FOR_REVIEW`, `FAILED`, or `CANCELLED`.
+The project owner is never the message bus.
 
-The project owner is never the message bus between workers.
+Prefer a native blocking/event wait. If repeated checks or an uncertain-duration
+wait is unavoidable, dispatch exactly one fresh low-context read-only Luna High
+waiter with exact targets, safety boundaries, a wall-clock horizon, and one
+typed terminal report. It receives no full-history fork and no mutation or
+release authority. Sol may make one initial read and one terminal spot-check;
+the coordinator does not poll unchanged state.
 
-ChatGPT consultation is optional and never a release authority. Use it only when explicitly requested or authorized for a named condition. If ChatGPT Pro is visibly available, use Pro; otherwise use the strongest available ChatGPT model (currently GPT-5.6) at the highest supported reasoning level. If the consultation is unavailable, cannot be verified, or cannot complete naturally, continue the core work without it and label that evidence unavailable. Pass a structured decision memo rather than a full transcript by default.
+ChatGPT consultation is optional and never a release authority. It is advisory.
+Use it only when explicitly requested or authorized for a named condition.
+Prefer ChatGPT Pro when it is visibly available; otherwise use the strongest
+available ChatGPT model at the highest supported reasoning level. If the consultation is unavailable, cannot be verified, or cannot complete naturally,
+stop that consultation, label its evidence unavailable, never claim substitute
+evidence, and continue unrelated core work. Pass a structured decision memo
+rather than a full transcript by default.
 
 ## Context, efficiency, and fan-in
 

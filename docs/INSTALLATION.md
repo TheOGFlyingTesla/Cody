@@ -74,3 +74,8 @@ python3 scripts/install_skill.py --release-root . --uninstall --approve-removal 
 
 Never paste a real token, credential, or private path into documentation or a
 support request.
+
+Installing Cody does not create a second coordinator by implication. In an
+existing Codex task, invoke `$cody-coordinator` to make that task the durable
+coordinator for the target repository. A request to create or replace that task
+must carry the exact repository identity and a compact recovery packet.

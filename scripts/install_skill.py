@@ -10,7 +10,12 @@ import os
 from pathlib import Path
 import secrets
 import stat
+import sys
 from typing import Any, Sequence
+
+# The installer imports its verifier from the release bundle. Prevent that
+# import from mutating the checksum-bound bundle before verification begins.
+sys.dont_write_bytecode = True
 
 from build_release import (
     MANIFEST_NAME,

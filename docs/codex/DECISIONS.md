@@ -80,6 +80,26 @@ Append durable product, architecture, safety, or operating decisions. Factual co
   compatibility claims.
 - Supersedes: None
 
+### 2026-08-15 — Public routing preserves the proven coordinator topology
+
+- Decision: Cody names Sol Medium as the primary coordinator, reviewer, and
+  release owner; Terra Extra High as an optional bounded junior coordinator for
+  fixed multi-stage Green/Amber work; and Luna High as the default scout,
+  worker, executor, and waiter. Simple work routes directly from Sol to Luna.
+  Model names describe the current capability map and never grant authority;
+  unavailable names use the nearest capable route while preserving the same
+  control, escalation, and review boundaries.
+- Reason: Removing the named topology during provider-neutralization changed
+  Cody's observable coordination behavior and erased the token-efficient
+  junior-coordinator path proven by the source standard.
+- Owner: Project owner.
+- Affected scope: Skill triggering, task lifecycle, orchestration, waiting,
+  recovery, efficiency measurement, templates, documentation, and behavioral
+  tests.
+- Supersedes: The unnamed-routing portion of “Portability claims are
+  capability- and proof-based”; all provider-neutral and proof-based boundaries
+  remain in force.
+
 Use this entry shape:
 
 ```text
