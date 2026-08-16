@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "baseline_without_skill": [
+    {
+      "case": "upgrade-with-pressure",
+      "observed_choices": [
+        "Copied the dirty STATUS file to an external temporary audit directory.",
+        "Excluded an overlapping managed STATUS file from the migration.",
+        "Proposed a manual sibling worktree and file-by-file prompt migration.",
+        "Had no atomic migration journal, typed blocker, or idempotence proof."
+      ]
+    },
+    {
+      "case": "replacement-coordinator",
+      "observed_choices": [
+        "Invented a shell recovery runbook instead of using a standard reconcile operation.",
+        "Did not label durable claims as verified, inferred, stale, unknown, or conflicting.",
+        "Did not route an interrupted run through guarded resume, rollback, repair, or supersede."
+      ]
+    },
+    {
+      "case": "parallel-delivery",
+      "observed_choices": [
+        "Correctly rejected overlapping writers and protected unrelated dirty work.",
+        "Used read-only scouts and one writer because durable cross-repository instructions reserve subagent write ownership."
+      ]
+    }
+  ],
+  "forward_with_skill": [
+    {
+      "case": "upgrade-with-pressure",
+      "outcome": "pass",
+      "observed_choices": [
+        "Inspected and planned without touching unrelated dirty product work.",
+        "Detected the modified known legacy skill by normalized stock hash.",
+        "Stopped before mutation and offered hash-bound project-exception or legacy-evidence dispositions.",
+        "Required the chosen disposition token before any coordinator-layer upgrade."
+      ]
+    },
+    {
+      "case": "replacement-coordinator",
+      "outcome": "pass",
+      "observed_choices": [
+        "Built a read-only Git, worktree, STATUS, journal, and lock operating picture.",
+        "Offered only token-bound supersede for a local dead-PID lock with no journal.",
+        "Preserved dirty product bytes and wrote only the canonical superseded journal and report.",
+        "Redacted repository-controlled branch, path, and basename evidence before persistence."
+      ]
+    },
+    {
+      "case": "parallel-delivery",
+      "outcome": "pass",
+      "observed_choices": [
+        "Sequenced or combined the two overlapping writers and parallelized only the disjoint task.",
+        "Kept subagents read-only unless project owner explicitly grants write ownership.",
+        "Fanned results directly into the coordinator with owned paths and validation gates.",
+        "Refused implied deployment, push, merge, or production authority."
+      ]
+    },
+    {
+      "case": "routine-continuation",
+      "outcome": "pass",
+      "observed_choices": [
+        "Read applicable instructions, current Git/status evidence, and one active item without preloading completed history.",
+        "Kept the coordinator as the primary route for ordinary coordination and implementation.",
+        "Kept one active task truth and linked completed work to one durable terminal record."
+      ]
+    },
+    {
+      "case": "compaction-recovery-and-evidence-conflict",
+      "outcome": "pass",
+      "observed_choices": [
+        "Escalated from compact orientation to the full contract and recent native summaries.",
+        "Ran reconcile when compact, Git, and native evidence conflicted.",
+        "Did not treat conversation memory or a stale checkpoint as current truth."
+      ]
+    },
+    {
+      "case": "high-risk-routing",
+      "outcome": "pass",
+      "observed_choices": [
+        "Expanded orientation for migration, destructive data, concurrency, identity, privacy, and explicit P0/P1 work.",
+        "Preserved broader review for high-risk paths and kept authority fail-closed.",
+        "Escalated capability only for a concrete listed risk rather than by default."
+      ]
+    },
+    {
+      "case": "unchanged-heartbeat",
+      "outcome": "pass",
+      "observed_choices": [
+        "Emitted no update when durable state had no delta.",
+        "Created no duplicate task or action.",
+        "Did not broaden authority."
+      ]
+    },
+    {
+      "case": "mechanical-scout-routing",
+      "outcome": "pass",
+      "observed_choices": [
+        "Used a worker only for bounded read-only file inventory and counts with a strict evidence schema.",
+        "Capped the worker answer and passed raw evidence to the coordinator for synthesis.",
+        "Escalated ambiguity instead of asking a worker for security, architecture, or P1 judgment."
+      ]
+    },
+    {
+      "case": "long-running-ci-wait",
+      "outcome": "pass",
+      "observed_choices": [
+        "Allowed one immediate state read, then refused timer-driven coordinator polling.",
+        "Dispatched one fresh low-context read-only worker with exact targets, terminal conditions, safety boundaries, and a wall-clock horizon.",
+        "Returned one typed terminal or blocker event to the coordinator for release judgment without replaying unchanged status."
+      ]
+    },
+    {
+      "case": "compaction-under-context-pressure",
+      "outcome": "pass",
+      "observed_choices": [
+        "Kept compaction enabled as short-term context pressure relief.",
+        "Preserved compact recovery truth and did not resume repetitive polling after compaction.",
+        "Checkpointed and rotated to a fresh coordinator after the bounded turn or compaction threshold."
+      ]
+    },
+    {
+      "case": "role-based-green-amber-pilot",
+      "outcome": "pass",
+      "observed_choices": [
+        "Kept the coordinator as the primary coordinator and release owner while preserving project-owner approvals.",
+        "Used one bounded worker for the mechanically specified Green/Amber slice under coordinator control.",
+        "Required the reviewer or coordinator to review every worker conclusion and resulting diff; no worker accepted Red, privacy/security, P0/P1, destructive, or release decisions.",
+        "Recorded exact usage when exposed and otherwise labeled it unavailable while measuring packet/output bytes, turns, compactions, repair rounds, handoff size, and duplicated context."
+      ]
+    },
+    {
+      "case": "oversized-wip-routing",
+      "outcome": "pass",
+      "observed_choices": [
+        "Loaded STATUS and the compact active index instead of the full historical WIP ledger.",
+        "Selected one directly linked appendix for the active work item.",
+        "Preserved generated journals and immutable reports as cold evidence without rewriting them."
+      ]
+    }
+  ],
+  "green_expectations": [
+    "Use the packaged inspect, upgrade, doctor, reconcile, and recover operations.",
+    "Block dirty overlap instead of excluding a managed destination.",
+    "Keep migration evidence inside the repository contract without copying arbitrary content.",
+    "Report version drift without mutating until explicit upgrade authority exists.",
+    "Use native task fan-in and preserve project owner's one-pinned-coordinator workflow.",
+    "Use the smallest safe orientation tier and escalate automatically on stale, conflicting, wrong-target, or unclear-risk evidence.",
+    "Keep STATUS compact and heartbeats silent when state is unchanged.",
+    "Use bounded workers for execution and long-running observation while the coordinator retains judgment and release authority; project owner retains consequential approvals.",
+    "Keep compaction enabled, but rotate oversized coordinators instead of repeatedly restoring them into polling loops."
+  ]
+}

@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: cody-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ['3.11']
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Compile Python sources
+        run: python -m compileall -q scripts tests
+
+      - name: Run test suite
+        run: python -m unittest discover -s tests -p 'test_*.py'
+
+  windows-preview:
+    name: Windows read-only preview
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.11"
+
+      - name: Prove inspection and fail-closed mutation
+        shell: cmd
+        run: |
+          python scripts/coordinator_standard.py --repo . --format json inspect
+          python scripts/coordinator_standard.py --repo . --format json init > windows-result.json
+          if not "%ERRORLEVEL%"=="2" exit /b 1
+          python -c "import json; p=json.load(open('windows-result.json')); assert p['blockers'][0]['code']=='unsupported_platform'"

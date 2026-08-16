@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "standard_name": "cody-coordinator",
+  "standard_version": "0.1.0",
+  "project_id": "b0899bb2-17be-421b-a1b8-6be2325e1646",
+  "project_slug": "cody",
+  "installed_at": "2026-08-15T21:50:03Z",
+  "last_validated_at": "2026-08-15T21:50:03Z",
+  "risk_profiles": [],
+  "migrations": [
+    {
+      "source_version": "unmanaged",
+      "destination_version": "0.1.0",
+      "run_id": "4a691a1b-4708-478d-be04-78885683add6",
+      "completed_at": "2026-08-15T21:50:03Z",
+      "record_path": "docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.report.md"
+    }
+  ]
+}

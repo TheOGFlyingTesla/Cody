@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cody — Codex Coordinator"
+  short_description: "Set up, route, and recover project coordination"
+  default_prompt: "Use $cody-coordinator to inspect this repository as its durable coordinator and recommend the next verified action."

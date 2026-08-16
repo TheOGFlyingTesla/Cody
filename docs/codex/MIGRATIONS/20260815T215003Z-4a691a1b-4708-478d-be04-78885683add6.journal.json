@@ -1,0 +1,519 @@
+{
+  "authority": {
+    "allowed_paths": [
+      ".git",
+      "AGENTS.md",
+      "docs",
+      "docs/codex",
+      "docs/codex/DECISIONS.md",
+      "docs/codex/MIGRATIONS",
+      "docs/codex/MIGRATIONS/.coordinator.lock",
+      "docs/codex/MIGRATIONS/.gitkeep",
+      "docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.journal.json",
+      "docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.report.md",
+      "docs/codex/PROJECT.md",
+      "docs/codex/ROADMAP.md",
+      "docs/codex/STANDARD.json",
+      "docs/codex/STATUS.md",
+      "docs/codex/WORK_ITEMS",
+      "docs/codex/WORK_ITEMS/.gitkeep"
+    ],
+    "command": "init",
+    "created_at": "2026-08-15T21:50:03Z",
+    "decisions": [],
+    "mutation_classes": [
+      "coordinator-layer",
+      "run-metadata",
+      "managed-directories",
+      "git-init"
+    ],
+    "source_id": "current-task:user-request"
+  },
+  "command": "init",
+  "created_at": "2026-08-15T21:50:03Z",
+  "file_hashes": [
+    {
+      "after_sha256": "2c40ad9e0e0cee8786343b08664ee4db84f6a5e2c3243e8837b65d60f694aa38",
+      "before_sha256": null,
+      "relative_path": "AGENTS.md"
+    },
+    {
+      "after_sha256": "634417976556aa796b6909c3c61cacdde24edbb57fbac0daac49e4d332738638",
+      "before_sha256": null,
+      "relative_path": "docs/codex/STANDARD.json"
+    },
+    {
+      "after_sha256": "1045bde00e11c0793d264c4ab9de32c4318d6df96b56b69f96cf636711b7924d",
+      "before_sha256": null,
+      "relative_path": "docs/codex/PROJECT.md"
+    },
+    {
+      "after_sha256": "13106c6b5f6d9bc40f8e1fd8ab1a3e6b98bcfacff6dd83a398f8d7b744c75830",
+      "before_sha256": null,
+      "relative_path": "docs/codex/STATUS.md"
+    },
+    {
+      "after_sha256": "e44461649b1357a4f2aff9a25252fb70299f7de22cb2bae027c94842b30c44bb",
+      "before_sha256": null,
+      "relative_path": "docs/codex/ROADMAP.md"
+    },
+    {
+      "after_sha256": "36ed9a393387a25e793fb988c656ebfc71747d794303e941f13e4471d7040d2f",
+      "before_sha256": null,
+      "relative_path": "docs/codex/DECISIONS.md"
+    },
+    {
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "before_sha256": null,
+      "relative_path": "docs/codex/WORK_ITEMS/.gitkeep"
+    },
+    {
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "before_sha256": null,
+      "relative_path": "docs/codex/MIGRATIONS/.gitkeep"
+    },
+    {
+      "after_sha256": "91a7255d3233f44913563d43407cd16e27b6292422b2f4197e67a9fe02d62fd6",
+      "before_sha256": null,
+      "relative_path": "docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.report.md"
+    }
+  ],
+  "next_action": "Continue normal coordination.",
+  "phase_history": [
+    {
+      "at": "2026-08-15T21:50:03Z",
+      "evidence": [
+        "repo_kind=\"empty-non-git\""
+      ],
+      "phase": "inspect"
+    },
+    {
+      "at": "2026-08-15T21:50:03Z",
+      "evidence": [
+        "operation_count=10"
+      ],
+      "phase": "plan"
+    },
+    {
+      "at": "2026-08-15T21:50:03Z",
+      "evidence": [
+        "written_files=9"
+      ],
+      "phase": "apply"
+    },
+    {
+      "at": "2026-08-15T21:50:03Z",
+      "evidence": [
+        "checks=39"
+      ],
+      "phase": "validate"
+    },
+    {
+      "at": "2026-08-15T21:50:03Z",
+      "evidence": [
+        "report_path=\"docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.report.md\""
+      ],
+      "phase": "finalize"
+    }
+  ],
+  "planned_operations": [
+    {
+      "action": "git-init",
+      "after_sha256": null,
+      "before_sha256": null,
+      "relative_path": ".git",
+      "reversal": {
+        "kind": "unavailable",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "2c40ad9e0e0cee8786343b08664ee4db84f6a5e2c3243e8837b65d60f694aa38",
+      "before_sha256": null,
+      "relative_path": "AGENTS.md",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "634417976556aa796b6909c3c61cacdde24edbb57fbac0daac49e4d332738638",
+      "before_sha256": null,
+      "relative_path": "docs/codex/STANDARD.json",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "1045bde00e11c0793d264c4ab9de32c4318d6df96b56b69f96cf636711b7924d",
+      "before_sha256": null,
+      "relative_path": "docs/codex/PROJECT.md",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "13106c6b5f6d9bc40f8e1fd8ab1a3e6b98bcfacff6dd83a398f8d7b744c75830",
+      "before_sha256": null,
+      "relative_path": "docs/codex/STATUS.md",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "e44461649b1357a4f2aff9a25252fb70299f7de22cb2bae027c94842b30c44bb",
+      "before_sha256": null,
+      "relative_path": "docs/codex/ROADMAP.md",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "36ed9a393387a25e793fb988c656ebfc71747d794303e941f13e4471d7040d2f",
+      "before_sha256": null,
+      "relative_path": "docs/codex/DECISIONS.md",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "before_sha256": null,
+      "relative_path": "docs/codex/WORK_ITEMS/.gitkeep",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "before_sha256": null,
+      "relative_path": "docs/codex/MIGRATIONS/.gitkeep",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    },
+    {
+      "action": "create",
+      "after_sha256": "91a7255d3233f44913563d43407cd16e27b6292422b2f4197e67a9fe02d62fd6",
+      "before_sha256": null,
+      "relative_path": "docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.report.md",
+      "reversal": {
+        "kind": "delete-new",
+        "metadata": [],
+        "reference": null
+      }
+    }
+  ],
+  "post_apply_git": {
+    "branch": "main",
+    "common_dir_identity_sha256": "4bc459d821d3d4163ba0f15eb793d9c70c86ca7aee1d141fabb063b6f122f4e1",
+    "explicit_base": null,
+    "head": null,
+    "is_detached": false,
+    "kind": "unborn-git",
+    "staged_managed_paths": [],
+    "unstaged_managed_paths": [],
+    "untracked_managed_paths": [
+      "AGENTS.md",
+      "docs/codex/DECISIONS.md",
+      "docs/codex/MIGRATIONS/.coordinator.lock",
+      "docs/codex/MIGRATIONS/.gitkeep",
+      "docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.journal.json",
+      "docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.report.md",
+      "docs/codex/PROJECT.md",
+      "docs/codex/ROADMAP.md",
+      "docs/codex/STANDARD.json",
+      "docs/codex/STATUS.md",
+      "docs/codex/WORK_ITEMS/.gitkeep"
+    ],
+    "worktree_identity_sha256": "5ffd49276e8f3e81b92f2fb14aa544edbc052222d7a67c0b454046fc8bcbd0c0"
+  },
+  "project_slug": "cody",
+  "report_path": "docs/codex/MIGRATIONS/20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.report.md",
+  "report_sha256": "91a7255d3233f44913563d43407cd16e27b6292422b2f4197e67a9fe02d62fd6",
+  "repository_identity": {
+    "basename": "cody",
+    "fingerprint": "98cd783474db779d26e43137d0ce2127db9073037782c31729ed70a306b87b17",
+    "project_id": "b0899bb2-17be-421b-a1b8-6be2325e1646",
+    "provisional": true
+  },
+  "run_id": "4a691a1b-4708-478d-be04-78885683add6",
+  "schema_version": 1,
+  "source_files": [],
+  "standard_name": "cody-coordinator",
+  "standard_version": "0.1.0",
+  "starting_git": {
+    "branch": null,
+    "common_dir_identity_sha256": null,
+    "explicit_base": null,
+    "head": null,
+    "is_detached": false,
+    "kind": "empty-non-git",
+    "staged_managed_paths": [],
+    "unstaged_managed_paths": [],
+    "untracked_managed_paths": [],
+    "worktree_identity_sha256": "5ffd49276e8f3e81b92f2fb14aa544edbc052222d7a67c0b454046fc8bcbd0c0"
+  },
+  "status": "complete",
+  "updated_at": "2026-08-15T21:50:03Z",
+  "validation": [
+    {
+      "message": "Repository and managed paths are safe regular locations.",
+      "name": "repository-safety",
+      "ok": true,
+      "severity": "P0"
+    },
+    {
+      "message": "Bundled schemas use only the documented dependency-free subset.",
+      "name": "supported-schema-subset",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "STANDARD.json matches the bundled identity schema.",
+      "name": "standard-schema",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "AGENTS.md contains one current, well-formed managed block.",
+      "name": "managed-marker-integrity",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Required coordinator path AGENTS.md is present and regular.",
+      "name": "required-path:AGENTS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Required coordinator path docs/codex/STANDARD.json is present and regular.",
+      "name": "required-path:docs/codex/STANDARD.json",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Required coordinator path docs/codex/PROJECT.md is present and regular.",
+      "name": "required-path:docs/codex/PROJECT.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Required coordinator path docs/codex/STATUS.md is present and regular.",
+      "name": "required-path:docs/codex/STATUS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Required coordinator path docs/codex/ROADMAP.md is present and regular.",
+      "name": "required-path:docs/codex/ROADMAP.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Required coordinator path docs/codex/DECISIONS.md is present and regular.",
+      "name": "required-path:docs/codex/DECISIONS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "PROJECT.md contains every required durable section.",
+      "name": "required-sections:PROJECT.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "ROADMAP.md contains every required durable section.",
+      "name": "required-sections:ROADMAP.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "DECISIONS.md contains every required durable section.",
+      "name": "required-sections:DECISIONS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "STATUS.md contains the current compact contract or the preserved 3.1 contract.",
+      "name": "required-sections:STATUS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "STATUS.md stays at or below the approximate 2,000-token recovery target.",
+      "name": "status-compactness",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The STANDARD.json has no unresolved template placeholders.",
+      "name": "template-placeholders:STANDARD.json",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The STANDARD.json has no serialized personal or absolute filesystem path.",
+      "name": "personal-or-absolute-path:STANDARD.json",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The PROJECT.md has no unresolved template placeholders.",
+      "name": "template-placeholders:PROJECT.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The PROJECT.md has no serialized personal or absolute filesystem path.",
+      "name": "personal-or-absolute-path:PROJECT.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The STATUS.md has no unresolved template placeholders.",
+      "name": "template-placeholders:STATUS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The STATUS.md has no serialized personal or absolute filesystem path.",
+      "name": "personal-or-absolute-path:STATUS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The ROADMAP.md has no unresolved template placeholders.",
+      "name": "template-placeholders:ROADMAP.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The ROADMAP.md has no serialized personal or absolute filesystem path.",
+      "name": "personal-or-absolute-path:ROADMAP.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The DECISIONS.md has no unresolved template placeholders.",
+      "name": "template-placeholders:DECISIONS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The DECISIONS.md has no serialized personal or absolute filesystem path.",
+      "name": "personal-or-absolute-path:DECISIONS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The managed coordinator block in AGENTS.md has no unresolved template placeholders.",
+      "name": "template-placeholders:AGENTS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The managed coordinator block in AGENTS.md has no serialized personal or absolute filesystem path.",
+      "name": "personal-or-absolute-path:AGENTS.md",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Credential-shape scan completed for STANDARD.json.",
+      "name": "credential-content:STANDARD.json",
+      "ok": true,
+      "severity": "P0"
+    },
+    {
+      "message": "Credential-shape scan completed for PROJECT.md.",
+      "name": "credential-content:PROJECT.md",
+      "ok": true,
+      "severity": "P0"
+    },
+    {
+      "message": "Credential-shape scan completed for STATUS.md.",
+      "name": "credential-content:STATUS.md",
+      "ok": true,
+      "severity": "P0"
+    },
+    {
+      "message": "Credential-shape scan completed for ROADMAP.md.",
+      "name": "credential-content:ROADMAP.md",
+      "ok": true,
+      "severity": "P0"
+    },
+    {
+      "message": "Credential-shape scan completed for DECISIONS.md.",
+      "name": "credential-content:DECISIONS.md",
+      "ok": true,
+      "severity": "P0"
+    },
+    {
+      "message": "Credential-shape scan completed for AGENTS.md.",
+      "name": "credential-content:AGENTS.md",
+      "ok": true,
+      "severity": "P0"
+    },
+    {
+      "message": "Journal 20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.journal.json matches the bundled run schema.",
+      "name": "journal-schema:20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.journal.json",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Journal 20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.journal.json contains no sensitive or absolute path evidence.",
+      "name": "journal-sensitive-content:20260815T215003Z-4a691a1b-4708-478d-be04-78885683add6.journal.json",
+      "ok": true,
+      "severity": "P0"
+    },
+    {
+      "message": "Every run journal is canonical, complete, and correlated with its report hash.",
+      "name": "journal-terminal-consistency",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "STANDARD migration history correlates with completed local run evidence.",
+      "name": "status-consistency",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "Journal authority and file receipts remain inside the coordinator allowlist.",
+      "name": "managed-scope-drift",
+      "ok": true,
+      "severity": "P1"
+    },
+    {
+      "message": "The managed instruction block matches the stable coordinator contract.",
+      "name": "render-idempotence",
+      "ok": true,
+      "severity": "P1"
+    }
+  ]
+}
