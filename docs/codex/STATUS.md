@@ -1,15 +1,17 @@
 # Coordinator Status
 
-Checkpoint recorded: 2026-08-16T03:54:56Z
+Checkpoint recorded: 2026-08-16T03:55:58Z
 Freshness: current at checkpoint
 
 ## Current exact identity and deploy truth
 
 - Coordinator Standard: `0.1.0`
-- Observed branch: `feat/open-source-coordinator`
-- Observed exact head: `45a882c09bf48f2b42c017a4b69092243e1b434c`
-- Working tree: 20 modified tracked files comprising the uncommitted behavioral
-  parity and installer-integrity repair candidate.
+- Observed branch: `release/v0.1.0-parity` based directly on public
+  `origin/main` at `6628e6944621dbc61a003711031cb8441ec288dd`.
+- Behavioral repair commit: `1a4a27c0f9fa02d5ec07d9e021d912e80075c402`.
+- Publication candidate: the current commit containing this checkpoint; verify
+  its immutable SHA from Git and the moved `v0.1.0` tag before relying on it.
+- Working tree: expected clean after this publication-record commit.
 - Deploy state: no application deployment configured; GitHub repository is public.
 
 ## Active task IDs
@@ -31,5 +33,5 @@ Freshness: current at checkpoint
 
 ## One next action
 
-Commit the 20-file repair, transplant it onto `origin/main`, certify the exact
-clean candidate SHA, replace `v0.1.0`, and verify hosted CI and release assets.
+Certify the exact clean candidate SHA, fast-forward public `main`, replace
+`v0.1.0`, and verify hosted CI plus release assets against that SHA.
