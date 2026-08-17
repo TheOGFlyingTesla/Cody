@@ -28,6 +28,9 @@ EXECUTABLES = {
     "scripts/coordinator_standard.py",
     "scripts/build_release.py",
     "scripts/install_skill.py",
+    "scripts/quick_validate.py",
+    "scripts/routing_contract.py",
+    "scripts/routing_live_eval.py",
 }
 
 # This is the source-to-bundle boundary.  Keep it as a literal inventory: a
@@ -74,6 +77,7 @@ RELEASE_ALLOWLIST = frozenset(
         "references/authority-matrix.md",
         "references/completion-report.md",
         "references/execution-efficiency.md",
+        "references/model-routing-contract.json",
         "references/operating-model.md",
         "references/orchestration-policy.md",
         "references/repository-contract.md",
@@ -92,6 +96,9 @@ RELEASE_ALLOWLIST = frozenset(
         "scripts/coordinator_standard/templates.py",
         "scripts/coordinator_standard/validator.py",
         "scripts/install_skill.py",
+        "scripts/quick_validate.py",
+        "scripts/routing_contract.py",
+        "scripts/routing_live_eval.py",
     }
 )
 _ALLOWLIST_DIRECTORIES = frozenset(
@@ -348,13 +355,26 @@ def _manifest_inventory(files: list[str]) -> list[str]:
     return [path for path in files if path != MANIFEST_NAME]
 
 
-def _manifest(files: list[str]) -> dict[str, Any]:
+def _source_content_sha256(root: Path, paths: Iterable[str]) -> str:
+    """Hash release source bytes without making the manifest self-referential."""
+
+    digest = hashlib.sha256()
+    for relative in _sort_paths(paths):
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(_sha256(root / relative).encode("ascii"))
+        digest.update(b"\n")
+    return digest.hexdigest()
+
+
+def _manifest(files: list[str], source_content_sha256: str) -> dict[str, Any]:
     return {
         "schema_version": 1,
         "standard_name": STANDARD_NAME,
         "standard_version": STANDARD_VERSION,
         "runtime": "python>=3.11; git>=2.39",
         "archive": "deterministic-zip-stored-v1",
+        "source_content_sha256": source_content_sha256,
         "files": _manifest_inventory(files),
     }
 
@@ -383,6 +403,13 @@ def _load_manifest(root: Path) -> dict[str, Any]:
         raise ReleaseError("release manifest file list is malformed")
     if files != _sort_paths(files) or len(files) != len(set(files)):
         raise ReleaseError("release manifest file list is not sorted and unique")
+    if not files or any(not _safe_name(item) for item in files):
+        raise ReleaseError("release manifest contains an unsafe file path")
+    source_content_sha256 = data.get("source_content_sha256")
+    if not isinstance(source_content_sha256, str) or not re.fullmatch(
+        r"[0-9a-f]{64}", source_content_sha256
+    ):
+        raise ReleaseError("release manifest source content hash is malformed")
     return data
 
 
@@ -391,11 +418,7 @@ def _checksum_bytes(root: Path, paths: list[str]) -> bytes:
     return ("\n".join(lines) + "\n").encode("utf-8")
 
 
-def load_checksums(root: Path) -> dict[str, str]:
-    try:
-        text = (root / CHECKSUM_NAME).read_text(encoding="utf-8")
-    except (OSError, UnicodeError) as error:
-        raise ReleaseError("SHA256SUMS is missing or unreadable") from error
+def _parse_checksums(text: str) -> dict[str, str]:
     if not text.endswith("\n") or "\n\n" in text:
         raise ReleaseError("SHA256SUMS has invalid line termination")
     checksums: dict[str, str] = {}
@@ -411,6 +434,37 @@ def load_checksums(root: Path) -> dict[str, str]:
     return checksums
 
 
+def load_checksums(root: Path) -> dict[str, str]:
+    try:
+        text = (root / CHECKSUM_NAME).read_text(encoding="utf-8")
+    except (OSError, UnicodeError) as error:
+        raise ReleaseError("SHA256SUMS is missing or unreadable") from error
+    return _parse_checksums(text)
+
+
+def load_archive_checksums(archive_path: Path) -> dict[str, str]:
+    """Read only the archive checksum inventory before safe extraction."""
+
+    try:
+        with zipfile.ZipFile(archive_path, "r") as archive:
+            entries = [item for item in archive.infolist() if item.filename == CHECKSUM_NAME]
+            if len(entries) != 1:
+                raise ReleaseError("archive has no unique checksum inventory")
+            entry = entries[0]
+            if (
+                entry.is_dir()
+                or entry.compress_type != zipfile.ZIP_STORED
+                or entry.compress_size != entry.file_size
+                or entry.file_size > 4 * 1024 * 1024
+                or entry.flag_bits & 0x1
+            ):
+                raise ReleaseError("archive checksum inventory has unsafe metadata")
+            text = archive.read(entry).decode("utf-8")
+    except (OSError, UnicodeError, zipfile.BadZipFile) as error:
+        raise ReleaseError("archive checksum inventory is unreadable") from error
+    return _parse_checksums(text)
+
+
 def verify_checksums(root: Path) -> dict[str, str]:
     checksums = load_checksums(root)
     for relative, expected in checksums.items():
@@ -418,6 +472,16 @@ def verify_checksums(root: Path) -> dict[str, str]:
         if not path.is_file() or path.is_symlink() or _sha256(path) != expected:
             raise ReleaseError(f"checksum mismatch: {relative}")
     return checksums
+
+
+def verify_source_content(root: Path, manifest: dict[str, Any] | None = None) -> str:
+    """Verify the manifest's source content identity for its listed files."""
+
+    loaded = manifest if manifest is not None else _load_manifest(root)
+    actual = _source_content_sha256(root, loaded["files"])
+    if actual != loaded["source_content_sha256"]:
+        raise ReleaseError("release source content hash differs from its manifest")
+    return actual
 
 
 def _zip_mode(relative: str) -> int:
@@ -615,7 +679,8 @@ def _stage_release(source_root: Path, staging_root: Path) -> dict[str, str]:
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, destination, follow_symlinks=False)
 
-    manifest = _manifest(source_files + [MANIFEST_NAME])
+    source_content_sha256 = _source_content_sha256(staging_root, source_files)
+    manifest = _manifest(source_files + [MANIFEST_NAME], source_content_sha256)
     (staging_root / MANIFEST_NAME).write_bytes(_manifest_bytes(manifest))
     inventory = inventory_release(staging_root)
     if manifest["files"] != _manifest_inventory(inventory):
@@ -624,6 +689,7 @@ def _stage_release(source_root: Path, staging_root: Path) -> dict[str, str]:
         _checksum_bytes(staging_root, inventory)
     )
     checksums = verify_checksums(staging_root)
+    verify_source_content(staging_root, manifest)
     if list(checksums) != inventory:
         raise ReleaseError("staged checksums differ from release inventory")
     return checksums
@@ -638,6 +704,7 @@ def build_release(release_root: Path, output_zip: Path, *, check: bool) -> dict[
         staging_root = Path(directory) / STANDARD_NAME
         staging_root.mkdir(mode=0o700)
         checksums = _stage_release(source_root, staging_root)
+        source_content_sha256 = _load_manifest(staging_root)["source_content_sha256"]
         candidate = Path(directory) / f"{STANDARD_NAME}-{STANDARD_VERSION}.zip"
         _write_zip(
             staging_root,
@@ -654,6 +721,7 @@ def build_release(release_root: Path, output_zip: Path, *, check: bool) -> dict[
                 "changed": False,
                 "standard_version": STANDARD_VERSION,
                 "archive_sha256": _sha256(output_zip),
+                "source_content_sha256": source_content_sha256,
                 "file_count": len(checksums),
             }
 
@@ -676,6 +744,7 @@ def build_release(release_root: Path, output_zip: Path, *, check: bool) -> dict[
         "changed": True,
         "standard_version": STANDARD_VERSION,
         "archive_sha256": _sha256(output_zip),
+        "source_content_sha256": source_content_sha256,
         "file_count": len(checksums),
     }
 

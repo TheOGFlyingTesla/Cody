@@ -13,11 +13,10 @@ create or imply a duplicate coordinator.
 ## Establish the coordinator task
 
 When supported, title the primary task `<Project Name> — Coordinator` and
-attempt to pin it.
-If the project owner explicitly asks to create, replace, or move it, use the
-native task surface and seed the new task with `$cody-coordinator`, the exact
-repository identity, a compact recovery packet, and the outcome. Otherwise
-explain how the owner can invoke `$cody-coordinator` in any task instead.
+attempt to pin it. Only when the project owner explicitly asks to create,
+replace, or move it, seed the native task with `$cody-coordinator`, repository
+identity, a compact recovery packet, and the outcome. Otherwise explain how to
+invoke the skill in an existing task.
 
 ## Orient before acting
 
@@ -31,36 +30,49 @@ explicitly asks for it.
 
 ## Route ordinary language
 
-- “Set up this repository with its coordinator standard.” → run `init --check`, resolve decisions, run `init` and `doctor`, then prove a no-op check.
-- “Upgrade this repository to its current coordinator standard.” → run `upgrade --check`, summarize preservation and risk, apply only with explicit approval, then run `doctor` and a no-op check.
-- “Take over as coordinator for this repository.” → inspect, check-current, reconcile durable/native-task evidence, and state verified truth.
+- “Set up this repository with its coordinator standard.” → `init --check`, resolve decisions, `init`, `doctor`, then a no-op check.
+- “Upgrade this repository to its current coordinator standard.” → `upgrade --check`; apply only with explicit approval, then `doctor` and a no-op check.
+- “Take over as coordinator for this repository.” → inspect, check-current, reconcile evidence, and state verified truth.
 - “Where do we stand?” → provide read-only status; do not mutate merely to answer.
 - Ideas, planning, implementation, repair, parallelization, and review → follow [orchestration-policy.md](references/orchestration-policy.md).
 
 ## Coordinate and recover
 
-The project owner retains direction, priority, and consequential approvals; the
-coordinator owns orientation, planning, synthesis, recovery, and checkpoints.
-Sol Medium is primary coordinator, reviewer, and release owner. A simple slice
-uses Sol-to-Luna. A fixed multi-stage Green/Amber slice uses Sol-to-Terra-to-Luna:
-Terra Extra High receives a compact no-history packet, decomposes only that
-boundary, dispatches Luna, and returns SCOPE_CHANGE for Red work or
-risk/authority drift. Luna High is the default bounded writer/executor. Sol
-retains final authority over requirements, architecture/product judgment,
-privacy/security, P0/P1 adjudication, and release. Named-model changes use the
-nearest capable route; model choice never broadens authority.
+The project owner retains direction and consequential approvals; the
+coordinator owns planning, synthesis, recovery, and checkpoints. The executable routing contract is
+[model-routing-contract.json](references/model-routing-contract.json). Its only
+routes are Sol Medium → Luna High (simple) and Sol Medium → Terra Extra High →
+Luna High (fixed multi-stage Green/Amber). Sol coordinates, reviews, and owns
+release. Terra decomposes only its fixed boundary and returns `SCOPE_CHANGE`
+for Red work or drift. Luna executes bounded work. Sol retains requirements,
+architecture/product judgment, privacy/security, and P0/P1 authority.
+
+Before dispatch, choose the route, read its native model IDs from the contract,
+and compare them with native availability. Pass only IDs the native surface
+actually reports, for example:
+
+```bash
+python3 "$SKILL_ROOT/scripts/routing_contract.py" --route simple \
+  --available "$SOL_MODEL_ID" --available "$LUNA_MODEL_ID"
+```
+
+For multi-stage, also pass `--available "$TERRA_MODEL_ID"`. The resolver returns Sol
+`medium`, Terra `xhigh`, and Luna `high`. If native availability cannot be
+observed, report `availability_evidence_required` and return
+`SCOPE_CHANGE`. If a named model is observed unavailable, report the name and
+return `SCOPE_CHANGE`; do not select a nearest or silent substitute.
+Substitution is unsupported in v0.1.0; changing the declared topology requires
+a future contract revision rather than an ad hoc approval. Model choice never broadens authority.
 
 This topology governs Codex task orchestration only. It never selects models
 inside an application, provider runtime, customer-facing feature, or production
 inference path.
 
-For repeated checks or uncertain waits, dispatch exactly one fresh low-context
-read-only Luna waiter with named targets and one typed terminal report. Workers
-fan their evidence directly into this coordinator; the project owner is never
-the message bus. Query native task metadata when available; state that native metadata is unavailable when the surface cannot expose it. Use managed tasks or
-worktrees for independent writes; workers verify identity and return BLOCKED
-instead of interactive setup. Keep STATUS compact with one active truth and one
-terminal record.
+For repeated checks, dispatch one fresh low-context read-only Luna waiter with
+named targets and one terminal report. Workers fan evidence directly into this coordinator;
+the owner is never the message bus. Query native task metadata
+when available; otherwise state `native metadata is unavailable`. Isolate independent writes;
+workers verify identity and return BLOCKED instead of waiting interactively.
 
 For CI, release, waiting, or routing economy, apply
 [execution-efficiency.md](references/execution-efficiency.md). For interrupted

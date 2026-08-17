@@ -8,7 +8,12 @@ For repositories with CI or release automation, measure completed job-minutes, t
 
 Keep one broad proof for the exact release candidate. A pull-request proof may satisfy the corresponding post-merge tier only when automation proves the merged commit has the exact same Git tree and required checks completed successfully. Direct pushes, squash commits, conflict resolutions, missing check evidence, or tree mismatches require the full tier.
 
-Keep a small independent required sentinel on the hosted CI service. Route exhaustive deterministic suites to an explicit isolated execution procedure when one is proven. Record candidate SHA, tree SHA, command, mode, result, and cleanup. Contracts-only or partial harness checks never substitute for release certification.
+When evidence shows that the project already has a hosted CI surface, keep a
+small independent required sentinel there. Otherwise record hosted CI as
+unavailable and use the project's evidence-discovered local or self-hosted proof
+surface. Route exhaustive deterministic suites to an explicit isolated
+execution procedure when one is proven. Record candidate SHA, tree SHA,
+command, mode, result, and cleanup. Contracts-only or partial harness checks never substitute for release certification.
 
 Exhaustive matrices are opt-in unless changed paths exercise their distinct risk. Documentation-only changes may skip product suites when a stable required sentinel proves the classification. Cache dependencies where safe, but never cache mutable databases, credentials, or unverified build outputs.
 
@@ -30,16 +35,18 @@ A proven pre-effect tooling failure may continue with a materially corrected att
 
 Write durable status only at meaningful state transitions. One owner writes the active truth; registries and dashboards link to it instead of copying narratives. Prefer one worker and one reviewer, bounded tool output, event-driven check-ins, and structured memos instead of copied transcripts.
 
-Treat model routing as measured resource control. Sol Medium is the primary
-coordinator, reviewer, and release owner; a simple packet goes Sol-to-Luna.
-For a fixed multi-stage Green/Amber packet, Sol may route
-Sol-to-Terra-to-Luna, where Terra Extra High is a bounded junior coordinator and
-Luna High performs bounded scout, worker, executor, or waiter work. Terra
-returns `SCOPE_CHANGE` for Red discovery or risk/authority drift. Model names
-never broaden authority and unavailable names use the nearest capable route.
-This topology governs Codex task orchestration only, never application or
-provider-runtime model routing. Sol reviews 100% of Terra conclusions and every
-resulting diff.
+Treat model routing as measured resource control. The executable
+`model-routing-contract.json` declares Sol Medium as primary coordinator,
+reviewer, and release owner; a simple packet is Sol Medium → Luna High. For a
+fixed multi-stage Green/Amber packet, the route is Sol Medium → Terra Extra High
+→ Luna High, where Terra is a bounded junior coordinator and Luna performs
+bounded scout, worker, executor, or waiter work. Terra returns `SCOPE_CHANGE`
+for Red discovery or risk/authority drift. Model names never broaden authority:
+unavailable named models are reported and no route is selected. Substitution is
+unsupported in v0.1.0; changing the declared topology requires a future contract
+revision rather than an ad hoc approval. This topology
+governs Codex task orchestration only, never application or provider-runtime
+model routing. Sol reviews 100% of Terra conclusions and every resulting diff.
 
 Count prompt and synthesis overhead, retries, rejected packets, duplicated
 context, waiting samples, optional consultation, and final review by Sol together.

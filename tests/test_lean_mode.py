@@ -70,6 +70,7 @@ class LeanModeContractTests(unittest.TestCase):
             skill.casefold(),
         )
         self.assertNotIn("matching `check-current` command", skill)
+        self.assertNotIn("nearest capable route", combined)
         consultation = orchestration.casefold()
         self.assertIn("chatgpt consultation is optional and never a release authority", consultation)
         self.assertIn("if the consultation is unavailable", consultation)
@@ -134,18 +135,29 @@ class LeanModeContractTests(unittest.TestCase):
         authority = (
             SKILL_ROOT / "references/authority-matrix.md"
         ).read_text(encoding="utf-8").casefold()
+        routing_contract = (
+            SKILL_ROOT / "references/model-routing-contract.json"
+        ).read_text(encoding="utf-8").casefold()
         managed = (
             SKILL_ROOT / "assets/repo-template/AGENTS.managed.md"
         ).read_text(encoding="utf-8").casefold()
         runtime = " ".join(
             "\n".join(
-                (skill, metadata, orchestration, efficiency, authority, managed)
+                (
+                    skill,
+                    metadata,
+                    orchestration,
+                    efficiency,
+                    authority,
+                    routing_contract,
+                    managed,
+                )
             ).split()
         )
 
         for required in (
-            "sol-to-luna",
-            "sol-to-terra-to-luna",
+            "sol medium → luna high",
+            "sol medium → terra extra high → luna high",
             "terra extra high",
             "terra returns `scope_change`",
             "sol retains",
@@ -169,7 +181,8 @@ class LeanModeContractTests(unittest.TestCase):
             self.assertIn(required, runtime)
 
         self.assertNotIn("version 2.5", runtime)
-        self.assertNotIn("gpt-5.6", runtime)
+        for model_id in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"):
+            self.assertIn(model_id, runtime)
 
     def test_standard_322_has_a_wip_preserving_upgrade_route(self) -> None:
         repo = self.temp / "standard-322-project"

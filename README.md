@@ -5,58 +5,133 @@
 ![Preview](https://img.shields.io/badge/status-v0.1.0%20preview-7c3aed)
 ![License](https://img.shields.io/badge/license-MIT-2563eb)
 
-Cody is a small, portable coordination layer for Codex-compatible repository
-workflows. It keeps project state legible, turns broad requests into bounded
-work, and makes safety boundaries part of the operating model.
+Cody is an installable **Codex skill** that turns one Codex task into the
+coordinator for a repository. You talk to that coordinator about outcomes,
+status, priorities, and blockers; Cody keeps the project state durable and
+routes bounded implementation or research to cheaper worker tasks when useful.
 
 > Cody is an independent community project. It is not affiliated with,
 > sponsored by, or endorsed by OpenAI. This repository is a v0.1.0 preview;
 > interfaces and support claims may change.
 
-## Why Cody?
+## What Cody does
 
-Coding agents are good at producing changes. Long-lived project work also needs
-orientation, durable checkpoints, explicit authority, and a clean recovery path.
-Cody provides a repository-local control plane for that work:
+Ordinary coding tasks lose context, duplicate work, or make the project owner
+carry messages between agents. Cody provides a repository-local control plane:
 
-- inspect a repository before making assumptions;
-- initialize or upgrade a compact `docs/codex/` contract;
-- keep status, decisions, roadmap, and work items durable;
-- validate structure with a deterministic doctor;
-- recover interrupted coordination without guessing at bytes or authority; and
-- make commit, push, deploy, provider, billing, and secret actions explicit.
+- one primary coordinator task that you can return to throughout the project;
+- inspection before action, with the exact repository and Git state verified;
+- durable status, decisions, roadmap, work items, and recovery evidence under
+  `docs/codex/`;
+- bounded worker and reviewer packets instead of repeatedly loading the full
+  project history;
+- deterministic validation and interrupted-work recovery; and
+- explicit boundaries around commit, push, deploy, secrets, billing, providers,
+  and production systems.
 
 The core is local and provider-neutral. It does not require a hosted service,
 database, secret manager, deployment target, remote compute host, or ChatGPT
 subscription.
 
-## Coordination boundaries
+## How you use it
+
+After installing Cody, open the Codex task that should become the project's
+long-lived coordinator and invoke:
+
+```text
+$cody-coordinator
+```
+
+That task becomes the one place where you can speak naturally about the
+project. Useful requests include:
+
+```text
+Set up this repository with its coordinator standard.
+Take over as coordinator for this repository.
+Where do we stand?
+Plan and implement <outcome>.
+Recover the interrupted work and tell me the next safe action.
+```
+
+Cody inspects the repository, reconciles durable and current evidence, keeps one
+active source of truth, and reports decisions or authority blockers directly.
+It may dispatch bounded workers or reviewers behind the scenes, but you keep
+talking to the coordinator rather than acting as a message bus between tasks.
+
+To move coordination to a fresh task, explicitly ask the current coordinator to
+create or hand off to a replacement coordinator. The replacement recovers from
+Git and `docs/codex/`; it does not rely on the old conversation alone. Cody does
+not create a second coordinator merely because its description happens to match
+another prompt.
+
+## Token-efficient Sol, Terra, and Luna routing
+
+Cody separates expensive project judgment from bounded execution:
+
+- **Sol Medium** is the primary coordinator. Sol owns requirements, planning,
+  architecture and product judgment, risk classification, synthesis, exact-diff
+  review, P0/P1 decisions, and release control.
+- **Luna High** is the default scout, worker, executor, reviewer helper, and
+  waiter. A simple bounded slice routes directly **Sol → Luna**.
+- **Terra Extra High** is an optional junior coordinator for a fixed
+  multi-stage Green/Amber boundary. That route is **Sol → Terra → Luna**. Terra
+  decomposes only the supplied boundary and returns `SCOPE_CHANGE` when the work
+  becomes Red or exceeds its authority.
+
+This is designed to save tokens without weakening control. Routine workers get
+small packets instead of the coordinator's full transcript; independent slices
+can run without duplicating all project context; repeated waiting is delegated
+to one low-context Luna waiter; and Sol receives compact evidence for final
+synthesis and review. Terra is used only when its decomposition saves more
+context than it costs—simple work skips that extra layer.
+
+Model availability is checked before dispatch. Missing evidence or an
+unavailable required model fails closed with `SCOPE_CHANGE`; Cody never silently
+selects a substitute. These roles configure Codex task orchestration only. They
+do not select models inside your application or production provider.
+
+## Authority boundaries
 
 The task that invokes `$cody-coordinator` is the repository's coordinator;
-Cody never creates a second coordinator by implication. The documented routing
-shape is Sol Medium for coordination, review, and release authority; direct
-Sol-to-Luna for a simple bounded slice; and optional Sol-to-Terra-to-Luna for a
-fixed multi-stage Green/Amber slice. Terra returns `SCOPE_CHANGE` for Red work
-or authority/risk drift, while Sol retains final authority. Provider or
-external-runtime ambiguity, unknown deploy pins, and unavailable consultation
-evidence fail closed rather than selecting an assumed target or substitute.
-These names describe Codex task orchestration only; Cody never selects an
-application's, provider's, customer-facing, or production inference models.
+Cody never creates a second coordinator by implication. Provider or external-
+runtime ambiguity, unknown deploy pins, and unavailable consultation evidence
+fail closed rather than selecting an assumed target. The project owner retains
+product direction, priorities, and consequential approvals. Installing or
+invoking Cody does not authorize commit, push, deploy, production mutation,
+secret access, billing changes, or communication with real recipients.
+
+The machine-checkable [routing contract](references/model-routing-contract.json)
+defines the exact orchestration topology. Substitution is unsupported in v0.1.0.
 
 ## Quick start
 
-Prerequisites are Python 3.11 or newer and Git 2.39 or newer. From a checkout:
+Prerequisites are Python 3.11 or newer and Git 2.39 or newer. Start from an
+extracted verified release bundle, not a source checkout. Verify the downloaded
+ZIP against the SHA-256 published for that exact release asset before
+extraction; see [Installation](docs/INSTALLATION.md). Then run:
+
+```bash
+python3 scripts/install_skill.py --release-root . --check
+python3 scripts/install_skill.py --release-root .
+python3 scripts/install_skill.py --release-root . --verify-discovery
+```
+
+The supported installation is user-scoped at
+`$HOME/.agents/skills/cody-coordinator`, the location in the
+[official Codex skill documentation](https://developers.openai.com/codex/skills).
+After discovery-path verification, restart or refresh Codex if needed. Open the
+task that should own coordination, invoke `$cody-coordinator`, and tell it the
+repository and outcome. Repository-scoped installation is not established by
+this project; Cody writes only the user-scoped `.agents/skills` entry.
+
+To evaluate a source checkout without installing it, use the separate
+[Installation](docs/INSTALLATION.md#evaluate-a-source-checkout) path. For a
+manual CLI smoke from the extracted bundle root, preview initialization before
+allowing mutation:
 
 ```bash
 python3 scripts/coordinator_standard.py --repo /absolute/path/to/project --format human inspect
 python3 scripts/coordinator_standard.py --repo /absolute/path/to/project --format human init --check
-```
-
-Review the check result before allowing a mutating initialization:
-
-```bash
-python3 scripts/coordinator_standard.py --repo /absolute/path/to/project --format human init
-python3 scripts/coordinator_standard.py --repo /absolute/path/to/project --format human doctor
 ```
 
 The `init` command can create or update coordinator-owned files and writes a

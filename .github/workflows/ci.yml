@@ -55,3 +55,9 @@ jobs:
           python scripts/coordinator_standard.py --repo . --format json init > windows-result.json
           if not "%ERRORLEVEL%"=="2" exit /b 1
           python -c "import json; p=json.load(open('windows-result.json')); assert p['blockers'][0]['code']=='unsupported_platform'"
+          python scripts/install_skill.py --release-root . --check > windows-install.json
+          if not "%ERRORLEVEL%"=="2" exit /b 1
+          python -c "import json; p=json.load(open('windows-install.json')); assert p['code']=='unsupported_platform'"
+          python scripts/quick_validate.py --release-root . > windows-archive.json
+          if not "%ERRORLEVEL%"=="2" exit /b 1
+          python -c "import json; p=json.load(open('windows-archive.json')); assert 'unsupported on this platform' in p['error']"

@@ -189,6 +189,10 @@ class CliTests(unittest.TestCase):
 
 
 class SkillPackageTests(unittest.TestCase):
+    def test_coordinator_requires_explicit_skill_invocation(self) -> None:
+        metadata = (SKILL_ROOT / "agents/openai.yaml").read_text(encoding="utf-8")
+        self.assertIn("allow_implicit_invocation: false", metadata)
+
     def test_skill_frontmatter_triggers_and_progressive_disclosure(self) -> None:
         path = SKILL_ROOT / "SKILL.md"
         text = path.read_text(encoding="utf-8")
@@ -202,7 +206,7 @@ class SkillPackageTests(unittest.TestCase):
     def test_skill_links_resolve_and_operating_contract_is_explicit(self) -> None:
         text = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         links = re.findall(r"\]\((references/[^)]+)\)", text)
-        self.assertEqual(6, len(set(links)))
+        self.assertEqual(7, len(set(links)))
         for relative in links:
             self.assertTrue((SKILL_ROOT / relative).is_file(), relative)
         required = (
@@ -280,8 +284,9 @@ class DocumentationTests(unittest.TestCase):
         for command in (
             "python3 scripts/install_skill.py --release-root . --check",
             "python3 scripts/install_skill.py --release-root .",
-            "python3 scripts/install_skill.py --release-root . --uninstall --check",
-            "python3 scripts/install_skill.py --release-root . --uninstall --approve-removal",
+            'python3 "$HOME/.agents/skills/cody-coordinator/scripts/install_skill.py"',
+            '--release-root "$HOME/.agents/skills/cody-coordinator" --uninstall --check',
+            "--approve-removal <current-decision-token>",
         ):
             self.assertIn(command, text)
         self.assertRegex(text, r"\binstalled offline\b")
@@ -305,12 +310,17 @@ class ReleaseIntegrityTests(unittest.TestCase):
         self.assertEqual(1, manifest["schema_version"])
         self.assertEqual("0.1.0", manifest["standard_version"])
         self.assertIn("python>=3.11", manifest["runtime"])
+        self.assertRegex(manifest["source_content_sha256"], r"^[0-9a-f]{64}$")
         self.assertEqual(sorted(manifest["files"], key=lambda value: value.encode()), manifest["files"])
         checksum_text = (RELEASE_ROOT / "SHA256SUMS").read_text(encoding="utf-8")
         self.assertRegex(checksum_text, r"^(?:[0-9a-f]{64}  [^\n]+\n)+$")
         self.assertNotIn("  SHA256SUMS\n", checksum_text)
         builder = self.builder_module()
         checksums = builder.verify_checksums(RELEASE_ROOT)
+        self.assertEqual(
+            manifest["source_content_sha256"],
+            builder.verify_source_content(RELEASE_ROOT, manifest),
+        )
         builder.validate_archive(RELEASE_ZIP, checksums)
         with zipfile.ZipFile(RELEASE_ZIP) as archive:
             self.assertNotIn(".DS_Store", "\n".join(archive.namelist()))
@@ -424,6 +434,42 @@ class ReleaseIntegrityTests(unittest.TestCase):
 
             with self.assertRaises(builder.ReleaseError):
                 builder.build_release(root, forged_zip, check=True)
+
+    def test_manifest_source_content_hash_rejects_rechecksummed_tampering(self) -> None:
+        builder = self.builder_module()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "release"
+            shutil.copytree(
+                RELEASE_ROOT,
+                root,
+                ignore=shutil.ignore_patterns(".DS_Store", "__pycache__", "*.pyc"),
+            )
+            (root / "README.md").write_text("changed release source\n", encoding="utf-8")
+            inventory = builder.inventory_release(root)
+            (root / "SHA256SUMS").write_bytes(builder._checksum_bytes(root, inventory))
+
+            with self.assertRaises(builder.ReleaseError):
+                builder.verify_source_content(root)
+
+    def test_manifest_rejects_unsafe_paths_before_source_hashing(self) -> None:
+        builder = self.builder_module()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = {
+                "schema_version": 1,
+                "standard_name": "cody-coordinator",
+                "standard_version": "0.1.0",
+                "runtime": "python>=3.11; git>=2.39",
+                "archive": "deterministic-zip-stored-v1",
+                "source_content_sha256": "0" * 64,
+                "files": ["/dev/zero"],
+            }
+            (root / "release_manifest.json").write_text(
+                json.dumps(manifest) + "\n", encoding="utf-8"
+            )
+
+            with self.assertRaisesRegex(builder.ReleaseError, "unsafe file path"):
+                builder._load_manifest(root)
 
     def test_safe_extract_rejects_symlinked_member_parent(self) -> None:
         builder = self.builder_module()
@@ -606,11 +652,13 @@ class InstallerTests(unittest.TestCase):
     def setUp(self) -> None:
         self.context = tempfile.TemporaryDirectory()
         self.temp = Path(self.context.name)
-        self.home = self.temp / "codex-home"
+        self.user_home = self.temp / "user-home"
+        self.user_home.mkdir(mode=0o700)
+        self.home = self.user_home / ".agents"
         self.home.mkdir(mode=0o700)
         self.environment = {
             **os.environ,
-            "CODEX_HOME": str(self.home),
+            "HOME": str(self.user_home),
             "PYTHONDONTWRITEBYTECODE": "1",
         }
 
@@ -662,22 +710,49 @@ class InstallerTests(unittest.TestCase):
     def test_first_install_exact_noop_and_uninstall_token(self) -> None:
         checked = self.run_installer("--check")
         self.assertEqual(0, checked.returncode, checked.stdout)
-        self.assertTrue(json.loads(checked.stdout)["changed"])
+        preview = json.loads(checked.stdout)
+        self.assertTrue(preview["changed"])
+        self.assertEqual("user-agents-home", preview["installation_scope"])
+        self.assertEqual("HOME/.agents/skills/cody-coordinator", preview["discovery_path"])
+        missing = self.run_installer("--verify-discovery")
+        self.assertEqual(2, missing.returncode)
+        self.assertEqual("discovery_not_found", json.loads(missing.stdout)["code"])
         self.assertFalse((self.home / "skills/cody-coordinator").exists())
 
         installed = self.run_installer()
         self.assertEqual(0, installed.returncode, installed.stdout)
         stable = self.home / "skills/cody-coordinator"
         self.assertTrue(stable.is_symlink())
+        discovery = self.run_installer("--verify-discovery")
+        self.assertEqual(0, discovery.returncode, discovery.stdout)
+        self.assertEqual("discovery-path-verified", json.loads(discovery.stdout)["action"])
         repeated = self.run_installer()
         self.assertEqual("already-installed", json.loads(repeated.stdout)["action"])
 
-        removal = self.run_installer("--uninstall", "--check")
+        installed_installer = stable / "scripts/install_skill.py"
+        installed_base = [
+            "python3",
+            str(installed_installer),
+            "--release-root",
+            str(stable),
+            "--uninstall",
+        ]
+        removal = subprocess.run(
+            [*installed_base, "--check"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            env=self.environment,
+        )
         payload = json.loads(removal.stdout)
         self.assertEqual(2, removal.returncode)
         token = payload["decision_token"]
-        removed = self.run_installer(
-            "--uninstall", "--approve-removal", token
+        removed = subprocess.run(
+            [*installed_base, "--approve-removal", token],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            env=self.environment,
         )
         self.assertEqual(0, removed.returncode, removed.stdout)
         self.assertFalse(stable.exists())
@@ -723,7 +798,75 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual(2, tampered.returncode)
         self.assertEqual("content_address_conflict", json.loads(tampered.stdout)["code"])
 
-    def test_symlinked_install_parent_cannot_escape_codex_home(self) -> None:
+    def test_quick_validate_runs_archive_only_install_and_inspection(self) -> None:
+        quick_validate = SKILL_ROOT / "scripts/quick_validate.py"
+        result = subprocess.run(
+            ["python3", str(quick_validate), "--release-root", str(RELEASE_ROOT)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
+        )
+
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        payload = json.loads(result.stdout)
+        self.assertEqual("archive-only-quick-validation-passed", payload["action"])
+        self.assertRegex(payload["archive_sha256"], r"^[0-9a-f]{64}$")
+
+    def test_quick_validate_consumes_the_exact_candidate_archive(self) -> None:
+        import build_release
+
+        expected = build_release._sha256(RELEASE_ZIP)
+        result = subprocess.run(
+            [
+                "python3",
+                str(SKILL_ROOT / "scripts/quick_validate.py"),
+                "--archive",
+                str(RELEASE_ZIP),
+                "--expected-sha256",
+                expected,
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
+        )
+
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+        self.assertEqual(expected, json.loads(result.stdout)["archive_sha256"])
+
+    def test_quick_validate_archive_requires_external_sha256(self) -> None:
+        result = subprocess.run(
+            [
+                "python3",
+                str(SKILL_ROOT / "scripts/quick_validate.py"),
+                "--archive",
+                str(RELEASE_ZIP),
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+
+        self.assertEqual(2, result.returncode)
+        self.assertIn("requires --expected-sha256", json.loads(result.stdout)["error"])
+
+    def test_quick_validate_pins_archive_bytes_before_validation(self) -> None:
+        import build_release
+        import quick_validate
+
+        source = self.temp / "replaceable.zip"
+        pinned = self.temp / "pinned.zip"
+        original = RELEASE_ZIP.read_bytes()
+        source.write_bytes(original)
+
+        digest = quick_validate._pin_archive(source, pinned)
+        source.write_bytes(b"replacement")
+
+        self.assertEqual(build_release._sha256(RELEASE_ZIP), digest)
+        self.assertEqual(original, pinned.read_bytes())
+
+    def test_symlinked_install_parent_cannot_escape_agents_home(self) -> None:
         outside = self.temp / "outside"
         outside.mkdir()
         (self.home / "coordinator-standards").symlink_to(
@@ -799,7 +942,7 @@ class InstallerTests(unittest.TestCase):
                 store.symlink_to(escape, target_is_directory=True)
             return result
 
-        with mock.patch.dict(os.environ, {"CODEX_HOME": str(self.home)}), mock.patch.object(
+        with mock.patch.dict(os.environ, {"HOME": str(self.user_home)}), mock.patch.object(
             install_skill,
             "_open_chain_fd",
             side_effect=swapping_open_chain,

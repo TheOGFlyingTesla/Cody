@@ -25,11 +25,45 @@ Before publishing a release, a maintainer should:
    archive before distributing it; and
 8. record unresolved risks instead of replacing them with marketing claims.
 
+## Artifact and source verification
+
+Build the candidate ZIP from a clean reviewed tree and retain both values in
+the release record:
+
+```bash
+git rev-parse --verify HEAD^{commit}
+python3 scripts/build_release.py --release-root . --output cody-coordinator-0.1.0.zip
+python3 scripts/build_release.py --release-root . --output cody-coordinator-0.1.0.zip --check
+python3 scripts/quick_validate.py --archive cody-coordinator-0.1.0.zip \
+  --expected-sha256 <archive_sha256-from-build-output>
+```
+
+The builder reports an `archive_sha256` for the ZIP and a
+`source_content_sha256` for the allowlisted source-file paths and bytes. Record
+the exact Git commit separately: the content hash identifies the bundled source
+inventory, while a Git commit identifies the reviewed source history.
+
+`SHA256SUMS` is an inventory of the unpacked bundle members; it is not the ZIP
+asset's checksum. Publish the builder's ZIP SHA-256 alongside the asset, then
+verify the downloaded ZIP against that published value before extraction. After
+safe extraction, the installer verifies the manifest, source-content hash, and
+member checksums before installing. These checks prove consistency, not the
+identity of the publisher by themselves.
+
+Use an annotated signed Git tag for a public release when maintainers have an
+established signing process, and publish the key-verification instructions with
+the release. Cody does not currently claim that any tag or ZIP is signed.
+
 The GitHub Actions workflow is one independent hosted proof lane. It runs on
 pull requests and pushes, cancels superseded runs, and runs the complete Python
 3.11 suite on Ubuntu and macOS. A separate Windows job proves read-only
-inspection and explicit fail-closed mutation. It uses no secrets, schedules,
-deployment steps, or path filters that could skip runtime proof.
+inspection and explicit fail-closed mutation. The existing Ubuntu and macOS
+jobs run `quick_validate` through the complete test suite. The suite both builds
+a deterministic ZIP from source and consumes an explicit candidate archive by
+its expected SHA-256. It safely extracts into a clean temporary location,
+installs from the extracted archive only, verifies the discovery path, and runs
+installed-skill inspection. It uses no secrets, schedules, deployment steps, or
+path filters that could skip runtime proof.
 
 ## Program references
 

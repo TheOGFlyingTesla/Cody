@@ -17,6 +17,9 @@ stable API.
   Python 3.11 matrix on Ubuntu, Windows, and macOS.
 - A deterministic allowlisted release builder, checksum-bound installer,
   repository doctor, recovery journal, and executable behavioral checks.
+- An explicit Codex skill workflow with one durable coordinator task and
+  token-conscious Sol Medium → Luna High or Sol Medium → Terra Extra High →
+  Luna High orchestration.
 
 ### Known boundaries
 

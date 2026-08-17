@@ -2,7 +2,11 @@
 
 ## Choose the smallest sound shape
 
-Use the coordinator for requirements, decisions, synthesis, and simple work. Use read-only workers for uncertainty, risky paths, logs, or test discovery. Use parallel workers only when outcomes are independent and write sets do not overlap; sequence work when ownership is uncertain.
+Use Sol for requirements, decisions, packets, synthesis, review, and release.
+Route authorized implementation slices, including simple slices, to Luna High.
+Use read-only workers for uncertainty, risky paths, logs, or test discovery. Use
+parallel workers only when outcomes are independent and write sets do not
+overlap; sequence work when ownership is uncertain.
 
 Each worker packet includes:
 
@@ -33,13 +37,15 @@ coordinator must correct the packet or managed starting state.
 
 Use `/plan` when requirements, ownership, or validation need to be explicit. Use the persistent goal mechanism for long-running work that must survive compaction. Keep goals concrete and mark them complete only after validation and review gates pass.
 
-Route by capability and role; model names make the current topology explicit.
-The explicit topology is Sol Medium as primary coordinator, reviewer, and
-release owner; Terra Extra High as an optional junior coordinator only for a
-fixed multi-stage Green/Amber boundary; and Luna High as the default bounded
-scout, worker, executor, and waiter. A simple slice goes directly
-Sol-to-Luna. A suitable multi-stage slice goes Sol-to-Terra-to-Luna, with Terra
-receiving a compact no-history packet.
+Route by capability and role. Use
+[the executable routing contract](model-routing-contract.json) as the one
+source for model names, roles, routes, unavailable-model handling, and the
+live-observation schema. The declared named topology is Sol Medium as primary
+coordinator, reviewer, and release owner; Terra Extra High as junior
+coordinator only for a fixed multi-stage Green/Amber boundary; and Luna High
+as the bounded scout, worker, executor, and waiter. A simple slice is Sol
+Medium → Luna High. A suitable multi-stage slice is Sol Medium → Terra Extra
+High → Luna High, with Terra receiving a compact no-history packet.
 
 Terra may decompose only the supplied Green/Amber boundary, dispatch bounded
 Luna work, enforce the supplied acceptance oracle, and return one structured
@@ -49,14 +55,40 @@ the packet. Sol retains requirements, risk classification, architecture/product
 judgment, privacy/security/identity review, concurrency and destructive
 decisions, P0/P1 adjudication, exact-diff review, final synthesis, and release.
 
-Model names express this topology, not authority. If names or availability
-change, use the nearest capable route without claiming unavailable-model
-evidence. An unavailable capability never silently grants a stronger worker or
-coordinator role.
+Model names express this topology, not authority. Before dispatch, choose the
+declared route and pass every model the native surface actually reports to
+`$SKILL_ROOT/scripts/routing_contract.py` with repeated `--available` options.
+If availability evidence cannot be observed, report
+`availability_evidence_required` and return `SCOPE_CHANGE`; do not treat missing
+evidence as observed unavailability. If a named model is observed unavailable,
+report its name and return `SCOPE_CHANGE`; no route is selected. Never use a
+nearest-capable fallback or a silent substitution. Substitution is unsupported
+in v0.1.0; changing the declared topology requires a future contract revision.
+An unavailable capability never grants a stronger worker or coordinator role.
 
 This topology governs Codex task orchestration only. It never enables or
 selects Sol, Terra, or Luna inside the application, provider runtime,
 customer-facing model routing, or production inference path.
+
+## Opt-in routing observation conformance
+
+Ordinary CI resolves only the local routing contract; it never invokes a live
+Codex command or consumes credits. To check a real, explicitly authorized
+Codex routing exercise, use the version-appropriate local observer supplied by
+the operator. Cody does not guess a Codex CLI or API command. The observer must
+emit JSON with `route`, `available_models`, and `assignments`, then either save
+that JSON and run:
+
+```bash
+python3 "$SKILL_ROOT/scripts/routing_live_eval.py" --observation routing-observation.json
+```
+
+or pass the observer as the final argument sequence after
+`--command`. The harness checks whether the supplied observation conforms to
+the canonical contract and reports a mismatch or named-model unavailability;
+it never silently substitutes a model. Operator-authored JSON is self-attested
+evidence, not proof that Codex executed the claimed route. Claim a live product
+result only when the operator supplies a provenance-bearing native observer.
 
 ## Risk and review
 

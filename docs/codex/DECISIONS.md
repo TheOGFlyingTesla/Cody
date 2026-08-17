@@ -100,6 +100,21 @@ Append durable product, architecture, safety, or operating decisions. Factual co
   capability- and proof-based”; all provider-neutral and proof-based boundaries
   remain in force.
 
+### 2026-08-16 — Unavailable named coordinator models fail closed
+
+- Decision: If a declared Sol, Terra, or Luna model is unavailable, Cody reports
+  the unavailable model and returns `SCOPE_CHANGE`. It never chooses a nearest
+  or silent substitute. Substitution is unsupported in v0.1.0; changing the
+  declared topology requires a future contract revision.
+- Reason: A silent capability substitution makes the public skill behave
+  differently from its declared topology and can change cost or review quality
+  without informed approval.
+- Owner: Project owner.
+- Affected scope: Routing contract, skill instructions, managed repository
+  contract, documentation, and behavioral checks.
+- Supersedes: The unavailable-model fallback in “Public routing preserves the
+  proven coordinator topology.”
+
 Use this entry shape:
 
 ```text

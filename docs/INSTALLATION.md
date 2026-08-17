@@ -1,11 +1,54 @@
 # Installation
 
-Cody v0.1.0 is a preview. There are two different activities: evaluating the
-coordinator from this source checkout, and installing a verified skill from a
-generated release bundle. Keeping those paths separate prevents an incomplete
-checkout from being mistaken for a release artifact.
+Cody v0.1.0 is a preview. Start by installing a verified release bundle. Source
+checkout evaluation is a separate, read-only activity and does not make that
+checkout discoverable as an installed skill.
 
-## Evaluate from a checkout
+## Install a verified bundle
+
+Before extraction, compare the downloaded ZIP's SHA-256 with the value published
+for that exact release asset:
+
+```bash
+# macOS
+shasum -a 256 cody-coordinator-0.1.0.zip
+
+# Linux
+sha256sum cody-coordinator-0.1.0.zip
+```
+
+Do not continue on a mismatch. After verification, extract the release ZIP to
+an empty directory and run these commands from that bundle root:
+
+```bash
+python3 scripts/install_skill.py --release-root . --check
+python3 scripts/install_skill.py --release-root .
+python3 scripts/install_skill.py --release-root . --verify-discovery
+```
+
+The check is read-only. The install verifies the release inventory and
+checksums, then installs only to the supported user scope:
+`$HOME/.agents/skills/cody-coordinator`. `--verify-discovery` proves that the
+expected immutable target and
+the stable user-scoped discovery path are present. Its JSON output identifies
+the scope and stable path without printing the local home directory. It does
+not prove that an already-running Codex process has refreshed its skill catalog.
+Restart or refresh Codex if needed, then invoke `$cody-coordinator` to confirm
+product-level discovery.
+
+This project has no established repository-scoped installation path. In
+particular, it does not create or manage repository-scoped `.agents/skills`.
+Do not copy the installed skill into another path and claim discovery-path
+verification passed.
+
+On platforms where the secure descriptor operations are unavailable, install
+and discovery-path verification fail closed with `unsupported_platform`. See
+[Portability](PORTABILITY.md) for the tested boundary.
+
+After successful verification, invoke `$cody-coordinator` in the Codex task
+that should coordinate the target repository.
+
+## Evaluate a source checkout
 
 Install Python 3.11+ and Git 2.39+, clone or download the repository, then run
 the read-only inspection against an explicit project path:
@@ -39,7 +82,7 @@ Initialization may create or update `AGENTS.md`'s managed coordinator block,
 boundary decision in the output before proceeding. Do not treat `init` as a
 generic project scaffolder.
 
-## Verified skill bundles
+## Bundle boundary
 
 `scripts/install_skill.py` is designed for a generated Cody release bundle
 whose root is the `cody-coordinator` skill itself, with `SKILL.md`, `VERSION`,
@@ -48,34 +91,26 @@ is no nested or companion package in the current layout. The source
 checkout is not an installable bundle until its manifest and checksums have
 been generated; an installer run against the wrong shape should fail closed.
 
-When a verified bundle is available, run its plan first:
+The installer uses the documented user skill root under `$HOME/.agents`. It
+uses a content-addressed destination and refuses to replace an unknown existing
+skill path without a current decision token. A bundle can be installed offline
+after it has been obtained and verified.
+
+The installed skill retains its verified release metadata, so uninstall does
+not depend on keeping the downloaded ZIP or extraction directory. Preview it
+from the stable installed path:
 
 ```bash
-python3 scripts/install_skill.py --release-root . --check
-```
-
-Then install only after reviewing the result:
-
-```bash
-python3 scripts/install_skill.py --release-root .
-```
-
-The installer uses `CODEX_HOME` when set, otherwise the local Codex home. It
-verifies checksums, uses a content-addressed destination, and refuses to
-replace an unknown existing skill path without a current decision token. A
-bundle can be installed offline after it has been obtained and verified.
-
-Uninstall is similarly explicit and should be previewed before removal:
-
-```bash
-python3 scripts/install_skill.py --release-root . --uninstall --check
-python3 scripts/install_skill.py --release-root . --uninstall --approve-removal <current-decision-token>
+python3 "$HOME/.agents/skills/cody-coordinator/scripts/install_skill.py" \
+  --release-root "$HOME/.agents/skills/cody-coordinator" --uninstall --check
+python3 "$HOME/.agents/skills/cody-coordinator/scripts/install_skill.py" \
+  --release-root "$HOME/.agents/skills/cody-coordinator" --uninstall \
+  --approve-removal <current-decision-token>
 ```
 
 Never paste a real token, credential, or private path into documentation or a
 support request.
 
-Installing Cody does not create a second coordinator by implication. In an
-existing Codex task, invoke `$cody-coordinator` to make that task the durable
-coordinator for the target repository. A request to create or replace that task
-must carry the exact repository identity and a compact recovery packet.
+Installing Cody does not create a second coordinator by implication. A request
+to create or replace the coordinator task must carry the exact repository
+identity and a compact recovery packet.

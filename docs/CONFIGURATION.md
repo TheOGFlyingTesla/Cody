@@ -23,13 +23,16 @@ target, secret manager, remote machine, or model account.
 
 ## Capability routing
 
-Cody's coordination topology is explicit but advisory about names: Sol Medium
+Cody's coordination topology is declared in the executable
+[model-routing contract](../references/model-routing-contract.json): Sol Medium
 holds primary coordination, review, and release authority; Terra Extra High is
-optional for a fixed multi-stage Green/Amber boundary; and Luna High is the
-default bounded scout, worker, executor, and waiter. A simple slice is
-Sol-to-Luna; a suitable multi-stage slice is Sol-to-Terra-to-Luna. Named-model
-availability never changes role authority: use the nearest capable route and
-record unavailable model evidence honestly.
+the junior coordinator for a fixed multi-stage Green/Amber boundary; and Luna
+High is the bounded scout, worker, executor, and waiter. A simple slice is Sol
+Medium → Luna High; a multi-stage slice is Sol Medium → Terra Extra High → Luna
+High. Named-model availability never changes role authority: report any
+unavailable named model and return `SCOPE_CHANGE`. Never choose a nearest or
+silent substitute. Substitution is unsupported in v0.1.0; changing the declared
+topology requires a future contract revision.
 
 This topology configures Codex task orchestration only. It does not configure
 application, provider-runtime, customer-facing, or production inference model
@@ -56,13 +59,16 @@ installed version.
 
 ## Local installation path
 
-The release installer honors `CODEX_HOME` when provided and otherwise uses the
-local Codex home. The chosen directory must be absolute, user-owned, and not
+The release installer uses the documented user skill root under
+`$HOME/.agents`. The chosen directory must be absolute, user-owned, and not
 group- or world-writable. The installer does not accept a path merely because
 it exists, and it refuses unknown existing skill entries.
 
 This setting applies to a verified release bundle; it is not a project
 configuration file and is not needed for direct CLI evaluation.
+The only established scope is `$HOME/.agents/skills/cody-coordinator` on
+supported Unix-like platforms. Repository-scoped skill installation is not
+written by Cody.
 
 ## Optional capabilities
 

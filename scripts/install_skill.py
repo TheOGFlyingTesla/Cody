@@ -18,17 +18,22 @@ from typing import Any, Sequence
 sys.dont_write_bytecode = True
 
 from build_release import (
+    CHECKSUM_NAME,
+    EXECUTABLES,
     MANIFEST_NAME,
     ReleaseError,
     _load_manifest,
     inventory_release,
     redact_release_text,
     verify_checksums,
+    verify_source_content,
 )
 
 
 SKILL_NAME = "cody-coordinator"
 VERSION = "0.1.0"
+INSTALLATION_SCOPE = "user-agents-home"
+DISCOVERY_PATH = "HOME/.agents/skills/cody-coordinator"
 
 
 class InstallError(RuntimeError):
@@ -44,40 +49,41 @@ def _result(ok: bool, changed: bool, action: str, **metadata: Any) -> dict[str, 
         "changed": changed,
         "action": action,
         "standard_version": VERSION,
+        "installation_scope": INSTALLATION_SCOPE,
+        "discovery_path": DISCOVERY_PATH,
         **metadata,
     }
 
 
-def _codex_home() -> Path:
-    raw = os.environ.get("CODEX_HOME")
-    path = Path(raw).expanduser() if raw else Path.home() / ".codex"
+def _agents_home() -> Path:
+    path = Path.home() / ".agents"
     if not path.is_absolute():
-        raise InstallError("unsafe_codex_home", "Codex home must be an absolute path.")
+        raise InstallError("unsafe_agents_home", "Agents home must be an absolute path.")
     return path
 
 
 def _safe_owned_directory(path: Path, *, may_be_absent: bool) -> None:
     _require_secure_filesystem_support()
     if path.is_symlink():
-        raise InstallError("unsafe_codex_home", "Codex home must not be a symlink.")
+        raise InstallError("unsafe_agents_home", "Agents home must not be a symlink.")
     probe = path if path.exists() else path.parent
     if not probe.is_dir() or probe.is_symlink():
-        raise InstallError("unsafe_codex_home", "Codex home parent must be a real directory.")
+        raise InstallError("unsafe_agents_home", "Agents home parent must be a real directory.")
     info = probe.stat()
     if info.st_uid != os.getuid() or info.st_mode & 0o022:
         raise InstallError(
-            "unsafe_codex_home",
-            "Codex home or its parent must be user-owned and not group/world writable.",
+            "unsafe_agents_home",
+            "Agents home or its parent must be user-owned and not group/world writable.",
         )
     if path.exists():
         info = path.stat()
         if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o022:
             raise InstallError(
-                "unsafe_codex_home",
-                "Codex home must be a user-owned, non-group/world-writable directory.",
+                "unsafe_agents_home",
+                "Agents home must be a user-owned, non-group/world-writable directory.",
             )
     elif not may_be_absent:
-        raise InstallError("unsafe_codex_home", "Codex home does not exist.")
+        raise InstallError("unsafe_agents_home", "Agents home does not exist.")
 
 
 def _skill_checksums(release_root: Path) -> dict[str, str]:
@@ -88,11 +94,11 @@ def _skill_checksums(release_root: Path) -> dict[str, str]:
         raise InstallError("invalid_release", "Release inventory differs from its manifest.")
     if list(checksums) != inventory:
         raise InstallError("invalid_release", "Release checksums differ from its inventory.")
-    selected = {
-        relative: digest
-        for relative, digest in checksums.items()
-        if relative not in {MANIFEST_NAME, "SHA256SUMS"}
-    }
+    verify_source_content(release_root, manifest)
+    selected = dict(checksums)
+    selected[CHECKSUM_NAME] = hashlib.sha256(
+        (release_root / CHECKSUM_NAME).read_bytes()
+    ).hexdigest()
     if not selected or "SKILL.md" not in selected or "VERSION" not in selected:
         raise InstallError("invalid_release", "Release checksums omit the coordinator skill.")
     version_path = release_root / "VERSION"
@@ -157,7 +163,7 @@ def _open_home_fd(home: Path) -> tuple[int, tuple[int, int]]:
         before = home.lstat()
         descriptor = os.open(home, _directory_flags())
     except OSError as error:
-        raise InstallError("unsafe_codex_home", "Codex home could not be opened safely.") from error
+        raise InstallError("unsafe_agents_home", "Agents home could not be opened safely.") from error
     opened = os.fstat(descriptor)
     if (
         stat.S_ISLNK(before.st_mode)
@@ -165,7 +171,7 @@ def _open_home_fd(home: Path) -> tuple[int, tuple[int, int]]:
         or (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino)
     ):
         os.close(descriptor)
-        raise InstallError("unsafe_codex_home", "Codex home changed while opening.")
+        raise InstallError("unsafe_agents_home", "Agents home changed while opening.")
     return descriptor, (opened.st_dev, opened.st_ino)
 
 
@@ -397,11 +403,7 @@ def _copy_skill_fd(
             flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
             if hasattr(os, "O_NOFOLLOW"):
                 flags |= os.O_NOFOLLOW
-            mode = 0o755 if relative in {
-                "scripts/coordinator_standard.py",
-                "scripts/build_release.py",
-                "scripts/install_skill.py",
-            } else 0o644
+            mode = 0o755 if relative in EXECUTABLES else 0o644
             file_fd: int | None = None
             try:
                 file_fd = os.open(file_name, flags, mode, dir_fd=parent_fd)
@@ -523,7 +525,7 @@ def install(
     root = release_root.resolve(strict=True)
     checksums = _skill_checksums(root)
     digest = _content_hash(checksums)
-    home = _codex_home()
+    home = _agents_home()
     _safe_owned_directory(home, may_be_absent=True)
     if not home.exists():
         if check:
@@ -637,7 +639,7 @@ def uninstall(*, check: bool, approval: str | None, release_root: Path) -> dict[
     _require_secure_filesystem_support()
     checksums = _skill_checksums(release_root.resolve(strict=True))
     digest = _content_hash(checksums)
-    home = _codex_home()
+    home = _agents_home()
     _safe_owned_directory(home, may_be_absent=False)
     home_fd, home_identity = _open_home_fd(home)
     skills_fd: int | None = None
@@ -684,6 +686,23 @@ def uninstall(*, check: bool, approval: str | None, release_root: Path) -> dict[
         os.close(home_fd)
 
 
+def verify_discovery(release_root: Path) -> dict[str, Any]:
+    """Prove that this verified release is at Cody's supported discovery path."""
+
+    result = install(release_root, check=True, approval=None)
+    if result["action"] != "already-installed":
+        raise InstallError(
+            "discovery_not_found",
+            "The verified skill is not installed at the supported user-scoped discovery path.",
+        )
+    return _result(
+        True,
+        False,
+        "discovery-path-verified",
+        content_hash=result["content_hash"],
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Install the verified Cody Coordinator skill")
     parser.add_argument("--release-root", type=Path, required=True)
@@ -691,21 +710,25 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--approve-replacement")
     parser.add_argument("--uninstall", action="store_true")
     parser.add_argument("--approve-removal")
+    parser.add_argument("--verify-discovery", action="store_true")
     arguments = parser.parse_args(argv)
     try:
-        result = (
-            uninstall(
+        if arguments.uninstall and arguments.verify_discovery:
+            parser.error("--uninstall and --verify-discovery cannot be combined")
+        if arguments.verify_discovery:
+            result = verify_discovery(arguments.release_root)
+        elif arguments.uninstall:
+            result = uninstall(
                 check=arguments.check,
                 approval=arguments.approve_removal,
                 release_root=arguments.release_root,
             )
-            if arguments.uninstall
-            else install(
+        else:
+            result = install(
                 arguments.release_root,
                 check=arguments.check,
                 approval=arguments.approve_replacement,
             )
-        )
     except (InstallError, ReleaseError) as error:
         payload = {
             "ok": False,
