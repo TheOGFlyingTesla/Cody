@@ -10,6 +10,11 @@ while it is in preview. A preview release may still change interfaces. The
 coordinator standard version reported by the runtime is an implementation
 identity and must not be presented as the public project version.
 
+Cody plugin `v0.1.1` ships coordinator standard `v0.1.0`. The plugin version,
+Git tag, changelog entry, and plugin-facing documentation advance together.
+The earlier `v0.1.0` tag remains the skill-only offline release; incremental
+plugin releases never rewrite that tag or claim it contained later packaging.
+
 ## Release checklist
 
 Before publishing a release, a maintainer should:
@@ -24,6 +29,12 @@ Before publishing a release, a maintainer should:
 7. build the deterministic bundle and verify its manifest, checksums, and
    archive before distributing it; and
 8. record unresolved risks instead of replacing them with marketing claims.
+
+For a plugin release, also install from the public repository in a fresh,
+isolated Codex profile using the exact documented marketplace and plugin
+commands. Record the Codex version, OS, main SHA, `codex plugin list` result,
+and a fresh-task `$cody-coordinator` invocation. A local checkout or direct
+plugin path is not a substitute for this public-route smoke.
 
 ## Artifact and source verification
 

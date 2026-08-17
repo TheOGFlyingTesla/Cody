@@ -1,6 +1,7 @@
 # Installation
 
-Cody v0.1.0 is a preview. The standard installation is the Cody Codex plugin.
+Cody plugin v0.1.1 is a preview and ships coordinator standard v0.1.0. The
+standard installation is the Cody Codex plugin.
 
 ## Install the plugin
 

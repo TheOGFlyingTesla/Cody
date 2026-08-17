@@ -1,6 +1,7 @@
 # Support
 
-Cody is a v0.1.0 preview maintained as a community project. Start with the
+Cody plugin v0.1.1 is a preview maintained as a community project and ships
+coordinator standard v0.1.0. Start with the
 [README](README.md), [Quick start](docs/QUICKSTART.md),
 [Configuration](docs/CONFIGURATION.md), and [Limitations](docs/LIMITATIONS.md).
 

@@ -4,6 +4,28 @@ All notable public-project changes are recorded here. Cody is currently in
 preview, so this log describes the repository surface rather than promising a
 stable API.
 
+## [0.1.1] — Codex plugin packaging
+
+### Added
+
+- A repository marketplace named `cody` and the self-contained
+  `cody-codex-coordinator` plugin.
+- The standard public installation flow through `codex plugin marketplace add`
+  and `codex plugin add`.
+- Deterministic source-to-plugin runtime synchronization, drift detection, and
+  a black-box copied-plugin execution check.
+- A release gate requiring exact public clean-install evidence from an isolated
+  Codex profile before publication.
+
+### Version boundary
+
+- Cody plugin `0.1.1` ships coordinator standard `0.1.0`.
+- The existing `v0.1.0` release remains the earlier checksum-verified,
+  skill-only offline bundle and is not rewritten or represented as containing
+  marketplace packaging.
+- Windows plugin execution remains preview-level; hosted CI proves read-only
+  fail-closed behavior, not a complete Windows plugin invocation.
+
 ## [0.1.0] — Preview
 
 ### Added
