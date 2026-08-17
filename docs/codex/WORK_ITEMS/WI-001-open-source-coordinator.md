@@ -81,17 +81,13 @@ communication is authorized.
 
 ## Current disposition
 
-Transplanted from reviewed source candidate
-`4e758adea6390f333eee6eb737fdeb634deb364d` onto the clean public history.
-Orientation, the Terra/Luna portability audit, and a privacy-safe ChatGPT Pro
-consultation are complete.
-The frozen design is a clean, coordinator-only, provider-neutral root skill;
-the private predecessor compatibility layer has been removed. The current
-uncommitted repair restores the explicit Sol Medium → Terra Extra High → Luna
-High task-orchestration topology, takeover/current-version gates, recovery and
-provider fail-closed boundaries, mandatory Sol review, executable contract
-checks, and a normal-environment installer smoke. The full 152-test suite,
-deterministic bundle build, isolated install, skill validation, doctor, blind
-forward use, and focused independent re-review pass. The public candidate
-commit, release replacement, hosted CI, and final published-SHA verification
-remain pending.
+The generic, provider-neutral coordinator skill is published at `v0.1.0` with
+its checksum-verified offline installer. The current bounded follow-up packages
+the same canonical runtime as the self-contained `cody-codex-coordinator`
+plugin and adds the repository marketplace named `cody`. The public quick path
+is marketplace installation from `main`, restart Codex, then explicitly invoke
+`$cody-coordinator`; the existing `v0.1.0` tag is not claimed to contain plugin
+packaging. Runtime mirroring is deterministic and byte-checked, and a copied
+plugin black-box test proves the coordinator runs without its source checkout.
+Publication awaits exact-diff review, an exact committed-candidate validation,
+hosted CI, and live GitHub readback. The deeper security scan remains deferred.

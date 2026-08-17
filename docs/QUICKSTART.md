@@ -1,33 +1,20 @@
 # Quick start
 
-This is the smallest useful pass through Cody. Start from an extracted verified
-release bundle. It is intentionally explicit so you can stop before any
-mutation.
+This is the smallest useful pass through Cody.
 
-## 1. Preview the user-scoped installation
+## 1. Add the Cody marketplace
 
 ```bash
-python3 scripts/install_skill.py --release-root . --check
+codex plugin marketplace add TheOGFlyingTesla/Cody --ref main
 ```
 
-The supported discovery scope is `$HOME/.agents/skills/cody-coordinator`.
-This project does not establish a repository-scoped installation path.
-
-## 2. Install and verify the discovery path
+## 2. Install Cody and restart Codex
 
 ```bash
-python3 scripts/install_skill.py --release-root .
-python3 scripts/install_skill.py --release-root . --verify-discovery
+codex plugin add cody-codex-coordinator@cody
 ```
 
-The verification command must report the `user-agents-home` installation scope
-and the `HOME/.agents/skills/cody-coordinator` discovery path. It does not print
-the local home path. On an unsupported secure filesystem platform, it fails
-closed rather than attempting another scope.
-
-This verifies the installed filesystem path, not a running Codex process's
-refreshed skill catalog. Restart or refresh Codex if needed, then invoke
-`$cody-coordinator` to confirm product-level discovery.
+Restart Codex after installation so the plugin and its skill are loaded.
 
 ## 3. Invoke Cody, inspect, and preview initialization
 
@@ -104,6 +91,9 @@ journal, and file hashes. Recovery is not a general-purpose undo command.
 If you only want to evaluate a source checkout, do not run its installer.
 Follow [Installation: Evaluate a source checkout](INSTALLATION.md#evaluate-a-source-checkout)
 instead; a checkout is not a generated bundle or a discovered installed skill.
+
+For an audited or offline installation, use the verified release bundle flow in
+[Installation](INSTALLATION.md#advanced-offline-installation).
 
 ## Stop conditions
 

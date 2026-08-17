@@ -1,0 +1,35 @@
+{
+  "name": "cody-codex-coordinator",
+  "version": "0.1.0",
+  "description": "Turn one Codex task into a durable repository coordinator with bounded orchestration and recovery.",
+  "author": {
+    "name": "Cody Contributors"
+  },
+  "repository": "https://github.com/TheOGFlyingTesla/Cody",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "coordination",
+    "repositories",
+    "orchestration",
+    "recovery"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Cody — Codex Coordinator",
+    "shortDescription": "Coordinate, route, and recover repository work.",
+    "longDescription": "Cody establishes one durable repository coordinator that verifies state, routes bounded work, preserves checkpoints, and recovers interrupted operations.",
+    "developerName": "Cody Contributors",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Repository coordination",
+      "Task orchestration",
+      "Recovery workflows"
+    ],
+    "defaultPrompt": [
+      "Use $cody-coordinator to take over this repository and report verified status.",
+      "Use $cody-coordinator to plan and coordinate this repository outcome.",
+      "Use $cody-coordinator to recover this interrupted repository task."
+    ]
+  }
+}

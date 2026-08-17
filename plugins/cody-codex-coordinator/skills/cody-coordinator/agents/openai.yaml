@@ -1,0 +1,7 @@
+interface:
+  display_name: "Cody — Codex Coordinator"
+  short_description: "Coordinate, route, and recover project work"
+  default_prompt: "Use $cody-coordinator to make this task the repository's durable coordinator. Inspect and reconcile first, then state the next verified action and route bounded work economically."
+
+policy:
+  allow_implicit_invocation: false

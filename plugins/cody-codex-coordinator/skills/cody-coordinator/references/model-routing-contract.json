@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "roles": [
+    {
+      "id": "primary_coordinator",
+      "model": "gpt-5.6-sol",
+      "label": "Sol Medium",
+      "reasoning_effort": "medium",
+      "authority": "requirements, risk classification, exact-diff review, final synthesis, and release"
+    },
+    {
+      "id": "junior_coordinator",
+      "model": "gpt-5.6-terra",
+      "label": "Terra Extra High",
+      "reasoning_effort": "xhigh",
+      "authority": "fixed Green/Amber decomposition, supplied acceptance oracle, and one structured synthesis"
+    },
+    {
+      "id": "bounded_worker",
+      "model": "gpt-5.6-luna",
+      "label": "Luna High",
+      "reasoning_effort": "high",
+      "authority": "bounded execution, focused proof, and typed terminal reporting"
+    }
+  ],
+  "authority_boundaries": {
+    "retained_by_sol": [
+      "requirements_and_risk_classification",
+      "architecture_and_product_judgment",
+      "privacy_security_and_identity",
+      "concurrency_and_destructive_decisions",
+      "p0_p1_adjudication",
+      "exact_diff_review",
+      "final_synthesis",
+      "release"
+    ],
+    "forbidden_for_terra": [
+      "red_work",
+      "architecture_and_product_judgment",
+      "privacy_security_and_identity",
+      "concurrency_and_destructive_decisions",
+      "p0_p1_adjudication",
+      "release"
+    ],
+    "terra_scope_change_triggers": [
+      "red_work",
+      "authority_drift",
+      "risk_drift",
+      "inseparable_judgment"
+    ]
+  },
+  "routes": {
+    "simple": {
+      "role_ids": ["primary_coordinator", "bounded_worker"]
+    },
+    "multi-stage": {
+      "role_ids": ["primary_coordinator", "junior_coordinator", "bounded_worker"]
+    }
+  },
+  "unavailable_named_model_policy": {
+    "code": "named_model_unavailable",
+    "action": "report-unavailable-and-return-scope-change",
+    "substitution": "unsupported-in-v0.1.0; no route is selected"
+  },
+  "live_observation": {
+    "required_fields": ["route", "available_models", "assignments"],
+    "ci_policy": "opt-in only; ordinary CI must not invoke an external Codex command"
+  }
+}

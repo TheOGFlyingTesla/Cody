@@ -1,10 +1,39 @@
 # Installation
 
-Cody v0.1.0 is a preview. Start by installing a verified release bundle. Source
-checkout evaluation is a separate, read-only activity and does not make that
-checkout discoverable as an installed skill.
+Cody v0.1.0 is a preview. The standard installation is the Cody Codex plugin.
 
-## Install a verified bundle
+## Install the plugin
+
+Add the repository as a Codex marketplace, then install Cody:
+
+```bash
+codex plugin marketplace add TheOGFlyingTesla/Cody --ref main
+codex plugin add cody-codex-coordinator@cody
+```
+
+Restart Codex so it loads the installed plugin. In the task that should become
+the repository coordinator, invoke:
+
+```text
+$cody-coordinator
+```
+
+The plugin installs the runtime skill; its local commands require Python 3.11+
+and Git 2.39+. Installing the plugin does not initialize or modify a project.
+Repository changes begin only after an explicit request within the authority
+boundaries documented in [Safety](SAFETY.md).
+
+The plugin contains one explicit-only skill. It declares no MCP server, app,
+authentication flow, telemetry, hosted backend, or runtime network service.
+Installation does not authorize commits, pushes, deployments, secret access,
+billing changes, or external messages. Grant those separately if a task needs
+them.
+
+## Advanced offline installation
+
+The deterministic release bundle remains available for advanced, audited, or
+offline installation without the plugin marketplace. It installs the same
+canonical coordinator runtime through the user-scoped skill discovery path.
 
 Before extraction, compare the downloaded ZIP's SHA-256 with the value published
 for that exact release asset:
@@ -36,10 +65,9 @@ not prove that an already-running Codex process has refreshed its skill catalog.
 Restart or refresh Codex if needed, then invoke `$cody-coordinator` to confirm
 product-level discovery.
 
-This project has no established repository-scoped installation path. In
-particular, it does not create or manage repository-scoped `.agents/skills`.
-Do not copy the installed skill into another path and claim discovery-path
-verification passed.
+The bundle installer has no repository-scoped skill installation path. Do not
+copy the installed skill into another path and claim discovery-path verification
+passed.
 
 On platforms where the secure descriptor operations are unavailable, install
 and discovery-path verification fail closed with `unsupported_platform`. See
@@ -82,14 +110,16 @@ Initialization may create or update `AGENTS.md`'s managed coordinator block,
 boundary decision in the output before proceeding. Do not treat `init` as a
 generic project scaffolder.
 
-## Bundle boundary
+## Offline bundle boundary
 
 `scripts/install_skill.py` is designed for a generated Cody release bundle
 whose root is the `cody-coordinator` skill itself, with `SKILL.md`, `VERSION`,
-the scripts and references, manifest, and checksums at the bundle root. There
-is no nested or companion package in the current layout. The source
-checkout is not an installable bundle until its manifest and checksums have
-been generated; an installer run against the wrong shape should fail closed.
+the scripts and references, manifest, and checksums at the bundle root. The
+source checkout is not an installable offline bundle until its release manifest
+and checksums have been generated; an installer run against the wrong shape
+should fail closed. The repository also contains the standard plugin package,
+whose runtime skill is byte-identical to the canonical skill sources and is
+checked by the test suite.
 
 The installer uses the documented user skill root under `$HOME/.agents`. It
 uses a content-addressed destination and refuses to replace an unknown existing

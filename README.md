@@ -5,10 +5,11 @@
 ![Preview](https://img.shields.io/badge/status-v0.1.0%20preview-7c3aed)
 ![License](https://img.shields.io/badge/license-MIT-2563eb)
 
-Cody is an installable **Codex skill** that turns one Codex task into the
-coordinator for a repository. You talk to that coordinator about outcomes,
-status, priorities, and blockers; Cody keeps the project state durable and
-routes bounded implementation or research to cheaper worker tasks when useful.
+Cody is a **Codex plugin** that provides the `$cody-coordinator` skill. It turns
+one Codex task into the coordinator for a repository. You talk to that
+coordinator about outcomes, status, priorities, and blockers; Cody keeps the
+project state durable and routes bounded implementation or research to cheaper
+worker tasks when useful.
 
 > Cody is an independent community project. It is not affiliated with,
 > sponsored by, or endorsed by OpenAI. This repository is a v0.1.0 preview;
@@ -105,24 +106,30 @@ defines the exact orchestration topology. Substitution is unsupported in v0.1.0.
 
 ## Quick start
 
-Prerequisites are Python 3.11 or newer and Git 2.39 or newer. Start from an
-extracted verified release bundle, not a source checkout. Verify the downloaded
-ZIP against the SHA-256 published for that exact release asset before
-extraction; see [Installation](docs/INSTALLATION.md). Then run:
+Add the Cody marketplace and install the plugin:
 
 ```bash
-python3 scripts/install_skill.py --release-root . --check
-python3 scripts/install_skill.py --release-root .
-python3 scripts/install_skill.py --release-root . --verify-discovery
+codex plugin marketplace add TheOGFlyingTesla/Cody --ref main
+codex plugin add cody-codex-coordinator@cody
 ```
 
-The supported installation is user-scoped at
-`$HOME/.agents/skills/cody-coordinator`, the location in the
-[official Codex skill documentation](https://developers.openai.com/codex/skills).
-After discovery-path verification, restart or refresh Codex if needed. Open the
-task that should own coordination, invoke `$cody-coordinator`, and tell it the
-repository and outcome. Repository-scoped installation is not established by
-this project; Cody writes only the user-scoped `.agents/skills` entry.
+Restart Codex, open the task that should own coordination, and invoke:
+
+```text
+$cody-coordinator
+```
+
+The plugin adds one explicit-only skill. It declares no MCP server, app,
+authentication flow, telemetry, hosted backend, or runtime network service.
+Installing it does not grant authority to commit, push, deploy, access secrets,
+change billing, or send external messages; those actions always need separate
+authorization.
+
+Tell it the repository and desired outcome. The runtime commands require Python
+3.11 or newer and Git 2.39 or newer.
+
+For advanced or offline installation, use a checksum-verified release bundle as
+described in [Installation](docs/INSTALLATION.md#advanced-offline-installation).
 
 To evaluate a source checkout without installing it, use the separate
 [Installation](docs/INSTALLATION.md#evaluate-a-source-checkout) path. For a
@@ -140,7 +147,7 @@ durable migration receipt. Read [Installation](docs/INSTALLATION.md) and
 
 ## Documentation
 
-- [Installation](docs/INSTALLATION.md) — source checkout evaluation and verified release bundles
+- [Installation](docs/INSTALLATION.md) — plugin installation, source evaluation, and verified offline bundles
 - [Quick start](docs/QUICKSTART.md) — the first safe repository pass
 - [Configuration](docs/CONFIGURATION.md) — repository state, flags, and local paths
 - [Portability](docs/PORTABILITY.md) — platform support and fail-closed boundaries

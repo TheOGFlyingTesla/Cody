@@ -120,6 +120,7 @@ _ALLOWLIST_DIRECTORIES = frozenset(
 _KNOWN_SOURCE_EXCLUSIONS = frozenset(
     {
         ".cody",
+        ".agents",
         ".github",
         ".git",
         ".gitignore",
@@ -128,6 +129,8 @@ _KNOWN_SOURCE_EXCLUSIONS = frozenset(
         "AGENTS.md",
         "docs/codex",
         "examples",
+        "plugins",
+        "scripts/sync_plugin_runtime.py",
         "tests",
         ".coverage",
         ".pytest_cache",
@@ -255,10 +258,12 @@ def _known_source_exclusion(relative: str) -> bool:
         for excluded in _KNOWN_SOURCE_EXCLUSIONS
         if excluded in {
             ".cody",
+            ".agents",
             ".github",
             ".git",
             "docs/codex",
             "examples",
+            "plugins",
             "tests",
             ".pytest_cache",
             ".mypy_cache",

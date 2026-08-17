@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cody-coordinator.local/schema/standard-v1.json",
+  "title": "Cody Coordinator installation record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "standard_name",
+    "standard_version",
+    "project_id",
+    "project_slug",
+    "installed_at",
+    "last_validated_at",
+    "risk_profiles",
+    "migrations"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "standard_name": {"type": "string", "const": "cody-coordinator"},
+    "standard_version": {"type": "string", "const": "0.1.0"},
+    "project_id": {"type": "string", "format": "uuid"},
+    "project_slug": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 63,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "installed_at": {"type": "string", "format": "date-time"},
+    "last_validated_at": {"type": "string", "format": "date-time"},
+    "risk_profiles": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "migrations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/migration"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "migration": {
+      "type": "object",
+      "required": [
+        "source_version",
+        "destination_version",
+        "run_id",
+        "completed_at",
+        "record_path"
+      ],
+      "properties": {
+        "source_version": {"type": "string", "minLength": 1},
+        "destination_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "run_id": {"type": "string", "format": "uuid"},
+        "completed_at": {"type": "string", "format": "date-time"},
+        "record_path": {
+          "type": "string",
+          "pattern": "^docs/codex/MIGRATIONS/[A-Za-z0-9._-]+\\.report\\.md$"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

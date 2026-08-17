@@ -1,38 +1,36 @@
 # Coordinator Status
 
-Checkpoint recorded: 2026-08-17T00:52:14Z
-Freshness: current during hosted CI repair
+Checkpoint recorded: 2026-08-17
+Freshness: current during Cody plugin publication
 
 ## Current exact identity and deploy truth
 
 - Coordinator Standard: `0.1.0`
-- Observed branch: `codex/release-v0.1.0`
-- Published candidate: `origin/main` and `v0.1.0` point to
-  `a813ea67c225a2f4a181abb8dbc91f538767fd61`.
-- Release assets at `v0.1.0` are byte-identical to the locally certified ZIP
-  and checksum file.
-- Working tree: bounded Windows CI assertion-harness repair plus its regression
-  test and refreshed checkpoint.
+- Candidate branch: `codex/package-cody-plugin`, based on published
+  `origin/main` commit `ab0111e4a9480338c4f0c57248c1c3bf10c42c1c`.
+- Published `v0.1.0` remains the checksum-verified skill-only release and does
+  not contain marketplace packaging.
+- Candidate adds the `cody` marketplace and self-contained
+  `cody-codex-coordinator` plugin on `main`; the documented install source is
+  therefore `main` until a later release is explicitly published.
 
 ## Active task IDs
 
-- `WI-001` — open-source the coordinator skill.
+- `WI-001` — publish Cody as a generic installable coordinator.
 
 ## Open P0/P1
 
-- Hosted Windows preview failed because its `cmd.exe` `%ERRORLEVEL%` assertion
-  chain did not preserve stage evidence. Product tests on Ubuntu/macOS passed;
-  the repair replaces the shell chain with one diagnostic Python harness.
+- None in local validation. Independent exact-diff review and hosted CI remain
+  publication gates.
 
 ## Authority or decision blocker
 
-- The project owner explicitly authorized committing all candidate files,
-  rebuilding from the committed tree, publishing to public `main`, replacing
-  `v0.1.0`, updating GitHub copy/metadata, and verifying hosted CI and release
-  assets. The official Deep Security Scan remains explicitly deferred and must
-  not be represented as completed.
+- The project owner explicitly authorized committing and publishing the plugin
+  package and updated GitHub installation instructions.
+- The previously deferred Deep Security Scan remains deferred and must not be
+  represented as completed.
 
 ## One next action
 
-Commit the bounded CI repair, rebuild and replace the exact release assets from
-that commit, then require successful main and tag CI readback.
+Close independent review, commit the exact candidate, rerun exact-SHA proof,
+publish to `main`, and verify hosted CI plus live installation copy.
