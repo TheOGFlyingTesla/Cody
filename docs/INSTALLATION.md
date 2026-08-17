@@ -16,10 +16,11 @@ Restart Codex so it loads the installed plugin. In the task that should become
 the repository coordinator, invoke:
 
 ```text
-$cody-coordinator
+$cody-codex-coordinator:cody-coordinator
 ```
 
-The plugin installs the runtime skill; its local commands require Python 3.11+
+Plugin-installed skills use the plugin namespace. The plugin installs the
+runtime skill; its local commands require Python 3.11+
 and Git 2.39+. Installing the plugin does not initialize or modify a project.
 Repository changes begin only after an explicit request within the authority
 boundaries documented in [Safety](SAFETY.md).

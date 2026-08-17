@@ -33,8 +33,8 @@ Before publishing a release, a maintainer should:
 For a plugin release, also install from the public repository in a fresh,
 isolated Codex profile using the exact documented marketplace and plugin
 commands. Record the Codex version, OS, main SHA, `codex plugin list` result,
-and a fresh-task `$cody-coordinator` invocation. A local checkout or direct
-plugin path is not a substitute for this public-route smoke.
+and a fresh-task `$cody-codex-coordinator:cody-coordinator` invocation. A local
+checkout or direct plugin path is not a substitute for this public-route smoke.
 
 ## Artifact and source verification
 

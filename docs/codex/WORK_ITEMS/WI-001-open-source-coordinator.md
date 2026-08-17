@@ -86,7 +86,8 @@ its checksum-verified offline installer. The current bounded follow-up packages
 the same canonical runtime as the self-contained `cody-codex-coordinator`
 plugin and adds the repository marketplace named `cody`. The public quick path
 is marketplace installation from `main`, restart Codex, then explicitly invoke
-`$cody-coordinator`; the existing `v0.1.0` tag is not claimed to contain plugin
+`$cody-codex-coordinator:cody-coordinator`; `$cody-coordinator` remains the
+standalone/offline invocation, and the existing `v0.1.0` tag is not claimed to contain plugin
 packaging. Runtime mirroring is deterministic and byte-checked, and a copied
 plugin black-box test proves the coordinator runs without its source checkout.
 The plugin package is published on `main`; the incremental `v0.1.1` release

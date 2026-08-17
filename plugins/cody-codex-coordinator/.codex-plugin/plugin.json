@@ -27,9 +27,9 @@
       "Recovery workflows"
     ],
     "defaultPrompt": [
-      "Use $cody-coordinator to take over this repository and report verified status.",
-      "Use $cody-coordinator to plan and coordinate this repository outcome.",
-      "Use $cody-coordinator to recover this interrupted repository task."
+      "Use $cody-codex-coordinator:cody-coordinator to take over this repository and report verified status.",
+      "Use $cody-codex-coordinator:cody-coordinator to plan and coordinate this repository outcome.",
+      "Use $cody-codex-coordinator:cody-coordinator to recover this interrupted repository task."
     ]
   }
 }

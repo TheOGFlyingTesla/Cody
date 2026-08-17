@@ -18,16 +18,17 @@ Restart Codex after installation so the plugin and its skill are loaded.
 
 ## 3. Invoke Cody, inspect, and preview initialization
 
-Invoke `$cody-coordinator` in the Codex task that will own coordination. The
-skill resolves its own installed `SKILL_ROOT` and runs its tooling from there.
-Keep talking to this task as the project's primary coordinator. It maintains
-the durable state and may route bounded work to Sol/Terra/Luna tasks without
+Invoke `$cody-codex-coordinator:cody-coordinator` in the Codex task that will
+own coordination. Plugin-installed skills use the plugin namespace. The skill
+resolves its own installed `SKILL_ROOT` and runs its tooling from there. Keep
+talking to this task as the project's primary coordinator. It maintains the
+durable state and may route bounded work to Sol/Terra/Luna tasks without
 requiring you to carry messages between them.
 
 For example:
 
 ```text
-$cody-coordinator
+$cody-codex-coordinator:cody-coordinator
 Take over as coordinator for /absolute/path/to/project. Inspect first, tell me
 where we stand, and plan the next safe outcome.
 ```

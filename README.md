@@ -5,7 +5,8 @@
 ![Preview](https://img.shields.io/badge/status-v0.1.1%20preview-7c3aed)
 ![License](https://img.shields.io/badge/license-MIT-2563eb)
 
-Cody is a **Codex plugin** that provides the `$cody-coordinator` skill. It turns
+Cody is a **Codex plugin** that provides the explicit
+`$cody-codex-coordinator:cody-coordinator` skill. It turns
 one Codex task into the coordinator for a repository. You talk to that
 coordinator about outcomes, status, priorities, and blockers; Cody keeps the
 project state durable and routes bounded implementation or research to cheaper
@@ -40,7 +41,7 @@ After installing Cody, open the Codex task that should become the project's
 long-lived coordinator and invoke:
 
 ```text
-$cody-coordinator
+$cody-codex-coordinator:cody-coordinator
 ```
 
 That task becomes the one place where you can speak naturally about the
@@ -93,7 +94,8 @@ do not select models inside your application or production provider.
 
 ## Authority boundaries
 
-The task that invokes `$cody-coordinator` is the repository's coordinator;
+The task that invokes `$cody-codex-coordinator:cody-coordinator` is the
+repository's coordinator;
 Cody never creates a second coordinator by implication. Provider or external-
 runtime ambiguity, unknown deploy pins, and unavailable consultation evidence
 fail closed rather than selecting an assumed target. The project owner retains
@@ -117,7 +119,7 @@ codex plugin add cody-codex-coordinator@cody
 Restart Codex, open the task that should own coordination, and invoke:
 
 ```text
-$cody-coordinator
+$cody-codex-coordinator:cody-coordinator
 ```
 
 The plugin adds one explicit-only skill. It declares no MCP server, app,
@@ -129,8 +131,10 @@ authorization.
 Tell it the repository and desired outcome. The runtime commands require Python
 3.11 or newer and Git 2.39 or newer.
 
-For advanced or offline installation, use a checksum-verified release bundle as
-described in [Installation](docs/INSTALLATION.md#advanced-offline-installation).
+Codex namespaces skills installed through plugins. The shorter
+`$cody-coordinator` invocation is reserved for the advanced standalone/offline
+skill installation described in
+[Installation](docs/INSTALLATION.md#advanced-offline-installation).
 
 To evaluate a source checkout without installing it, use the separate
 [Installation](docs/INSTALLATION.md#evaluate-a-source-checkout) path. For a

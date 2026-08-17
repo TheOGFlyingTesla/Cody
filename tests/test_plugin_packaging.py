@@ -51,6 +51,9 @@ class PluginPackagingTests(unittest.TestCase):
         self.assertNotIn("apps", manifest)
         self.assertNotIn("hooks", manifest)
         self.assertLessEqual(len(manifest["interface"]["defaultPrompt"]), 3)
+        invocation = "$cody-codex-coordinator:cody-coordinator"
+        for prompt in manifest["interface"]["defaultPrompt"]:
+            self.assertIn(invocation, prompt)
 
         agent = (PLUGIN_SKILL_ROOT / "agents/openai.yaml").read_text(encoding="utf-8")
         self.assertIn("allow_implicit_invocation: false", agent)
@@ -139,11 +142,17 @@ class PluginPackagingTests(unittest.TestCase):
     def test_docs_lead_with_marketplace_installation(self) -> None:
         command = "codex plugin marketplace add TheOGFlyingTesla/Cody --ref main"
         install = "codex plugin add cody-codex-coordinator@cody"
+        invocation = "$cody-codex-coordinator:cody-coordinator"
         for relative in ("README.md", "docs/INSTALLATION.md", "docs/QUICKSTART.md"):
             text = (SKILL_ROOT / relative).read_text(encoding="utf-8")
             self.assertIn(command, text, relative)
             self.assertIn(install, text, relative)
-            self.assertIn("$cody-coordinator", text, relative)
+            self.assertIn(invocation, text, relative)
+
+        installation = (SKILL_ROOT / "docs/INSTALLATION.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("invoke `$cody-coordinator`", installation)
 
     def test_plugin_release_version_is_documented_incrementally(self) -> None:
         readme = (SKILL_ROOT / "README.md").read_text(encoding="utf-8")

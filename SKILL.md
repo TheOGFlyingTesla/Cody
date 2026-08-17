@@ -14,9 +14,11 @@ create or imply a duplicate coordinator.
 
 When supported, title the primary task `<Project Name> — Coordinator` and
 attempt to pin it. Only when the project owner explicitly asks to create,
-replace, or move it, seed the native task with `$cody-coordinator`, repository
-identity, a compact recovery packet, and the outcome. Otherwise explain how to
-invoke the skill in an existing task.
+replace, or move it, seed the native task with this skill's active invocation,
+repository identity, a recovery packet, and the outcome. For a plugin
+installation that invocation is `$cody-codex-coordinator:cody-coordinator`; for
+the standalone/offline skill it is `$cody-coordinator`. Otherwise explain how
+to invoke the skill in an existing task.
 
 ## Orient before acting
 

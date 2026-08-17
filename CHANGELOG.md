@@ -12,6 +12,9 @@ stable API.
   `cody-codex-coordinator` plugin.
 - The standard public installation flow through `codex plugin marketplace add`
   and `codex plugin add`.
+- The standard plugin invocation,
+  `$cody-codex-coordinator:cody-coordinator`; `$cody-coordinator` remains the
+  standalone/offline skill invocation.
 - Deterministic source-to-plugin runtime synchronization, drift detection, and
   a black-box copied-plugin execution check.
 - A release gate requiring exact public clean-install evidence from an isolated
