@@ -189,6 +189,15 @@ class CliTests(unittest.TestCase):
 
 
 class SkillPackageTests(unittest.TestCase):
+    def test_windows_preview_uses_one_python_assertion_harness(self) -> None:
+        workflow = (SKILL_ROOT / ".github/workflows/ci.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("shell: python", workflow)
+        self.assertIn("def run_json(*arguments):", workflow)
+        self.assertIn('mutation_payload["blockers"][0]["code"]', workflow)
+        self.assertNotIn("%ERRORLEVEL%", workflow)
+
     def test_coordinator_requires_explicit_skill_invocation(self) -> None:
         metadata = (SKILL_ROOT / "agents/openai.yaml").read_text(encoding="utf-8")
         self.assertIn("allow_implicit_invocation: false", metadata)

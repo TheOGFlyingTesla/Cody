@@ -49,15 +49,46 @@ jobs:
           python-version: "3.11"
 
       - name: Prove inspection and fail-closed mutation
-        shell: cmd
+        shell: python
         run: |
-          python scripts/coordinator_standard.py --repo . --format json inspect
-          python scripts/coordinator_standard.py --repo . --format json init > windows-result.json
-          if not "%ERRORLEVEL%"=="2" exit /b 1
-          python -c "import json; p=json.load(open('windows-result.json')); assert p['blockers'][0]['code']=='unsupported_platform'"
-          python scripts/install_skill.py --release-root . --check > windows-install.json
-          if not "%ERRORLEVEL%"=="2" exit /b 1
-          python -c "import json; p=json.load(open('windows-install.json')); assert p['code']=='unsupported_platform'"
-          python scripts/quick_validate.py --release-root . > windows-archive.json
-          if not "%ERRORLEVEL%"=="2" exit /b 1
-          python -c "import json; p=json.load(open('windows-archive.json')); assert 'unsupported on this platform' in p['error']"
+          import json
+          import subprocess
+          import sys
+
+          def run_json(*arguments):
+              completed = subprocess.run(
+                  [sys.executable, *arguments],
+                  stdin=subprocess.DEVNULL,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.PIPE,
+                  text=True,
+                  check=False,
+              )
+              print(completed.stdout)
+              if completed.stderr:
+                  print(completed.stderr, file=sys.stderr)
+              return completed, json.loads(completed.stdout)
+
+          inspection, inspection_payload = run_json(
+              "scripts/coordinator_standard.py", "--repo", ".", "--format", "json", "inspect"
+          )
+          assert inspection.returncode == 0
+          assert inspection_payload["ok"] is True
+
+          mutation, mutation_payload = run_json(
+              "scripts/coordinator_standard.py", "--repo", ".", "--format", "json", "init"
+          )
+          assert mutation.returncode == 2
+          assert mutation_payload["blockers"][0]["code"] == "unsupported_platform"
+
+          install, install_payload = run_json(
+              "scripts/install_skill.py", "--release-root", ".", "--check"
+          )
+          assert install.returncode == 2
+          assert install_payload["code"] == "unsupported_platform"
+
+          archive, archive_payload = run_json(
+              "scripts/quick_validate.py", "--release-root", "."
+          )
+          assert archive.returncode == 2
+          assert "unsupported on this platform" in archive_payload["error"]

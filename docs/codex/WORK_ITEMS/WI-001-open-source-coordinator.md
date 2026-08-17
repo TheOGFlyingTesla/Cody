@@ -90,7 +90,7 @@ the private predecessor compatibility layer has been removed. The current
 uncommitted repair restores the explicit Sol Medium → Terra Extra High → Luna
 High task-orchestration topology, takeover/current-version gates, recovery and
 provider fail-closed boundaries, mandatory Sol review, executable contract
-checks, and a normal-environment installer smoke. The full 151-test suite,
+checks, and a normal-environment installer smoke. The full 152-test suite,
 deterministic bundle build, isolated install, skill validation, doctor, blind
 forward use, and focused independent re-review pass. The public candidate
 commit, release replacement, hosted CI, and final published-SHA verification
