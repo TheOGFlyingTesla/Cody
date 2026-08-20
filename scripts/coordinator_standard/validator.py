@@ -302,7 +302,11 @@ def validate_json(instance: Any, schema: dict[str, Any]) -> tuple[str, ...]:
 
 
 def validate_schema_document(instance: Any, schema_name: str) -> tuple[str, ...]:
-    if schema_name not in {"standard.schema.json", "journal.schema.json"}:
+    if schema_name not in {
+        "standard.schema.json",
+        "journal.schema.json",
+        "dispatch-packet.schema.json",
+    }:
         return ("unsupported bundled schema",)
     try:
         return validate_json(instance, _load_schema(schema_name))
@@ -422,6 +426,7 @@ def validate_repository(
         schemas = {
             "standard": _load_schema("standard.schema.json"),
             "journal": _load_schema("journal.schema.json"),
+            "dispatch-packet": _load_schema("dispatch-packet.schema.json"),
         }
         subset_ok = not any(_schema_subset_errors(item) for item in schemas.values())
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError):

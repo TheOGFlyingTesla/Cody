@@ -43,6 +43,32 @@ class RoutingContractTests(unittest.TestCase):
             boundaries["terra_scope_change_triggers"],
         )
 
+    def test_contract_requires_visible_tasks_and_automatic_upward_fan_in(self) -> None:
+        mesh = routing_contract.load_contract()["task_mesh"]
+        self.assertEqual("visible-task", mesh["critical_delivery_owner"])
+        self.assertEqual("bounded-support-only", mesh["hidden_subagents"])
+        self.assertIn(
+            ["primary_coordinator", "bounded_worker"], mesh["dispatch_edges"]
+        )
+        self.assertEqual(["task_id", "host"], mesh["required_parent_fields"])
+        self.assertEqual(
+            [
+                "READY",
+                "READY_FOR_REVIEW",
+                "BLOCKED",
+                "SCOPE_CHANGE",
+                "FAILED",
+                "LIVE_TERMINAL",
+                "COMPLETE",
+            ],
+            mesh["typed_events"],
+        )
+        self.assertTrue(mesh["terminal_callback_required"])
+        self.assertEqual(
+            {"owner": "immediate-parent", "attempts": 1},
+            mesh["missing_callback_reconciliation"],
+        )
+
     def test_cli_requires_route_and_availability_evidence(self) -> None:
         missing_route = subprocess.run(
             [sys.executable, str(SCRIPTS / "routing_contract.py")],

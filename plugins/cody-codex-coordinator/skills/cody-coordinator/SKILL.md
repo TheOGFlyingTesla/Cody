@@ -6,9 +6,10 @@ description: Use when a Codex task should become a durable coordinator, take ove
 # Cody — Codex Coordinator
 
 Act as the project's control tower. Any task whose owner invokes this skill is
-the durable Cody coordinator for its target repository. Keep one primary
-coordinator; workers and reviewers are bounded implementation detail. Do not
-create or imply a duplicate coordinator.
+the durable Cody root or initiative coordinator for its target repository. Keep
+one root coordinator and one visible Sol coordinator per bounded initiative;
+workers and reviewers remain bounded implementation detail. Do not create or
+imply a duplicate root coordinator.
 
 ## Establish the coordinator task
 
@@ -41,40 +42,27 @@ explicitly asks for it.
 ## Coordinate and recover
 
 The project owner retains direction and consequential approvals; the
-coordinator owns planning, synthesis, recovery, and checkpoints. The executable routing contract is
-[model-routing-contract.json](references/model-routing-contract.json). Its only
-routes are Sol Medium → Luna High (simple) and Sol Medium → Terra Extra High →
-Luna High (fixed multi-stage Green/Amber). Sol coordinates, reviews, and owns
-release. Terra decomposes only its fixed boundary and returns `SCOPE_CHANGE`
-for Red work or drift. Luna executes bounded work. Sol retains requirements,
-architecture/product judgment, privacy/security, and P0/P1 authority.
+coordinator owns planning, synthesis, recovery, and checkpoints. The executable
+[routing contract](references/model-routing-contract.json) defines Sol Medium →
+Luna High and Sol Medium → Terra Extra High → Luna High. Sol owns judgment,
+review, and release; Terra decomposes only a fixed Green/Amber boundary; Luna
+executes. Missing availability returns `SCOPE_CHANGE`; never silently
+substitute a model. This topology applies only to Codex task orchestration.
 
-Before dispatch, choose the route, read its native model IDs from the contract,
-and compare them with native availability. Pass only IDs the native surface
-actually reports, for example:
+Critical milestones use visible tasks: root → Sol; Sol → Terra only when it
+saves context, otherwise Luna directly; Terra → Luna. Hidden subagents are
+bounded Luna support and never own critical delivery. Generate or validate each
+child packet with `scripts/dispatch_packet.py`; it must name the exact parent
+task ID and host and callback `READY`, `READY_FOR_REVIEW`, `BLOCKED`,
+`SCOPE_CHANGE`, `FAILED`, `LIVE_TERMINAL`, or `COMPLETE`. Unchanged state is
+silent. Fan-in is Luna → Terra → Sol → root, directly into this coordinator at
+each hop; the project owner is never the message bus. The immediate parent owns
+one bounded reconciliation for a missing callback.
 
-```bash
-python3 "$SKILL_ROOT/scripts/routing_contract.py" --route simple \
-  --available "$SOL_MODEL_ID" --available "$LUNA_MODEL_ID"
-```
-
-For multi-stage, also pass `--available "$TERRA_MODEL_ID"`. The resolver returns Sol
-`medium`, Terra `xhigh`, and Luna `high`. If native availability cannot be
-observed, report `availability_evidence_required` and return
-`SCOPE_CHANGE`. If a named model is observed unavailable, report the name and
-return `SCOPE_CHANGE`; do not select a nearest or silent substitute.
-Substitution is unsupported in v0.1.0; changing the declared topology requires
-a future contract revision rather than an ad hoc approval. Model choice never broadens authority.
-
-This topology governs Codex task orchestration only. It never selects models
-inside an application, provider runtime, customer-facing feature, or production
-inference path.
-
-For repeated checks, dispatch one fresh low-context read-only Luna waiter with
-named targets and one terminal report. Workers fan evidence directly into this coordinator;
-the owner is never the message bus. Query native task metadata
-when available; otherwise state `native metadata is unavailable`. Isolate independent writes;
-workers verify identity and return BLOCKED instead of waiting interactively.
+Keep coordinators event-driven. Route repeated checks to one visible,
+low-context Luna waiter. Query native task metadata when available; otherwise
+state `native metadata is unavailable`. Workers verify identity and return
+`BLOCKED` instead of waiting interactively.
 
 For CI, release, waiting, or routing economy, apply
 [execution-efficiency.md](references/execution-efficiency.md). For interrupted

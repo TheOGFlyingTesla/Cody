@@ -15,7 +15,13 @@ Each worker packet includes:
 - non-goals and authority boundary;
 - base branch/worktree identity when relevant;
 - acceptance criteria and validation evidence;
-- stop conditions and direct coordinator report format.
+- stop conditions and direct coordinator report format;
+- the exact parent task ID and host; and
+- the required typed callbacks and terminal callback destination.
+
+Critical delivery and uncertain waiting remain visible in the Codex task list.
+Hidden subagents may be used only inside a Luna task for bounded support and may
+not own a critical milestone, terminal proof, or completion callback.
 
 Use managed worktrees only when write isolation is useful. Use one worktree per
 active writer and prefer one worker and one reviewer for an ordinary bounded
@@ -63,8 +69,9 @@ If availability evidence cannot be observed, report
 evidence as observed unavailability. If a named model is observed unavailable,
 report its name and return `SCOPE_CHANGE`; no route is selected. Never use a
 nearest-capable fallback or a silent substitution. Substitution is unsupported
-in v0.1.0; changing the declared topology requires a future contract revision.
+in v0.2.0; changing the declared topology requires a future contract revision.
 An unavailable capability never grants a stronger worker or coordinator role.
+Model choice never broadens authority.
 
 This topology governs Codex task orchestration only. It never enables or
 selects Sol, Terra, or Luna inside the application, provider runtime,
@@ -106,12 +113,25 @@ reslices. Reconcile first when interrupted state or durable evidence conflicts.
 
 ## Task mesh, waiting, and consultation
 
-Use a hub-and-spoke mesh. Workers report directly to their dispatching
-coordinator; they do not form a peer message bus. Check-ins are event-driven and
-typed: `BLOCKED`, `SCOPE_CHANGE`, `READY_FOR_REVIEW`, `FAILED`, or `CANCELLED`.
+Use a visible hub-and-spoke mesh: root/portfolio coordinator → one visible Sol
+task per bounded initiative; Sol → visible Terra only when coordination
+materially reduces context, otherwise visible Luna directly; Terra → visible
+Luna. Workers do not form a peer message bus. Every child packet names its exact
+parent task ID and host and sends state deltas directly to that parent. Check-ins
+are event-driven and typed: `READY`, `READY_FOR_REVIEW`, `BLOCKED`,
+`SCOPE_CHANGE`, `FAILED`, `LIVE_TERMINAL`, or `COMPLETE`. Unchanged state is
+silent. Fan-in is Luna → Terra → Sol → root, and the project owner is never the
+message bus or completion detector.
 The project owner is never the message bus.
 
-Prefer a native blocking/event wait. If repeated checks or an uncertain-duration
+Generate or validate packets with `scripts/dispatch_packet.py` and
+`assets/schema/dispatch-packet.schema.json`. A terminal callback is mandatory.
+If callback delivery fails or a child terminates silently, the immediate parent
+owns one bounded reconciliation, restores the upward notification, and does not
+wait for the project owner to ask for status.
+
+Prefer a native blocking/event wait and keep coordinators idle between events.
+If repeated checks or an uncertain-duration
 wait is unavoidable, dispatch exactly one fresh low-context read-only Luna High
 waiter with exact targets, safety boundaries, a wall-clock horizon, and one
 typed terminal report. It receives no full-history fork and no mutation or
@@ -130,7 +150,11 @@ rather than a full transcript by default.
 
 Keep routine packets near 1,000–2,000 tokens and link durable evidence instead of copying it. Compaction is short-term pressure relief; after roughly 20–30 turns or two compactions, checkpoint and continue from a fresh task at a safe boundary. Measure actual usage when exposed; otherwise record stable proxies such as packet/output bytes, turns, compactions, repair rounds, and handoff size. A cheaper route that causes reslicing, duplicated context, or coordinator rework is not efficient.
 
-Workers report to the coordinator. The coordinator reviews evidence, resolves conflicts, integrates within authority, and updates durable state. Classify new ideas without silently widening scope. P0/P1 findings block completion; P2/P3 findings receive an explicit fixed, accepted, or deferred disposition.
+Luna reports to Terra when Terra dispatched it, otherwise directly to Sol;
+Terra reports to Sol; Sol reports to root. The receiving coordinator reviews
+evidence, resolves conflicts, integrates within authority, and updates durable
+state. Classify new ideas without silently widening scope. P0/P1 findings block completion;
+P2/P3 findings receive an explicit fixed, accepted, or deferred disposition.
 
 ## CI and release economy
 

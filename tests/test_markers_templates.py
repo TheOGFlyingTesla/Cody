@@ -27,12 +27,12 @@ MODEL_FILE = SKILL_ROOT / "scripts/coordinator_standard/model.py"
 class ContractTests(unittest.TestCase):
     def test_version_and_standard_schema_are_pinned(self) -> None:
         self.assertTrue(VERSION_FILE.is_file(), "VERSION must exist")
-        self.assertEqual("0.1.0\n", VERSION_FILE.read_text(encoding="utf-8"))
+        self.assertEqual("0.2.0\n", VERSION_FILE.read_text(encoding="utf-8"))
         self.assertTrue(STANDARD_SCHEMA.is_file(), "standard schema must exist")
         schema = json.loads(STANDARD_SCHEMA.read_text(encoding="utf-8"))
         self.assertEqual(1, schema["properties"]["schema_version"]["const"])
         self.assertEqual(
-            "0.1.0", schema["properties"]["standard_version"]["const"]
+            "0.2.0", schema["properties"]["standard_version"]["const"]
         )
         self.assertFalse(schema["additionalProperties"])
         forbidden = {"remote_url", "home", "worktree_path", "token", "secret"}
@@ -44,6 +44,7 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(
             [
                 "0.1.0",
+                "0.2.0",
                 "3.0.0",
                 "3.1.0",
                 "3.2.0",
@@ -94,7 +95,7 @@ class MarkerTests(unittest.TestCase):
         markers = self.markers()
         before = (
             b"custom-before\n"
-            b"<!-- cody-coordinator:start standard=0.1.0 -->\n"
+            b"<!-- cody-coordinator:start standard=0.2.0 -->\n"
             b"old body\n"
             b"<!-- cody-coordinator:end -->\n"
             b"custom-after\n"
@@ -102,7 +103,7 @@ class MarkerTests(unittest.TestCase):
         after = markers.upsert_managed_block(before, b"new body\n")
         self.assertEqual(
             b"custom-before\n"
-            b"<!-- cody-coordinator:start standard=0.1.0 -->\n"
+            b"<!-- cody-coordinator:start standard=0.2.0 -->\n"
             b"new body\n"
             b"<!-- cody-coordinator:end -->\n"
             b"custom-after\n",
@@ -219,7 +220,7 @@ class TemplateTests(unittest.TestCase):
             standard = json.loads(rendered["docs/codex/STANDARD.json"])
             self.assertEqual("12345678-1234-5678-9234-567812345678", standard["project_id"])
             self.assertEqual("project-one", standard["project_slug"])
-            self.assertEqual("0.1.0", standard["standard_version"])
+            self.assertEqual("0.2.0", standard["standard_version"])
             self.assertIn(b"custom instructions\n", rendered["AGENTS.md"])
 
             required_headings = {
@@ -330,7 +331,7 @@ class TemplateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             repo = Path(directory)
             (repo / "AGENTS.md").write_bytes(
-                b"<!-- cody-coordinator:start standard=0.1.0 -->\n"
+                b"<!-- cody-coordinator:start standard=0.2.0 -->\n"
                 b"manually altered custom policy\n"
                 b"<!-- cody-coordinator:end -->\n"
             )

@@ -22,10 +22,10 @@ class LeanModeContractTests(unittest.TestCase):
         self.context.cleanup()
 
     def test_public_release_identity_is_single_coordinator_skill(self) -> None:
-        self.assertEqual("0.1.0\n", (SKILL_ROOT / "VERSION").read_text(encoding="utf-8"))
+        self.assertEqual("0.2.0\n", (SKILL_ROOT / "VERSION").read_text(encoding="utf-8"))
         package = importlib.import_module("coordinator_standard")
         self.assertEqual("cody-coordinator", package.STANDARD_NAME)
-        self.assertEqual("0.1.0", package.STANDARD_VERSION)
+        self.assertEqual("0.2.0", package.STANDARD_VERSION)
 
     def test_skill_and_managed_contract_expose_lean_routing_and_escalation(self) -> None:
         skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -103,7 +103,7 @@ class LeanModeContractTests(unittest.TestCase):
             "otherwise record stable proxies",
             "optional consultation",
             "final review",
-            "workers report to the coordinator",
+            "luna reports to terra when terra dispatched it, otherwise directly to sol",
             "p0/p1 findings block completion",
         ):
             self.assertIn(required, combined)
@@ -163,7 +163,7 @@ class LeanModeContractTests(unittest.TestCase):
             "sol retains",
             "governs codex task orchestration only",
             "sol reviews 100% of terra conclusions and every resulting diff",
-            "directly to their dispatching coordinator",
+            "sends state deltas directly to that parent",
             "exactly one fresh low-context read-only luna high waiter",
             "no full-history fork",
             "approved correction path",
@@ -171,7 +171,7 @@ class LeanModeContractTests(unittest.TestCase):
             "only when listed safe",
             "action-specific token",
             "make this task the repository's durable cody coordinator",
-            "do not create or imply a duplicate coordinator",
+            "do not create or imply a duplicate root coordinator",
             "chatgpt pro when it is visibly available",
             "strongest available chatgpt model",
             "evidence unavailable",
@@ -212,7 +212,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.1.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 
@@ -244,7 +244,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.1.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 
@@ -276,7 +276,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.1.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 
@@ -348,7 +348,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.1.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 
@@ -380,7 +380,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.1.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 

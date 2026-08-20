@@ -17,7 +17,7 @@
   "properties": {
     "schema_version": {"type": "integer", "const": 1},
     "standard_name": {"type": "string", "const": "cody-coordinator"},
-    "standard_version": {"type": "string", "const": "0.1.0"},
+    "standard_version": {"type": "string", "const": "0.2.0"},
     "project_id": {"type": "string", "format": "uuid"},
     "project_slug": {
       "type": "string",

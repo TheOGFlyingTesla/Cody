@@ -1,6 +1,6 @@
 # Limitations
 
-Cody plugin v0.1.1 is a preview and ships coordinator standard v0.1.0. The
+Cody plugin v0.2.0 is a candidate and ships coordinator standard v0.2.0. The
 following limits are intentional and should be treated as part of the current
 contract.
 
@@ -9,7 +9,7 @@ contract.
   it should not be pointed at an arbitrary source tree.
 - The standard runtime and public project version are separate concepts: the
   repository's current coordinator standard is recorded by its own tooling,
-  while the public plugin is v0.1.1 preview.
+  while the public plugin is v0.2.0 candidate.
 - Windows is not a blanket guarantee for secure mutation or installation; the
   implementation may fail closed where filesystem ownership or descriptor
   primitives are unavailable.

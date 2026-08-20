@@ -1,6 +1,6 @@
 # Installation
 
-Cody plugin v0.1.1 is a preview and ships coordinator standard v0.1.0. The
+Cody plugin v0.2.0 is a candidate and ships coordinator standard v0.2.0. The
 standard installation is the Cody Codex plugin.
 
 ## Install the plugin
@@ -31,6 +31,25 @@ Installation does not authorize commits, pushes, deployments, secret access,
 billing changes, or external messages. Grant those separately if a task needs
 them.
 
+## Upgrade an existing repository contract
+
+An installed plugin or skill update does not silently rewrite repositories.
+In the repository's coordinator task, explicitly ask Cody to upgrade its
+coordinator standard. Cody resolves `SKILL_ROOT` to the active installed skill
+and runs this check/apply/prove sequence against the explicit repository path:
+
+```bash
+python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json upgrade --check
+python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json upgrade
+python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json doctor
+python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json upgrade --check
+```
+
+The first check previews a migration from supported `0.1.0` or legacy `3.2.x`
+contracts to public standard `0.2.0`. The final check must report no changes.
+Newly initialized repositories receive `0.2.0` directly. In-flight child tasks
+are not rewritten; new dispatches use the 0.2.0 packet contract.
+
 ## Advanced offline installation
 
 The deterministic release bundle remains available for advanced, audited, or
@@ -42,10 +61,10 @@ for that exact release asset:
 
 ```bash
 # macOS
-shasum -a 256 cody-coordinator-0.1.0.zip
+shasum -a 256 cody-coordinator-0.2.0.zip
 
 # Linux
-sha256sum cody-coordinator-0.1.0.zip
+sha256sum cody-coordinator-0.2.0.zip
 ```
 
 Do not continue on a mismatch. After verification, extract the release ZIP to

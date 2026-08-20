@@ -22,6 +22,7 @@ PLUGIN_RUNTIME_PATHS = frozenset(
         "assets/repo-template/docs/codex/STATUS.md.tmpl",
         "assets/repo-template/docs/codex/WORK_ITEMS/WORK_ITEM_TEMPLATE.md.tmpl",
         "assets/schema/journal.schema.json",
+        "assets/schema/dispatch-packet.schema.json",
         "assets/schema/standard.schema.json",
         "references/authority-matrix.md",
         "references/completion-report.md",
@@ -43,6 +44,7 @@ PLUGIN_RUNTIME_PATHS = frozenset(
         "scripts/coordinator_standard/safety.py",
         "scripts/coordinator_standard/templates.py",
         "scripts/coordinator_standard/validator.py",
+        "scripts/dispatch_packet.py",
         "scripts/routing_contract.py",
         "scripts/routing_live_eval.py",
     }

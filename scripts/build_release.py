@@ -20,7 +20,7 @@ from typing import Any, Iterable, Sequence
 MANIFEST_NAME = "release_manifest.json"
 CHECKSUM_NAME = "SHA256SUMS"
 STANDARD_NAME = "cody-coordinator"
-STANDARD_VERSION = "0.1.0"
+STANDARD_VERSION = "0.2.0"
 EXCLUDED_NAMES = {"__pycache__"}
 IGNORED_DIRECTORIES = {".git"}
 IGNORED_ROOT_PATHS = {".github", "docs/codex"}
@@ -63,6 +63,7 @@ RELEASE_ALLOWLIST = frozenset(
         "assets/repo-template/docs/codex/WORK_ITEMS/.gitkeep",
         "assets/repo-template/docs/codex/WORK_ITEMS/WORK_ITEM_TEMPLATE.md.tmpl",
         "assets/schema/journal.schema.json",
+        "assets/schema/dispatch-packet.schema.json",
         "assets/schema/standard.schema.json",
         "docs/CONFIGURATION.md",
         "docs/ADOPTION.md",
@@ -97,6 +98,7 @@ RELEASE_ALLOWLIST = frozenset(
         "scripts/coordinator_standard/validator.py",
         "scripts/install_skill.py",
         "scripts/quick_validate.py",
+        "scripts/dispatch_packet.py",
         "scripts/routing_contract.py",
         "scripts/routing_live_eval.py",
     }

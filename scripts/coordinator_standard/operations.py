@@ -1357,6 +1357,7 @@ def upgrade(repo: Path, *, check: bool) -> OperationResult:
             recommended_next_action="Continue normal coordination.",
         )
     if inspection.installed_version in {
+        "0.1.0",
         "3.0.0",
         "3.1.0",
         "3.2.0",

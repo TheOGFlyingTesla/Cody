@@ -2,7 +2,7 @@
 
 ![Cody coordinating three bounded work streams](assets/cody-social-preview.jpg)
 
-![Preview](https://img.shields.io/badge/status-v0.1.1%20preview-7c3aed)
+![Preview](https://img.shields.io/badge/status-v0.2.0%20candidate-7c3aed)
 ![License](https://img.shields.io/badge/license-MIT-2563eb)
 
 Cody is a **Codex plugin** that provides the explicit
@@ -13,7 +13,7 @@ project state durable and routes bounded implementation or research to cheaper
 worker tasks when useful.
 
 > Cody is an independent community project. It is not affiliated with,
-> sponsored by, or endorsed by OpenAI. Cody plugin v0.1.1 is a preview;
+> sponsored by, or endorsed by OpenAI. Cody plugin v0.2.0 is a candidate;
 > interfaces and support claims may change.
 
 ## What Cody does
@@ -105,7 +105,7 @@ secret access, billing changes, or communication with real recipients.
 
 The machine-checkable [routing contract](references/model-routing-contract.json)
 defines the exact orchestration topology. Substitution is unsupported in
-coordinator standard v0.1.0, which ships inside Cody plugin v0.1.1.
+coordinator standard v0.2.0, which ships inside Cody plugin v0.2.0.
 
 ## Quick start
 

@@ -10,10 +10,16 @@ while it is in preview. A preview release may still change interfaces. The
 coordinator standard version reported by the runtime is an implementation
 identity and must not be presented as the public project version.
 
-Cody plugin `v0.1.1` ships coordinator standard `v0.1.0`. The plugin version,
+Cody plugin `v0.2.0` ships coordinator standard `v0.2.0`. The plugin version,
 Git tag, changelog entry, and plugin-facing documentation advance together.
 The earlier `v0.1.0` tag remains the skill-only offline release; incremental
 plugin releases never rewrite that tag or claim it contained later packaging.
+
+Cody's public coordinator standard has its own `0.x` lineage. Supported legacy
+`3.2.x` repository contracts are migration inputs, not public Cody version
+numbers: an explicit Cody upgrade converts them to the current public standard.
+This repository therefore advances `0.1.0` → `0.2.0`; it does not relabel the
+candidate as `3.2.7` or claim to update a separately installed private package.
 
 ## Release checklist
 
@@ -43,9 +49,9 @@ the release record:
 
 ```bash
 git rev-parse --verify HEAD^{commit}
-python3 scripts/build_release.py --release-root . --output cody-coordinator-0.1.0.zip
-python3 scripts/build_release.py --release-root . --output cody-coordinator-0.1.0.zip --check
-python3 scripts/quick_validate.py --archive cody-coordinator-0.1.0.zip \
+python3 scripts/build_release.py --release-root . --output cody-coordinator-0.2.0.zip
+python3 scripts/build_release.py --release-root . --output cody-coordinator-0.2.0.zip --check
+python3 scripts/quick_validate.py --archive cody-coordinator-0.2.0.zip \
   --expected-sha256 <archive_sha256-from-build-output>
 ```
 

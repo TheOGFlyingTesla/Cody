@@ -1,6 +1,6 @@
 # Configuration
 
-Cody v0.1.0 does not define a separate application configuration file. The
+Cody v0.2.0 does not define a separate application configuration file. The
 configuration model is deliberately small and repository-local.
 
 ## Durable project state
@@ -31,7 +31,7 @@ High is the bounded scout, worker, executor, and waiter. A simple slice is Sol
 Medium → Luna High; a multi-stage slice is Sol Medium → Terra Extra High → Luna
 High. Named-model availability never changes role authority: report any
 unavailable named model and return `SCOPE_CHANGE`. Never choose a nearest or
-silent substitute. Substitution is unsupported in v0.1.0; changing the declared
+silent substitute. Substitution is unsupported in v0.2.0; changing the declared
 topology requires a future contract revision.
 
 This topology configures Codex task orchestration only. It does not configure

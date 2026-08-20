@@ -33,7 +33,7 @@ class UpgradeV30Tests(unittest.TestCase):
         agents.write_bytes(
             b"custom instructions\n"
             + agents.read_bytes().replace(
-                b"standard=0.1.0", b"standard=3.0.0", 1
+                b"standard=0.2.0", b"standard=3.0.0", 1
             ).replace(current_guidance, b"")
         )
         standard_path = repo / "docs/codex/STANDARD.json"
@@ -78,7 +78,7 @@ class UpgradeV30Tests(unittest.TestCase):
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
         self.assertEqual(b"custom instructions\n", (repo / "AGENTS.md").read_bytes()[:20])
-        self.assertIn(b"standard=0.1.0", (repo / "AGENTS.md").read_bytes())
+        self.assertIn(b"standard=0.2.0", (repo / "AGENTS.md").read_bytes())
         self.assertEqual(1, (repo / "AGENTS.md").read_bytes().count(b"Routine continuation"))
         self.assertIn(b"Heartbeats are state-delta-only", (repo / "AGENTS.md").read_bytes())
         self.assertNotEqual(agents_before, (repo / "AGENTS.md").read_bytes())
@@ -86,9 +86,9 @@ class UpgradeV30Tests(unittest.TestCase):
             self.assertEqual(content, (repo / f"docs/codex/{name}").read_bytes())
 
         standard = json.loads((repo / "docs/codex/STANDARD.json").read_text())
-        self.assertEqual("0.1.0", standard["standard_version"])
+        self.assertEqual("0.2.0", standard["standard_version"])
         self.assertEqual("3.0.0", standard["migrations"][-1]["source_version"])
-        self.assertEqual("0.1.0", standard["migrations"][-1]["destination_version"])
+        self.assertEqual("0.2.0", standard["migrations"][-1]["destination_version"])
         reports = sorted((repo / "docs/codex/MIGRATIONS").glob("*.md"))
         report = reports[-1].read_text(encoding="utf-8")
         self.assertIn("## Standard 3.0.0 source mapping", report)
@@ -141,7 +141,7 @@ class UpgradeV30Tests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.1.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
         for name, content in protected.items():
             self.assertEqual(content, (repo / f"docs/codex/{name}").read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)

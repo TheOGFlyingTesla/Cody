@@ -115,6 +115,20 @@ Append durable product, architecture, safety, or operating decisions. Factual co
 - Supersedes: The unavailable-model fallback in “Public routing preserves the
   proven coordinator topology.”
 
+### 2026-08-20 — Visible task ownership and automatic upward fan-in
+
+- Decision: Standard 0.2.0 makes visible Codex tasks the owners of critical
+  milestones and uncertain waiting. Every child dispatch packet carries its
+  exact parent task ID/host and mandatory typed callbacks; the immediate parent
+  owns one bounded reconciliation after missing notification.
+- Reason: Completion must reach Luna → Terra → Sol → root automatically without
+  making the project owner relay messages or repeatedly ask for status.
+- Owner: Project owner.
+- Affected scope: Skill instructions, routing contract, dispatch packet schema
+  and validator, managed repository template, plugin runtime, migration path,
+  documentation, and behavioral tests.
+- Supersedes: The less explicit task-mesh language in standard 0.1.0.
+
 Use this entry shape:
 
 ```text

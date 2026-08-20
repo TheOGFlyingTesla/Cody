@@ -18,6 +18,7 @@ from .validator import strict_json_loads
 
 LEGACY_VERSION = "3.0.0"
 SUPPORTED_SOURCE_VERSIONS = (
+    "0.1.0",
     "3.0.0",
     "3.1.0",
     "3.2.0",
@@ -102,7 +103,7 @@ def plan_v30_migration(inspection: Inspection, *, now: datetime) -> MigrationPla
         raise CoordinatorError(
             Blocker(
                 "unsupported_standard_version",
-                "The installed coordinator is not a supported sequential Standard 3.x source.",
+                "The installed coordinator is not a supported sequential source version.",
                 "Use a supported sequential migration.",
                 ("docs/codex/STANDARD.json",),
             )
