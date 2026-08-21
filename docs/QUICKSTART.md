@@ -18,15 +18,16 @@ Restart Codex after installation so the plugin and its skill are loaded.
 
 ## 3. Invoke Cody, inspect, and preview initialization
 
-Invoke `$cody-codex-coordinator:cody-coordinator` in the Codex task that will
-own coordination. Plugin-installed skills use the plugin namespace. The skill
-resolves its own installed `SKILL_ROOT` and runs its tooling from there. Keep
-talking to this task as the project's primary coordinator. It maintains the
-durable root/portfolio state. For critical or multi-stage initiatives it
-creates one visible Sol coordinator; Sol dispatches a visible Luna worker
-directly, or uses visible Terra only when that coordination materially saves
-context. Every child reports directly upward, so you do not carry messages
-between tasks.
+Invoke `$cody-codex-coordinator:cody-coordinator` in the task you want to use
+as the project's home base. Keep talking to that task as the root coordinator.
+For a bounded initiative it creates one visible Sol coordinator. Sol sends
+focused work directly to Luna, or adds Terra when coordinating several pieces
+will genuinely save context. Every child reports back to its parent, so you do
+not carry messages between tasks.
+
+Plugin-installed skills use the plugin namespace. Cody resolves its own
+installed `SKILL_ROOT`, so its helper scripts do not depend on your project's
+working directory.
 
 For example:
 
@@ -55,8 +56,8 @@ python3 scripts/coordinator_standard.py --repo /absolute/path/to/project --forma
 python3 scripts/coordinator_standard.py --repo /absolute/path/to/project --format human check-current
 ```
 
-The doctor result is the useful handoff point: it tells a replacement
-coordinator whether the repository contract is structurally sound.
+The doctor result is the useful handoff point: it tells Cody whether the
+repository's coordination files are complete and consistent.
 
 ## 5. Continue with a bounded request
 

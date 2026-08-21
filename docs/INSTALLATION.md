@@ -1,7 +1,7 @@
 # Installation
 
-Cody plugin v0.2.0 ships coordinator standard v0.2.0. The standard installation
-is the Cody Codex plugin.
+Cody plugin v0.2.0 includes coordinator standard v0.2.0. For most people, the
+Codex plugin is the right way to install it.
 
 ## Install the plugin
 
@@ -19,11 +19,10 @@ the repository coordinator, invoke:
 $cody-codex-coordinator:cody-coordinator
 ```
 
-Plugin-installed skills use the plugin namespace. The plugin installs the
-runtime skill; its local commands require Python 3.11+
-and Git 2.39+. Installing the plugin does not initialize or modify a project.
-Repository changes begin only after an explicit request within the authority
-boundaries documented in [Safety](SAFETY.md).
+Plugin-installed skills use the plugin namespace. Cody's local tools require
+Python 3.11+ and Git 2.39+. Installing the plugin does not initialize or modify
+a project; repository changes begin only after you explicitly ask for them.
+The full boundaries are documented in [Safety](SAFETY.md).
 
 The plugin contains one explicit-only skill. It declares no MCP server, app,
 authentication flow, telemetry, hosted backend, or runtime network service.
