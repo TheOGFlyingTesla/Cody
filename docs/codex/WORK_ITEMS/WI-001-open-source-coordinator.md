@@ -81,18 +81,14 @@ communication is authorized.
 
 ## Current disposition
 
-The generic, provider-neutral coordinator skill is published at `v0.1.0` with
-its checksum-verified offline installer. The current bounded follow-up packages
-the same canonical runtime as the self-contained `cody-codex-coordinator`
-plugin and adds the repository marketplace named `cody`. The public quick path
-is marketplace installation from `main`, restart Codex, then explicitly invoke
-`$cody-codex-coordinator:cody-coordinator`; `$cody-coordinator` remains the
-standalone/offline invocation, and the existing `v0.1.0` tag is not claimed to contain plugin
-packaging. Runtime mirroring is deterministic and byte-checked, and a copied
-plugin black-box test proves the coordinator runs without its source checkout.
-The plugin package is published on `main`; the incremental `v0.1.1` release
-candidate now aligns the plugin manifest, public copy, changelog, and release
-evidence while preserving coordinator standard `0.1.0` and the historical
-skill-only `v0.1.0` tag. Publication awaits exact-diff review, exact committed-
-candidate validation, a public-route clean install and invocation smoke, hosted
-CI, and live GitHub readback. The deeper security scan remains deferred.
+The generic, provider-neutral coordinator is published as the
+`cody-codex-coordinator` plugin through the repository marketplace named
+`cody`; `v0.1.0` remains the historical checksum-verified skill-only release.
+The v0.2.0 source advances the plugin and public coordinator standard together,
+adds visible root → Sol → optional Terra → Luna ownership, and requires direct
+typed upward callbacks. Runtime mirroring is deterministic and byte-checked,
+and a copied-plugin black-box test proves the coordinator runs without its
+source checkout. Publication requires the final exact-candidate validation and
+GitHub readback; the public-route clean install follows after `main` contains
+that exact source. The deeper security scan remains deferred and is not claimed
+as release evidence.

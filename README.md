@@ -2,7 +2,7 @@
 
 ![Cody coordinating three bounded work streams](assets/cody-social-preview.jpg)
 
-![Preview](https://img.shields.io/badge/status-v0.2.0%20candidate-7c3aed)
+![Version](https://img.shields.io/badge/version-v0.2.0-7c3aed)
 ![License](https://img.shields.io/badge/license-MIT-2563eb)
 
 Cody is a **Codex plugin** that provides the explicit
@@ -13,15 +13,16 @@ project state durable and routes bounded implementation or research to cheaper
 worker tasks when useful.
 
 > Cody is an independent community project. It is not affiliated with,
-> sponsored by, or endorsed by OpenAI. Cody plugin v0.2.0 is a candidate;
-> interfaces and support claims may change.
+> sponsored by, or endorsed by OpenAI. Cody remains a preview project;
+> interfaces and support claims may change between `0.x` releases.
 
 ## What Cody does
 
 Ordinary coding tasks lose context, duplicate work, or make the project owner
 carry messages between agents. Cody provides a repository-local control plane:
 
-- one primary coordinator task that you can return to throughout the project;
+- one long-lived root/portfolio coordinator task that you can return to
+  throughout the project;
 - inspection before action, with the exact repository and Git state verified;
 - durable status, decisions, roadmap, work items, and recovery evidence under
   `docs/codex/`;
@@ -57,8 +58,18 @@ Recover the interrupted work and tell me the next safe action.
 
 Cody inspects the repository, reconciles durable and current evidence, keeps one
 active source of truth, and reports decisions or authority blockers directly.
-It may dispatch bounded workers or reviewers behind the scenes, but you keep
-talking to the coordinator rather than acting as a message bus between tasks.
+When the task surface cannot expose identity, Cody reports that native metadata
+is unavailable instead of inventing a callback destination.
+It may dispatch visible bounded worker or reviewer tasks while keeping critical
+milestone ownership inspectable. Luna tasks may use hidden subagents only for
+bounded internal support; hidden subagents never own critical delivery. You
+keep talking to the coordinator rather than acting as a message bus between
+tasks.
+
+The packaged schema and validator require direct upward callbacks; they cannot
+prove that an external Codex task service delivered a live event. If a child
+terminates without notifying its parent, the immediate parent owns one bounded
+reconciliation and restores the callback path.
 
 To move coordination to a fresh task, explicitly ask the current coordinator to
 create or hand off to a replacement coordinator. The replacement recovers from
@@ -68,9 +79,12 @@ another prompt.
 
 ## Token-efficient Sol, Terra, and Luna routing
 
-Cody separates expensive project judgment from bounded execution:
+Cody separates expensive project judgment from bounded execution. The task
+where you invoke Cody is the durable root/portfolio coordinator. For critical
+or multi-stage work it creates one visible Sol initiative coordinator, which
+then routes bounded execution through the smallest useful worker shape:
 
-- **Sol Medium** is the primary coordinator. Sol owns requirements, planning,
+- **Sol Medium** is the visible initiative coordinator. Sol owns requirements, planning,
   architecture and product judgment, risk classification, synthesis, exact-diff
   review, P0/P1 decisions, and release control.
 - **Luna High** is the default scout, worker, executor, reviewer helper, and
@@ -79,6 +93,10 @@ Cody separates expensive project judgment from bounded execution:
   multi-stage Green/Amber boundary. That route is **Sol → Terra → Luna**. Terra
   decomposes only the supplied boundary and returns `SCOPE_CHANGE` when the work
   becomes Red or exceeds its authority.
+
+The complete visible hierarchy is **root → Sol → Luna** for a simple bounded
+slice, or **root → Sol → Terra → Luna** when Terra's decomposition materially
+saves context. Terra is not inserted by default.
 
 This is designed to save tokens without weakening control. Routine workers get
 small packets instead of the coordinator's full transcript; independent slices
@@ -186,9 +204,10 @@ still best to review diagnostics before sharing them.
 
 ## Project status
 
-This is a preview, not a hosted product or a compatibility guarantee. The
-repository is intentionally conservative about claims while the public package
-layout and cross-platform installer hardening continue to settle. See
+This is an early public release, not a hosted product or a compatibility
+guarantee. The repository is intentionally conservative about claims while the
+public package layout and cross-platform installer hardening continue to
+settle. See
 [Limitations](docs/LIMITATIONS.md) for the current boundary.
 
 If you are evaluating Cody alongside OpenAI's community programs, use the

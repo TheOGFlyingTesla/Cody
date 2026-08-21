@@ -115,7 +115,7 @@ Append durable product, architecture, safety, or operating decisions. Factual co
 - Supersedes: The unavailable-model fallback in “Public routing preserves the
   proven coordinator topology.”
 
-### 2026-08-20 — Visible task ownership and automatic upward fan-in
+### 2026-08-20 — Visible task ownership and required direct upward fan-in
 
 - Decision: Standard 0.2.0 makes visible Codex tasks the owners of critical
   milestones and uncertain waiting. Every child dispatch packet carries its

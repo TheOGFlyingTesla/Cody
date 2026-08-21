@@ -9,6 +9,7 @@
     "parent",
     "child",
     "outcome",
+    "work",
     "reporting",
     "visibility"
   ],
@@ -18,6 +19,32 @@
     "parent": {"$ref": "#/$defs/task"},
     "child": {"$ref": "#/$defs/task"},
     "outcome": {"type": "string", "minLength": 1},
+    "work": {
+      "type": "object",
+      "required": [
+        "owned_paths",
+        "forbidden_paths",
+        "non_goals",
+        "authority_boundary",
+        "base_identity",
+        "acceptance_criteria",
+        "validation_requirements",
+        "stop_conditions",
+        "report_format"
+      ],
+      "properties": {
+        "owned_paths": {"$ref": "#/$defs/nonempty_strings"},
+        "forbidden_paths": {"$ref": "#/$defs/nonempty_strings"},
+        "non_goals": {"$ref": "#/$defs/nonempty_strings"},
+        "authority_boundary": {"type": "string", "minLength": 1},
+        "base_identity": {"type": "string", "minLength": 1},
+        "acceptance_criteria": {"$ref": "#/$defs/nonempty_strings"},
+        "validation_requirements": {"$ref": "#/$defs/nonempty_strings"},
+        "stop_conditions": {"$ref": "#/$defs/nonempty_strings"},
+        "report_format": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
     "reporting": {
       "type": "object",
       "required": [
@@ -78,6 +105,12 @@
   },
   "additionalProperties": false,
   "$defs": {
+    "nonempty_strings": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
     "task": {
       "type": "object",
       "required": ["role", "task_id", "host"],

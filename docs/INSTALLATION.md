@@ -1,7 +1,7 @@
 # Installation
 
-Cody plugin v0.2.0 is a candidate and ships coordinator standard v0.2.0. The
-standard installation is the Cody Codex plugin.
+Cody plugin v0.2.0 ships coordinator standard v0.2.0. The standard installation
+is the Cody Codex plugin.
 
 ## Install the plugin
 
@@ -45,8 +45,9 @@ python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --fo
 python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json upgrade --check
 ```
 
-The first check previews a migration from supported `0.1.0` or legacy `3.2.x`
-contracts to public standard `0.2.0`. The final check must report no changes.
+The first check previews a migration from supported `0.1.0` or listed legacy
+`3.2.0` through `3.2.6` contracts to public standard `0.2.0`. The final check
+must report no changes.
 Newly initialized repositories receive `0.2.0` directly. In-flight child tasks
 are not rewritten; new dispatches use the 0.2.0 packet contract.
 

@@ -43,7 +43,7 @@ class RoutingContractTests(unittest.TestCase):
             boundaries["terra_scope_change_triggers"],
         )
 
-    def test_contract_requires_visible_tasks_and_automatic_upward_fan_in(self) -> None:
+    def test_contract_requires_visible_tasks_and_direct_upward_fan_in(self) -> None:
         mesh = routing_contract.load_contract()["task_mesh"]
         self.assertEqual("visible-task", mesh["critical_delivery_owner"])
         self.assertEqual("bounded-support-only", mesh["hidden_subagents"])

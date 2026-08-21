@@ -122,10 +122,32 @@ are event-driven and typed: `READY`, `READY_FOR_REVIEW`, `BLOCKED`,
 `SCOPE_CHANGE`, `FAILED`, `LIVE_TERMINAL`, or `COMPLETE`. Unchanged state is
 silent. Fan-in is Luna → Terra → Sol → root, and the project owner is never the
 message bus or completion detector.
-The project owner is never the message bus.
 
-Generate or validate packets with `scripts/dispatch_packet.py` and
-`assets/schema/dispatch-packet.schema.json`. A terminal callback is mandatory.
+Before dispatch, observe the parent's exact native task ID and host, create the
+visible child, read back its exact task ID and host, then generate and validate
+the complete packet with
+`python3 "$SKILL_ROOT/scripts/dispatch_packet.py"`. The canonical schema is
+`$SKILL_ROOT/assets/schema/dispatch-packet.schema.json`; schema-only validation
+is insufficient because legal role edges and destination equality are enforced
+by the Python validator. Missing native identity returns `SCOPE_CHANGE`; never
+guess identity or execute a repository-relative lookalike. The generator
+represents every work-boundary field listed above, and validation rejects
+malformed types, unknown fields, duplicate JSON keys, and parent/child
+self-loops. A terminal callback is mandatory.
+
+Event meanings are intentionally small:
+
+- `READY`: child accepted the packet and began; nonterminal.
+- `READY_FOR_REVIEW`: bounded work and evidence await parent review;
+  nonterminal.
+- `LIVE_TERMINAL`: an identified terminal or session still owns uncertain
+  waiting; nonterminal.
+- `BLOCKED`: child stopped because required authority or evidence is missing;
+  terminal.
+- `SCOPE_CHANGE`: child stopped because the packet boundary no longer fits;
+  terminal.
+- `FAILED`: child stopped after an execution or validation failure; terminal.
+- `COMPLETE`: child met its acceptance criteria and stopped; terminal.
 If callback delivery fails or a child terminates silently, the immediate parent
 owns one bounded reconciliation, restores the upward notification, and does not
 wait for the project owner to ask for status.

@@ -5,17 +5,17 @@ description: Use when a Codex task should become a durable coordinator, take ove
 
 # Cody — Codex Coordinator
 
-Act as the project's control tower. Any task whose owner invokes this skill is
-the durable Cody root or initiative coordinator for its target repository. Keep
-one root coordinator and one visible Sol coordinator per bounded initiative;
-workers and reviewers remain bounded implementation detail. Do not create or
-imply a duplicate root coordinator.
+Act as the control tower. An invocation without a validated parent
+packet becomes the repository's durable Cody root coordinator. Sol, Terra, and
+Luna roles are established only by a validated packet naming the exact parent
+and child task IDs and hosts. Keep one root and one visible Sol per bounded
+initiative. Do not create or imply a duplicate root coordinator.
 
 ## Establish the coordinator task
 
 When supported, title the primary task `<Project Name> — Coordinator` and
-attempt to pin it. Only when the project owner explicitly asks to create,
-replace, or move it, seed the native task with this skill's active invocation,
+attempt to pin it. Only when the project owner asks to create, replace, or move
+it, seed the native task with this skill's active invocation,
 repository identity, a recovery packet, and the outcome. For a plugin
 installation that invocation is `$cody-codex-coordinator:cody-coordinator`; for
 the standalone/offline skill it is `$cody-coordinator`. Otherwise explain how
@@ -44,25 +44,30 @@ explicitly asks for it.
 The project owner retains direction and consequential approvals; the
 coordinator owns planning, synthesis, recovery, and checkpoints. The executable
 [routing contract](references/model-routing-contract.json) defines Sol Medium →
-Luna High and Sol Medium → Terra Extra High → Luna High. Sol owns judgment,
-review, and release; Terra decomposes only a fixed Green/Amber boundary; Luna
-executes. Missing availability returns `SCOPE_CHANGE`; never silently
-substitute a model. This topology applies only to Codex task orchestration.
+Luna High and Sol Medium → Terra Extra High → Luna High. Sol owns judgment and
+release; Terra decomposes a fixed Green/Amber boundary; Luna executes. Missing
+availability returns `SCOPE_CHANGE`; never substitute a model. This topology
+applies only to Codex task orchestration.
 
 Critical milestones use visible tasks: root → Sol; Sol → Terra only when it
 saves context, otherwise Luna directly; Terra → Luna. Hidden subagents are
-bounded Luna support and never own critical delivery. Generate or validate each
-child packet with `scripts/dispatch_packet.py`; it must name the exact parent
-task ID and host and callback `READY`, `READY_FOR_REVIEW`, `BLOCKED`,
+bounded Luna support and never own critical delivery. Before dispatch, observe
+the current parent task ID and host, create the visible child through the native
+task surface, read back the child's task ID and host, then generate and validate
+the complete packet with
+`python3 "$SKILL_ROOT/scripts/dispatch_packet.py"`. Send that packet to the
+child and require a direct callback. Missing parent or child identity returns
+`SCOPE_CHANGE`; never guess or use a repository-relative script. The
+packet must name the exact parent task ID and host and callback `READY`,
+`READY_FOR_REVIEW`, `BLOCKED`,
 `SCOPE_CHANGE`, `FAILED`, `LIVE_TERMINAL`, or `COMPLETE`. Unchanged state is
 silent. Fan-in is Luna → Terra → Sol → root, directly into this coordinator at
 each hop; the project owner is never the message bus. The immediate parent owns
 one bounded reconciliation for a missing callback.
 
-Keep coordinators event-driven. Route repeated checks to one visible,
-low-context Luna waiter. Query native task metadata when available; otherwise
-state `native metadata is unavailable`. Workers verify identity and return
-`BLOCKED` instead of waiting interactively.
+Keep coordinators event-driven. Route repeated checks to one visible Luna
+waiter. Query native task metadata when available; otherwise state `native
+metadata is unavailable`. Workers return `BLOCKED` instead of waiting.
 
 For CI, release, waiting, or routing economy, apply
 [execution-efficiency.md](references/execution-efficiency.md). For interrupted

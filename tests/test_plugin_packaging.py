@@ -167,7 +167,8 @@ class PluginPackagingTests(unittest.TestCase):
         support = (SKILL_ROOT / "SUPPORT.md").read_text(encoding="utf-8")
         contributing = (SKILL_ROOT / "CONTRIBUTING.md").read_text(encoding="utf-8")
 
-        self.assertIn("status-v0.2.0%20candidate", readme)
+        self.assertIn("version-v0.2.0", readme)
+        self.assertIn("Cody remains a preview project", readme)
         self.assertIn("Cody plugin v0.2.0", installation)
         self.assertIn("## [0.2.0]", changelog)
         self.assertIn("plugin `0.2.0` ships coordinator standard `0.2.0`", changelog)

@@ -170,7 +170,7 @@ class LeanModeContractTests(unittest.TestCase):
             "external-runtime or provider ambiguity fails closed",
             "only when listed safe",
             "action-specific token",
-            "make this task the repository's durable cody coordinator",
+            "make this unparented task the repository's durable cody root coordinator",
             "do not create or imply a duplicate root coordinator",
             "chatgpt pro when it is visibly available",
             "strongest available chatgpt model",

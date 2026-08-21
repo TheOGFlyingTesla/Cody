@@ -15,11 +15,12 @@ Git tag, changelog entry, and plugin-facing documentation advance together.
 The earlier `v0.1.0` tag remains the skill-only offline release; incremental
 plugin releases never rewrite that tag or claim it contained later packaging.
 
-Cody's public coordinator standard has its own `0.x` lineage. Supported legacy
-`3.2.x` repository contracts are migration inputs, not public Cody version
-numbers: an explicit Cody upgrade converts them to the current public standard.
-This repository therefore advances `0.1.0` → `0.2.0`; it does not relabel the
-candidate as `3.2.7` or claim to update a separately installed private package.
+Cody's public coordinator standard has its own `0.x` lineage. Supported listed
+legacy `3.2.0` through `3.2.6` repository contracts are migration inputs, not
+public Cody version numbers: an explicit Cody upgrade converts them to the
+current public standard. This repository therefore advances `0.1.0` → `0.2.0`;
+it does not relabel the release as `3.2.7` or claim to update a separately
+installed private package.
 
 ## Release checklist
 

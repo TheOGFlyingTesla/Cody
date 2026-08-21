@@ -22,8 +22,11 @@ Invoke `$cody-codex-coordinator:cody-coordinator` in the Codex task that will
 own coordination. Plugin-installed skills use the plugin namespace. The skill
 resolves its own installed `SKILL_ROOT` and runs its tooling from there. Keep
 talking to this task as the project's primary coordinator. It maintains the
-durable state and may route bounded work to Sol/Terra/Luna tasks without
-requiring you to carry messages between them.
+durable root/portfolio state. For critical or multi-stage initiatives it
+creates one visible Sol coordinator; Sol dispatches a visible Luna worker
+directly, or uses visible Terra only when that coordination materially saves
+context. Every child reports directly upward, so you do not carry messages
+between tasks.
 
 For example:
 
@@ -70,11 +73,12 @@ Where do we stand?
 The coordinator should inspect first, keep one active work item, and report
 authority or evidence blockers instead of guessing.
 
-For a simple implementation slice, Sol coordinates and Luna performs the
-bounded work. For a fixed multi-stage Green/Amber outcome, Sol may ask Terra to
-decompose bounded Luna work. Sol still reviews the evidence and every resulting
-diff. This keeps the expensive coordinator context compact while workers receive
-only the information their slice needs.
+For a critical simple implementation slice, the visible route is root → Sol →
+Luna. For a fixed multi-stage Green/Amber outcome, the visible route is root →
+Sol → Terra → Luna. Sol still reviews the evidence and every resulting diff;
+Terra is used only when its decomposition saves more context than it costs.
+This keeps the expensive coordinator context compact while workers receive only
+the information their slice needs.
 
 ## 6. Recover deliberately
 

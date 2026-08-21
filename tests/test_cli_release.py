@@ -231,16 +231,18 @@ class SkillPackageTests(unittest.TestCase):
             self.assertIn(phrase, text)
 
     def test_references_cover_authority_recovery_and_completion(self) -> None:
-        combined = "\n".join(
-            path.read_text(encoding="utf-8")
-            for path in sorted((SKILL_ROOT / "references").glob("*.md"))
+        combined = " ".join(
+            "\n".join(
+                path.read_text(encoding="utf-8")
+                for path in sorted((SKILL_ROOT / "references").glob("*.md"))
+            ).lower().split()
         )
         for phrase in (
-            "**Project owner:**",
-            "Git/worktree evidence",
+            "**project owner:**",
+            "git/worktree evidence",
             "verified, inferred, unknown, stale, or conflicting",
-            "P0/P1 status",
-            "Preserve every byte outside it",
+            "p0/p1 status",
+            "preserve every byte outside it",
             "project owner is never the message bus",
         ):
             self.assertIn(phrase, combined)
@@ -272,7 +274,7 @@ class DocumentationTests(unittest.TestCase):
             path.name: path.read_text(encoding="utf-8")
             for path in RELEASE_ROOT.glob("*.md")
         }
-        combined = "\n".join(documents.values())
+        combined = " ".join("\n".join(documents.values()).split())
         for phrase in (
             "Set up this repository with its coordinator standard.",
             "Upgrade this repository to its current coordinator standard.",

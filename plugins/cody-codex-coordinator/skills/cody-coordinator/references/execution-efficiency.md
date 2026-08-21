@@ -33,7 +33,7 @@ A proven pre-effect tooling failure may continue with a materially corrected att
 
 ## Keep coordination compact
 
-Write durable status only at meaningful state transitions. One owner writes the active truth; registries and dashboards link to it instead of copying narratives. Prefer one worker and one reviewer, bounded tool output, visible task ownership for critical work, automatic upward callbacks, event-driven check-ins, and structured memos instead of copied transcripts.
+Write durable status only at meaningful state transitions. One owner writes the active truth; registries and dashboards link to it instead of copying narratives. Prefer one worker and one reviewer, bounded tool output, visible task ownership for critical work, required direct upward callbacks, event-driven check-ins, and structured memos instead of copied transcripts.
 
 Treat model routing as measured resource control. The executable
 `model-routing-contract.json` declares Sol Medium as primary coordinator,

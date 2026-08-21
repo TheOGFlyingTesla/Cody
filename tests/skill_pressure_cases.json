@@ -134,7 +134,8 @@
       "case": "topology-and-runtime-ambiguity",
       "outcome": "pass",
       "observed_choices": [
-        "Routed a simple bounded slice from Sol to Luna and a fixed multi-stage Green/Amber slice from Sol to Terra to Luna with no full-history fork.",
+        "Kept one durable visible root, created one visible Sol coordinator per bounded initiative, and required every child packet to name its exact parent task ID and host.",
+        "Routed a simple bounded slice root to Sol to Luna and a fixed multi-stage Green/Amber slice root to Sol to Terra to Luna with no full-history fork.",
         "Returned SCOPE_CHANGE to Sol when Terra discovered Red work or authority/risk drift; Sol retained final release and P0/P1 authority.",
         "Dispatched exactly one low-context Luna waiter for repeated checks and fanned its typed terminal report directly to the coordinator.",
         "Failed before mutation when a deploy pin mismatched and exposed only the approved correction path.",
@@ -156,7 +157,7 @@
     "Block dirty overlap instead of excluding a managed destination.",
     "Keep migration evidence inside the repository contract without copying arbitrary content.",
     "Report version drift without mutating until explicit upgrade authority exists.",
-    "Use native task fan-in and preserve project owner's one-pinned-coordinator workflow.",
+    "Use required direct native task fan-in, preserve one durable visible root, and keep critical Sol, optional Terra, and Luna delivery visible without making the project owner relay messages.",
     "Use the smallest safe orientation tier and escalate automatically on stale, conflicting, wrong-target, or unclear-risk evidence.",
     "Keep STATUS compact and heartbeats silent when state is unchanged.",
     "Use bounded workers for execution and long-running observation while the coordinator retains judgment and release authority; project owner retains consequential approvals.",
