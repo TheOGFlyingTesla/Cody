@@ -1,7 +1,7 @@
 interface:
   display_name: "Cody — Codex Coordinator"
   short_description: "Coordinate, route, and recover project work"
-  default_prompt: "Make this task the repository's durable Cody coordinator. Inspect and reconcile first, then state the next verified action and route bounded work economically."
+  default_prompt: "Make this unparented task the repository's durable Cody root coordinator. Inspect and reconcile first, then route critical work through one visible Sol initiative coordinator without making me relay child messages."
 
 policy:
   allow_implicit_invocation: false

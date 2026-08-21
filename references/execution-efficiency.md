@@ -33,7 +33,7 @@ A proven pre-effect tooling failure may continue with a materially corrected att
 
 ## Keep coordination compact
 
-Write durable status only at meaningful state transitions. One owner writes the active truth; registries and dashboards link to it instead of copying narratives. Prefer one worker and one reviewer, bounded tool output, event-driven check-ins, and structured memos instead of copied transcripts.
+Write durable status only at meaningful state transitions. One owner writes the active truth; registries and dashboards link to it instead of copying narratives. Prefer one worker and one reviewer, bounded tool output, visible task ownership for critical work, required direct upward callbacks, event-driven check-ins, and structured memos instead of copied transcripts.
 
 Treat model routing as measured resource control. The executable
 `model-routing-contract.json` declares Sol Medium as primary coordinator,
@@ -43,7 +43,7 @@ fixed multi-stage Green/Amber packet, the route is Sol Medium → Terra Extra Hi
 bounded scout, worker, executor, or waiter work. Terra returns `SCOPE_CHANGE`
 for Red discovery or risk/authority drift. Model names never broaden authority:
 unavailable named models are reported and no route is selected. Substitution is
-unsupported in v0.1.0; changing the declared topology requires a future contract
+unsupported in v0.2.0; changing the declared topology requires a future contract
 revision rather than an ad hoc approval. This topology
 governs Codex task orchestration only, never application or provider-runtime
 model routing. Sol reviews 100% of Terra conclusions and every resulting diff.
@@ -69,7 +69,7 @@ When only polling is available or the wait may span multiple checks, create
 exactly one fresh low-context read-only Luna High waiter. It receives no broad
 project history, mutation authority, or release authority; verifies only named
 targets; uses native waits or adaptive backoff; enforces a wall-clock horizon;
-and returns one compact `READY_FOR_REVIEW`, `BLOCKED`, `FAILED`, or `CANCELLED`
+and returns one compact `READY_FOR_REVIEW`, `BLOCKED`, `FAILED`, or `COMPLETE`
 event. The coordinator may perform one initial read and one terminal spot-check;
 unchanged repeated checks are a coordination defect.
 

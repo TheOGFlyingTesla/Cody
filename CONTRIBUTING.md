@@ -1,8 +1,8 @@
 # Contributing to Cody
 
 Thanks for helping make repository coordination safer and more portable. Cody
-plugin v0.1.1 is a community preview shipping coordinator standard v0.1.0, so
-clear evidence and modest claims are more useful than broad promises.
+plugin v0.2.0 is a community preview release shipping coordinator standard v0.2.0,
+so clear evidence and modest claims are more useful than broad promises.
 
 ## Before you start
 

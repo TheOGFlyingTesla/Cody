@@ -31,7 +31,7 @@ from build_release import (
 
 
 SKILL_NAME = "cody-coordinator"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 INSTALLATION_SCOPE = "user-agents-home"
 DISCOVERY_PATH = "HOME/.agents/skills/cody-coordinator"
 

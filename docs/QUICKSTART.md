@@ -18,12 +18,16 @@ Restart Codex after installation so the plugin and its skill are loaded.
 
 ## 3. Invoke Cody, inspect, and preview initialization
 
-Invoke `$cody-codex-coordinator:cody-coordinator` in the Codex task that will
-own coordination. Plugin-installed skills use the plugin namespace. The skill
-resolves its own installed `SKILL_ROOT` and runs its tooling from there. Keep
-talking to this task as the project's primary coordinator. It maintains the
-durable state and may route bounded work to Sol/Terra/Luna tasks without
-requiring you to carry messages between them.
+Invoke `$cody-codex-coordinator:cody-coordinator` in the task you want to use
+as the project's home base. Keep talking to that task as the root coordinator.
+For a bounded initiative it creates one visible Sol coordinator. Sol sends
+focused work directly to Luna, or adds Terra when coordinating several pieces
+will genuinely save context. Every child reports back to its parent, so you do
+not carry messages between tasks.
+
+Plugin-installed skills use the plugin namespace. Cody resolves its own
+installed `SKILL_ROOT`, so its helper scripts do not depend on your project's
+working directory.
 
 For example:
 
@@ -52,8 +56,8 @@ python3 scripts/coordinator_standard.py --repo /absolute/path/to/project --forma
 python3 scripts/coordinator_standard.py --repo /absolute/path/to/project --format human check-current
 ```
 
-The doctor result is the useful handoff point: it tells a replacement
-coordinator whether the repository contract is structurally sound.
+The doctor result is the useful handoff point: it tells Cody whether the
+repository's coordination files are complete and consistent.
 
 ## 5. Continue with a bounded request
 
@@ -70,11 +74,12 @@ Where do we stand?
 The coordinator should inspect first, keep one active work item, and report
 authority or evidence blockers instead of guessing.
 
-For a simple implementation slice, Sol coordinates and Luna performs the
-bounded work. For a fixed multi-stage Green/Amber outcome, Sol may ask Terra to
-decompose bounded Luna work. Sol still reviews the evidence and every resulting
-diff. This keeps the expensive coordinator context compact while workers receive
-only the information their slice needs.
+For a critical simple implementation slice, the visible route is root → Sol →
+Luna. For a fixed multi-stage Green/Amber outcome, the visible route is root →
+Sol → Terra → Luna. Sol still reviews the evidence and every resulting diff;
+Terra is used only when its decomposition saves more context than it costs.
+This keeps the expensive coordinator context compact while workers receive only
+the information their slice needs.
 
 ## 6. Recover deliberately
 

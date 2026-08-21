@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cody-coordinator.local/schema/dispatch-packet-v1.json",
+  "title": "Cody visible-task dispatch packet",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "route",
+    "parent",
+    "child",
+    "outcome",
+    "work",
+    "reporting",
+    "visibility"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "route": {"type": "string", "enum": ["root-to-sol", "simple", "multi-stage"]},
+    "parent": {"$ref": "#/$defs/task"},
+    "child": {"$ref": "#/$defs/task"},
+    "outcome": {"type": "string", "minLength": 1},
+    "work": {
+      "type": "object",
+      "required": [
+        "owned_paths",
+        "forbidden_paths",
+        "non_goals",
+        "authority_boundary",
+        "base_identity",
+        "acceptance_criteria",
+        "validation_requirements",
+        "stop_conditions",
+        "report_format"
+      ],
+      "properties": {
+        "owned_paths": {"$ref": "#/$defs/nonempty_strings"},
+        "forbidden_paths": {"$ref": "#/$defs/nonempty_strings"},
+        "non_goals": {"$ref": "#/$defs/nonempty_strings"},
+        "authority_boundary": {"type": "string", "minLength": 1},
+        "base_identity": {"type": "string", "minLength": 1},
+        "acceptance_criteria": {"$ref": "#/$defs/nonempty_strings"},
+        "validation_requirements": {"$ref": "#/$defs/nonempty_strings"},
+        "stop_conditions": {"$ref": "#/$defs/nonempty_strings"},
+        "report_format": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "reporting": {
+      "type": "object",
+      "required": [
+        "destination_task_id",
+        "destination_host",
+        "events",
+        "unchanged_state",
+        "direct_upward",
+        "terminal_callback_required",
+        "missing_callback_reconciliation"
+      ],
+      "properties": {
+        "destination_task_id": {"type": "string", "minLength": 1},
+        "destination_host": {"type": "string", "minLength": 1},
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "READY",
+              "READY_FOR_REVIEW",
+              "BLOCKED",
+              "SCOPE_CHANGE",
+              "FAILED",
+              "LIVE_TERMINAL",
+              "COMPLETE"
+            ]
+          },
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true
+        },
+        "unchanged_state": {"type": "string", "const": "silent"},
+        "direct_upward": {"type": "boolean", "const": true},
+        "terminal_callback_required": {"type": "boolean", "const": true},
+        "missing_callback_reconciliation": {
+          "type": "object",
+          "required": ["owner", "attempts"],
+          "properties": {
+            "owner": {"type": "string", "const": "immediate-parent"},
+            "attempts": {"type": "integer", "const": 1}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "visibility": {
+      "type": "object",
+      "required": ["child_task", "critical_milestone_owner", "hidden_subagents"],
+      "properties": {
+        "child_task": {"type": "string", "const": "visible"},
+        "critical_milestone_owner": {"type": "string", "const": "visible-task"},
+        "hidden_subagents": {"type": "string", "const": "bounded-support-only"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nonempty_strings": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "task": {
+      "type": "object",
+      "required": ["role", "task_id", "host"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "root_coordinator",
+            "primary_coordinator",
+            "junior_coordinator",
+            "bounded_worker"
+          ]
+        },
+        "task_id": {"type": "string", "minLength": 1},
+        "host": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -68,7 +68,7 @@ def parse_managed_block(content: bytes) -> ManagedBlock | None:
     )
 
 
-def format_managed_block(body: bytes, *, version: str = "0.1.0") -> bytes:
+def format_managed_block(body: bytes, *, version: str = "0.2.0") -> bytes:
     normalized_body = body if body.endswith(b"\n") else body + b"\n"
     return (
         f"<!-- cody-coordinator:start standard={version} -->\n".encode("ascii")
@@ -77,7 +77,7 @@ def format_managed_block(body: bytes, *, version: str = "0.1.0") -> bytes:
     )
 
 
-def upsert_managed_block(content: bytes, body: bytes, *, version: str = "0.1.0") -> bytes:
+def upsert_managed_block(content: bytes, body: bytes, *, version: str = "0.2.0") -> bytes:
     block_bytes = format_managed_block(body, version=version)
     existing = parse_managed_block(content)
     if existing is not None:

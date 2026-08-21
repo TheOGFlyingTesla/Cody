@@ -57,10 +57,36 @@
       "role_ids": ["primary_coordinator", "junior_coordinator", "bounded_worker"]
     }
   },
+  "task_mesh": {
+    "critical_delivery_owner": "visible-task",
+    "hidden_subagents": "bounded-support-only",
+    "dispatch_edges": [
+      ["root_coordinator", "primary_coordinator"],
+      ["primary_coordinator", "junior_coordinator"],
+      ["primary_coordinator", "bounded_worker"],
+      ["junior_coordinator", "bounded_worker"]
+    ],
+    "required_parent_fields": ["task_id", "host"],
+    "typed_events": [
+      "READY",
+      "READY_FOR_REVIEW",
+      "BLOCKED",
+      "SCOPE_CHANGE",
+      "FAILED",
+      "LIVE_TERMINAL",
+      "COMPLETE"
+    ],
+    "unchanged_state": "silent",
+    "terminal_callback_required": true,
+    "missing_callback_reconciliation": {
+      "owner": "immediate-parent",
+      "attempts": 1
+    }
+  },
   "unavailable_named_model_policy": {
     "code": "named_model_unavailable",
     "action": "report-unavailable-and-return-scope-change",
-    "substitution": "unsupported-in-v0.1.0; no route is selected"
+    "substitution": "unsupported-in-v0.2.0; no route is selected"
   },
   "live_observation": {
     "required_fields": ["route", "available_models", "assignments"],

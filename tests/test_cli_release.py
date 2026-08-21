@@ -36,7 +36,7 @@ def _prepare_release() -> tuple[tempfile.TemporaryDirectory[str], Path, Path]:
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    archive = Path(context.name) / "cody-coordinator-0.1.0.zip"
+    archive = Path(context.name) / "cody-coordinator-0.2.0.zip"
     module.build_release(source, archive, check=False)
     root = Path(context.name) / "cody-coordinator"
     root.mkdir()
@@ -231,16 +231,18 @@ class SkillPackageTests(unittest.TestCase):
             self.assertIn(phrase, text)
 
     def test_references_cover_authority_recovery_and_completion(self) -> None:
-        combined = "\n".join(
-            path.read_text(encoding="utf-8")
-            for path in sorted((SKILL_ROOT / "references").glob("*.md"))
+        combined = " ".join(
+            "\n".join(
+                path.read_text(encoding="utf-8")
+                for path in sorted((SKILL_ROOT / "references").glob("*.md"))
+            ).lower().split()
         )
         for phrase in (
-            "**Project owner:**",
-            "Git/worktree evidence",
+            "**project owner:**",
+            "git/worktree evidence",
             "verified, inferred, unknown, stale, or conflicting",
-            "P0/P1 status",
-            "Preserve every byte outside it",
+            "p0/p1 status",
+            "preserve every byte outside it",
             "project owner is never the message bus",
         ):
             self.assertIn(phrase, combined)
@@ -272,7 +274,7 @@ class DocumentationTests(unittest.TestCase):
             path.name: path.read_text(encoding="utf-8")
             for path in RELEASE_ROOT.glob("*.md")
         }
-        combined = "\n".join(documents.values())
+        combined = " ".join("\n".join(documents.values()).split())
         for phrase in (
             "Set up this repository with its coordinator standard.",
             "Upgrade this repository to its current coordinator standard.",
@@ -317,7 +319,7 @@ class ReleaseIntegrityTests(unittest.TestCase):
             (RELEASE_ROOT / "release_manifest.json").read_text(encoding="utf-8")
         )
         self.assertEqual(1, manifest["schema_version"])
-        self.assertEqual("0.1.0", manifest["standard_version"])
+        self.assertEqual("0.2.0", manifest["standard_version"])
         self.assertIn("python>=3.11", manifest["runtime"])
         self.assertRegex(manifest["source_content_sha256"], r"^[0-9a-f]{64}$")
         self.assertEqual(sorted(manifest["files"], key=lambda value: value.encode()), manifest["files"])
@@ -347,7 +349,7 @@ class ReleaseIntegrityTests(unittest.TestCase):
                 ),
             )
             before = tree_hash(source)
-            archive_path = Path(directory) / "cody-coordinator-0.1.0.zip"
+            archive_path = Path(directory) / "cody-coordinator-0.2.0.zip"
 
             builder.build_release(source, archive_path, check=False)
 
@@ -467,7 +469,7 @@ class ReleaseIntegrityTests(unittest.TestCase):
             manifest = {
                 "schema_version": 1,
                 "standard_name": "cody-coordinator",
-                "standard_version": "0.1.0",
+                "standard_version": "0.2.0",
                 "runtime": "python>=3.11; git>=2.39",
                 "archive": "deterministic-zip-stored-v1",
                 "source_content_sha256": "0" * 64,
@@ -787,7 +789,7 @@ class InstallerTests(unittest.TestCase):
         )
 
         self.assertEqual(0, installed.returncode, installed.stdout)
-        self.assertTrue(stable.resolve(strict=True).name.startswith("0.1.0-"))
+        self.assertTrue(stable.resolve(strict=True).name.startswith("0.2.0-"))
         self.assertEqual(old_bytes, (old_target / "VERSION").read_bytes())
 
     def test_unknown_stable_path_and_tampered_store_fail_closed(self) -> None:

@@ -21,6 +21,7 @@ fail-closed blocker for unsupported native mutation; see
 | Routing resolves only the declared Sol Medium → Luna High or Sol Medium → Terra Extra High → Luna High assignments, reports unavailable named models, and never silently substitutes | `tests/test_routing_contract.py` and `scripts/routing_contract.py` |
 | An opt-in routing observation can be checked for contract conformance without claiming that self-authored JSON proves a live Codex run | `scripts/routing_live_eval.py` and `tests/test_routing_contract.py` |
 | Executable contract checks require Terra escalation, Sol final authority, direct fan-in, one low-context waiter, and no implied duplicate coordinator | `tests/test_lean_mode.py` and `tests/skill_pressure_cases.json` |
+| Visible dispatch packets require a complete work boundary, exact parent task and host identity, direct typed callbacks, terminal fan-in, silent unchanged state, bounded missing-callback reconciliation, fail-closed types, and duplicate-key rejection | `tests/test_dispatch_packet.py`, `tests/test_routing_contract.py`, and `assets/schema/dispatch-packet.schema.json` |
 | Executable contract checks require deploy-pin mismatch and unknown provider/external-runtime ambiguity to fail closed | `tests/test_lean_mode.py` and `tests/skill_pressure_cases.json` |
 
 From a source checkout, run the same suite used by CI. The generated release

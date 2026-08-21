@@ -1,7 +1,7 @@
 # Support
 
-Cody plugin v0.1.1 is a preview maintained as a community project and ships
-coordinator standard v0.1.0. Start with the
+Cody plugin v0.2.0 is a community preview release and ships coordinator standard v0.2.0.
+Start with the
 [README](README.md), [Quick start](docs/QUICKSTART.md),
 [Configuration](docs/CONFIGURATION.md), and [Limitations](docs/LIMITATIONS.md).
 

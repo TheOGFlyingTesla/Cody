@@ -23,11 +23,13 @@ def _validate_contract(contract: Any) -> dict[str, Any]:
     roles = contract.get("roles")
     routes = contract.get("routes")
     boundaries = contract.get("authority_boundaries")
+    task_mesh = contract.get("task_mesh")
     policy = contract.get("unavailable_named_model_policy")
     if (
         not isinstance(roles, list)
         or not isinstance(routes, dict)
         or not isinstance(boundaries, dict)
+        or not isinstance(task_mesh, dict)
         or not isinstance(policy, dict)
         or not all(
             isinstance(role, dict)
@@ -83,6 +85,33 @@ def _validate_contract(contract: Any) -> dict[str, Any]:
         raise ContractError("routing routes are unsupported")
     if not isinstance(policy.get("code"), str) or not isinstance(policy.get("action"), str):
         raise ContractError("routing unavailable-model policy is unsupported")
+    if task_mesh != {
+        "critical_delivery_owner": "visible-task",
+        "hidden_subagents": "bounded-support-only",
+        "dispatch_edges": [
+            ["root_coordinator", "primary_coordinator"],
+            ["primary_coordinator", "junior_coordinator"],
+            ["primary_coordinator", "bounded_worker"],
+            ["junior_coordinator", "bounded_worker"],
+        ],
+        "required_parent_fields": ["task_id", "host"],
+        "typed_events": [
+            "READY",
+            "READY_FOR_REVIEW",
+            "BLOCKED",
+            "SCOPE_CHANGE",
+            "FAILED",
+            "LIVE_TERMINAL",
+            "COMPLETE",
+        ],
+        "unchanged_state": "silent",
+        "terminal_callback_required": True,
+        "missing_callback_reconciliation": {
+            "owner": "immediate-parent",
+            "attempts": 1,
+        },
+    }:
+        raise ContractError("routing task mesh is unsupported")
     return contract
 
 

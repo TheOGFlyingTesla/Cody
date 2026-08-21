@@ -1,7 +1,7 @@
 # Examples
 
 These files are illustrative notes, not executable configuration and not a
-source of credentials. Cody v0.1.0 has no separate project configuration file;
+source of credentials. Cody v0.2.0 has no separate project configuration file;
 the runtime discovers repository state from the target project and its
 `docs/codex/` contract.
 

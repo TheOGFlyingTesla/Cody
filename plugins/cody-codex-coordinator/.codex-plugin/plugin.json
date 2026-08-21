@@ -1,7 +1,7 @@
 {
   "name": "cody-codex-coordinator",
-  "version": "0.1.1",
-  "description": "Turn one Codex task into a durable repository coordinator with bounded orchestration and recovery.",
+  "version": "0.2.0",
+  "description": "Turn one Codex task into a durable repository root with visible, bounded orchestration and recovery.",
   "author": {
     "name": "Cody Contributors"
   },
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Cody — Codex Coordinator",
     "shortDescription": "Coordinate, route, and recover repository work.",
-    "longDescription": "Cody establishes one durable repository coordinator that verifies state, routes bounded work, preserves checkpoints, and recovers interrupted operations.",
+    "longDescription": "Cody establishes one durable repository root that verifies state, creates one visible Sol coordinator per bounded initiative, routes optional Terra and Luna work, preserves checkpoints, and recovers interrupted operations without making the project owner relay messages.",
     "developerName": "Cody Contributors",
     "category": "Developer Tools",
     "capabilities": [
@@ -27,8 +27,8 @@
       "Recovery workflows"
     ],
     "defaultPrompt": [
-      "Use $cody-codex-coordinator:cody-coordinator to take over this repository and report verified status.",
-      "Use $cody-codex-coordinator:cody-coordinator to plan and coordinate this repository outcome.",
+      "Use $cody-codex-coordinator:cody-coordinator to make this task the repository root and report verified status.",
+      "Use $cody-codex-coordinator:cody-coordinator to coordinate this repository outcome through visible bounded tasks.",
       "Use $cody-codex-coordinator:cody-coordinator to recover this interrupted repository task."
     ]
   }

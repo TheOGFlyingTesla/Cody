@@ -2,31 +2,31 @@
 
 ![Cody coordinating three bounded work streams](assets/cody-social-preview.jpg)
 
-![Preview](https://img.shields.io/badge/status-v0.1.1%20preview-7c3aed)
+![Version](https://img.shields.io/badge/version-v0.2.0-7c3aed)
 ![License](https://img.shields.io/badge/license-MIT-2563eb)
 
-Cody is a **Codex plugin** that provides the explicit
-`$cody-codex-coordinator:cody-coordinator` skill. It turns
-one Codex task into the coordinator for a repository. You talk to that
-coordinator about outcomes, status, priorities, and blockers; Cody keeps the
-project state durable and routes bounded implementation or research to cheaper
-worker tasks when useful.
+Cody is a **Codex plugin** that turns one task into the home base for a
+repository. You use the explicit
+`$cody-codex-coordinator:cody-coordinator` skill, then keep talking to that
+task about goals, priorities, progress, and blockers. Cody keeps track of the
+project and hands focused work to other tasks when that saves time and context.
 
 > Cody is an independent community project. It is not affiliated with,
-> sponsored by, or endorsed by OpenAI. Cody plugin v0.1.1 is a preview;
-> interfaces and support claims may change.
+> sponsored by, or endorsed by OpenAI. Cody remains a preview project;
+> interfaces and support claims may change between `0.x` releases.
 
 ## What Cody does
 
-Ordinary coding tasks lose context, duplicate work, or make the project owner
-carry messages between agents. Cody provides a repository-local control plane:
+Long-running coding work can lose context, repeat work, or leave you carrying
+messages between tasks. Cody gives the repository a simple coordination layer:
 
-- one primary coordinator task that you can return to throughout the project;
+- one long-lived root/portfolio coordinator task that you can return to
+  throughout the project;
 - inspection before action, with the exact repository and Git state verified;
 - durable status, decisions, roadmap, work items, and recovery evidence under
   `docs/codex/`;
-- bounded worker and reviewer packets instead of repeatedly loading the full
-  project history;
+- focused instructions for workers and reviewers instead of repeatedly loading
+  the full project history;
 - deterministic validation and interrupted-work recovery; and
 - explicit boundaries around commit, push, deploy, secrets, billing, providers,
   and production systems.
@@ -44,8 +44,8 @@ long-lived coordinator and invoke:
 $cody-codex-coordinator:cody-coordinator
 ```
 
-That task becomes the one place where you can speak naturally about the
-project. Useful requests include:
+That task becomes the place where you talk about the project in ordinary
+language. For example:
 
 ```text
 Set up this repository with its coordinator standard.
@@ -55,22 +55,29 @@ Plan and implement <outcome>.
 Recover the interrupted work and tell me the next safe action.
 ```
 
-Cody inspects the repository, reconciles durable and current evidence, keeps one
-active source of truth, and reports decisions or authority blockers directly.
-It may dispatch bounded workers or reviewers behind the scenes, but you keep
-talking to the coordinator rather than acting as a message bus between tasks.
+Cody checks the repository before acting, keeps one current source of truth,
+and tells you when it needs a decision. It can create visible worker and
+reviewer tasks, but you keep talking to the coordinator; you do not have to
+relay messages between them. If Codex cannot provide the task identity needed
+for a reliable handoff, Cody says that native metadata is unavailable instead
+of guessing.
 
-To move coordination to a fresh task, explicitly ask the current coordinator to
-create or hand off to a replacement coordinator. The replacement recovers from
-Git and `docs/codex/`; it does not rely on the old conversation alone. Cody does
-not create a second coordinator merely because its description happens to match
-another prompt.
+Every child task is told exactly where to report. If it ends without reporting,
+its parent performs one bounded check and restores the handoff. Cody validates
+that protocol locally; live message delivery still depends on Codex itself.
+
+If you want to move coordination to a fresh task, ask the current coordinator
+to hand it off. The replacement rebuilds its context from Git and `docs/codex/`
+instead of depending on the old conversation alone.
 
 ## Token-efficient Sol, Terra, and Luna routing
 
-Cody separates expensive project judgment from bounded execution:
+Cody keeps high-context project judgment separate from focused execution. The
+task where you invoke Cody is the long-lived root coordinator. For a bounded
+initiative it creates one visible Sol coordinator, which then uses the smallest
+useful worker setup:
 
-- **Sol Medium** is the primary coordinator. Sol owns requirements, planning,
+- **Sol Medium** is the visible initiative coordinator. Sol owns requirements, planning,
   architecture and product judgment, risk classification, synthesis, exact-diff
   review, P0/P1 decisions, and release control.
 - **Luna High** is the default scout, worker, executor, reviewer helper, and
@@ -80,12 +87,13 @@ Cody separates expensive project judgment from bounded execution:
   decomposes only the supplied boundary and returns `SCOPE_CHANGE` when the work
   becomes Red or exceeds its authority.
 
-This is designed to save tokens without weakening control. Routine workers get
-small packets instead of the coordinator's full transcript; independent slices
-can run without duplicating all project context; repeated waiting is delegated
-to one low-context Luna waiter; and Sol receives compact evidence for final
-synthesis and review. Terra is used only when its decomposition saves more
-context than it costs—simple work skips that extra layer.
+The complete visible hierarchy is **root → Sol → Luna** for a simple bounded
+slice, or **root → Sol → Terra → Luna** when Terra's decomposition materially
+saves context. Terra is not inserted by default.
+
+This saves tokens by giving each worker only the context it needs. Sol receives
+compact results for review, repeated waiting goes to one low-context Luna task,
+and simple work skips Terra entirely.
 
 Model availability is checked before dispatch. Missing evidence or an
 unavailable required model fails closed with `SCOPE_CHANGE`; Cody never silently
@@ -94,18 +102,15 @@ do not select models inside your application or production provider.
 
 ## Authority boundaries
 
-The task that invokes `$cody-codex-coordinator:cody-coordinator` is the
-repository's coordinator;
-Cody never creates a second coordinator by implication. Provider or external-
-runtime ambiguity, unknown deploy pins, and unavailable consultation evidence
-fail closed rather than selecting an assumed target. The project owner retains
-product direction, priorities, and consequential approvals. Installing or
-invoking Cody does not authorize commit, push, deploy, production mutation,
-secret access, billing changes, or communication with real recipients.
+The task where you invoke Cody is the repository's root coordinator. Cody does
+not create a second root unless you ask for a handoff or replacement. You still
+own product direction, priorities, and consequential approvals. Installing or
+invoking Cody is not permission to commit, push, deploy, change production,
+access secrets, change billing, or contact real people.
 
 The machine-checkable [routing contract](references/model-routing-contract.json)
 defines the exact orchestration topology. Substitution is unsupported in
-coordinator standard v0.1.0, which ships inside Cody plugin v0.1.1.
+coordinator standard v0.2.0, which ships inside Cody plugin v0.2.0.
 
 ## Quick start
 
@@ -186,9 +191,10 @@ still best to review diagnostics before sharing them.
 
 ## Project status
 
-This is a preview, not a hosted product or a compatibility guarantee. The
-repository is intentionally conservative about claims while the public package
-layout and cross-platform installer hardening continue to settle. See
+This is an early public release, not a hosted product or a compatibility
+guarantee. The repository is intentionally conservative about claims while the
+public package layout and cross-platform installer hardening continue to
+settle. See
 [Limitations](docs/LIMITATIONS.md) for the current boundary.
 
 If you are evaluating Cody alongside OpenAI's community programs, use the

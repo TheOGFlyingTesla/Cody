@@ -1,15 +1,14 @@
 # Limitations
 
-Cody plugin v0.1.1 is a preview and ships coordinator standard v0.1.0. The
-following limits are intentional and should be treated as part of the current
-contract.
+Cody plugin v0.2.0 ships coordinator standard v0.2.0. The following limits are
+intentional and should be treated as part of the current contract.
 
 - The source checkout is not automatically a generated release bundle.
 - The verified skill installer expects the release bundle layout and checksums;
   it should not be pointed at an arbitrary source tree.
 - The standard runtime and public project version are separate concepts: the
   repository's current coordinator standard is recorded by its own tooling,
-  while the public plugin is v0.1.1 preview.
+  while the public plugin is v0.2.0.
 - Windows is not a blanket guarantee for secure mutation or installation; the
   implementation may fail closed where filesystem ownership or descriptor
   primitives are unavailable.
@@ -23,6 +22,9 @@ contract.
   protection, code review, backups, or operational runbooks.
 - A passing local check cannot prove that an external system, task surface, or
   provider is available. Unknown external state remains unknown.
+- Dispatch schemas and validators prove that callback routing is present and
+  well-formed; they do not prove live callback delivery by an external Codex
+  task surface. The immediate parent must reconcile one missing notification.
 - Preview releases may change command output, package shape, and supported
   platforms without a compatibility window.
 - Unpublished private predecessor formats and their fixtures are intentionally

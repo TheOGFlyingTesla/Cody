@@ -4,6 +4,30 @@ All notable public-project changes are recorded here. Cody is currently in
 preview, so this log describes the repository surface rather than promising a
 stable API.
 
+## [0.2.0] — 2026-08-21
+
+### Visible task hierarchy and required upward fan-in
+
+### Added
+
+- Critical milestones and uncertain waiting remain owned by visible Codex
+  tasks: root → Sol, optional Terra, then Luna.
+- Dispatch packets structurally require exact parent task/host routing, direct
+  typed callbacks, terminal notification, silent unchanged state, and one
+  immediate-parent reconciliation after a missing callback.
+- Packets also require the complete bounded-work contract: owned and forbidden
+  paths, non-goals, authority and base identity, acceptance and validation
+  requirements, stop conditions, and report format.
+- A dependency-free dispatch packet generator/validator and schema.
+- Packet parsing rejects duplicate JSON keys and malformed value types without
+  leaking a traceback or accepting last-key-wins routing ambiguity.
+
+### Version boundary
+
+- Existing standard `0.1.0` installations and supported listed legacy versions
+  `3.2.0` through `3.2.6` can explicitly upgrade to standard `0.2.0`.
+- Cody plugin `0.2.0` ships coordinator standard `0.2.0`.
+
 ## [0.1.1] — Codex plugin packaging
 
 ### Added

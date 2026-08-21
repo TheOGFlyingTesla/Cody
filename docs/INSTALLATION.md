@@ -1,7 +1,7 @@
 # Installation
 
-Cody plugin v0.1.1 is a preview and ships coordinator standard v0.1.0. The
-standard installation is the Cody Codex plugin.
+Cody plugin v0.2.0 includes coordinator standard v0.2.0. For most people, the
+Codex plugin is the right way to install it.
 
 ## Install the plugin
 
@@ -19,17 +19,36 @@ the repository coordinator, invoke:
 $cody-codex-coordinator:cody-coordinator
 ```
 
-Plugin-installed skills use the plugin namespace. The plugin installs the
-runtime skill; its local commands require Python 3.11+
-and Git 2.39+. Installing the plugin does not initialize or modify a project.
-Repository changes begin only after an explicit request within the authority
-boundaries documented in [Safety](SAFETY.md).
+Plugin-installed skills use the plugin namespace. Cody's local tools require
+Python 3.11+ and Git 2.39+. Installing the plugin does not initialize or modify
+a project; repository changes begin only after you explicitly ask for them.
+The full boundaries are documented in [Safety](SAFETY.md).
 
 The plugin contains one explicit-only skill. It declares no MCP server, app,
 authentication flow, telemetry, hosted backend, or runtime network service.
 Installation does not authorize commits, pushes, deployments, secret access,
 billing changes, or external messages. Grant those separately if a task needs
 them.
+
+## Upgrade an existing repository contract
+
+An installed plugin or skill update does not silently rewrite repositories.
+In the repository's coordinator task, explicitly ask Cody to upgrade its
+coordinator standard. Cody resolves `SKILL_ROOT` to the active installed skill
+and runs this check/apply/prove sequence against the explicit repository path:
+
+```bash
+python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json upgrade --check
+python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json upgrade
+python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json doctor
+python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json upgrade --check
+```
+
+The first check previews a migration from supported `0.1.0` or listed legacy
+`3.2.0` through `3.2.6` contracts to public standard `0.2.0`. The final check
+must report no changes.
+Newly initialized repositories receive `0.2.0` directly. In-flight child tasks
+are not rewritten; new dispatches use the 0.2.0 packet contract.
 
 ## Advanced offline installation
 
@@ -42,10 +61,10 @@ for that exact release asset:
 
 ```bash
 # macOS
-shasum -a 256 cody-coordinator-0.1.0.zip
+shasum -a 256 cody-coordinator-0.2.0.zip
 
 # Linux
-sha256sum cody-coordinator-0.1.0.zip
+sha256sum cody-coordinator-0.2.0.zip
 ```
 
 Do not continue on a mismatch. After verification, extract the release ZIP to
