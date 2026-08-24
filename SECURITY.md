@@ -7,8 +7,9 @@ documented.
 
 ## Supported security boundary
 
-The `v0.1.x` preview line is the only public line currently described here.
-There is no promise of a response time or a paid security program.
+The current `v0.x` preview line is the only public line described here. Preview
+releases may change between minor versions. There is no promise of a response
+time or a paid security program.
 
 ## Reporting a vulnerability
 
