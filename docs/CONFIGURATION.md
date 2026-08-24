@@ -1,6 +1,6 @@
 # Configuration
 
-Cody v0.2.0 does not define a separate application configuration file. The
+Cody v0.3.0 does not define a separate application configuration file. The
 configuration model is deliberately small and repository-local.
 
 ## Durable project state
@@ -25,17 +25,21 @@ target, secret manager, remote machine, or model account.
 
 Cody's coordination topology is declared in the executable
 [model-routing contract](../references/model-routing-contract.json): Sol Medium
-holds primary coordination, review, and release authority; Terra Extra High is
-the junior coordinator for a fixed multi-stage Green/Amber boundary; and Luna
-High is the bounded scout, worker, executor, and waiter. A simple slice is Sol
-Medium → Luna High; a multi-stage slice is Sol Medium → Terra Extra High → Luna
-High. The user-facing Cody task is the durable root/portfolio coordinator;
-critical initiatives remain visible as root → Sol → Luna, or root → Sol → Terra
-→ Luna when Terra's decomposition materially reduces context. Named-model
+holds persistent coordination and release authority; Terra Medium is the
+default class-level writer and independent reviewer; Luna Low/Medium handles
+routine operations; and Luna High handles deterministic proof and exact-oracle
+edits. Terra High and Sol High are named escalation tiers; XHigh/Max are
+exceptional. The user-facing Cody task remains the durable root coordinator.
+Model and effort are explicit, and unnecessary layers are skipped. Named-model
 availability never changes role authority: report any
 unavailable named model and return `SCOPE_CHANGE`. Never choose a nearest or
-silent substitute. Substitution is unsupported in v0.2.0; changing the declared
+silent substitute. Substitution is unsupported in v0.3.0; changing the declared
 topology requires a future contract revision.
+
+Public API price differences are directional routing evidence only. OpenAI does
+not publish a Codex subscription-credit multiplier by model and reasoning
+effort, so Cody records exact quota as unavailable unless the active surface
+exposes it.
 
 This topology configures Codex task orchestration only. It does not configure
 application, provider-runtime, customer-facing, or production inference model

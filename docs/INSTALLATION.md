@@ -1,6 +1,6 @@
 # Installation
 
-Cody plugin v0.2.0 includes coordinator standard v0.2.0. For most people, the
+Cody plugin v0.3.0 includes coordinator standard v0.3.0. For most people, the
 Codex plugin is the right way to install it.
 
 ## Install the plugin
@@ -44,11 +44,11 @@ python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --fo
 python3 "$SKILL_ROOT/scripts/coordinator_standard.py" --repo "$TARGET_REPO" --format json upgrade --check
 ```
 
-The first check previews a migration from supported `0.1.0` or listed legacy
-`3.2.0` through `3.2.6` contracts to public standard `0.2.0`. The final check
-must report no changes.
-Newly initialized repositories receive `0.2.0` directly. In-flight child tasks
-are not rewritten; new dispatches use the 0.2.0 packet contract.
+The first check previews a migration from supported public `0.1.0` or `0.2.0`,
+or listed legacy `3.2.0` through `3.2.6`, to public standard `0.3.0`. The final
+check must report no changes. Newly initialized repositories receive `0.3.0`
+directly. In-flight child tasks are not rewritten; new dispatches use the 0.3.0
+routing contract.
 
 ## Advanced offline installation
 
@@ -61,10 +61,10 @@ for that exact release asset:
 
 ```bash
 # macOS
-shasum -a 256 cody-coordinator-0.2.0.zip
+shasum -a 256 cody-coordinator-0.3.0.zip
 
 # Linux
-sha256sum cody-coordinator-0.2.0.zip
+sha256sum cody-coordinator-0.3.0.zip
 ```
 
 Do not continue on a mismatch. After verification, extract the release ZIP to

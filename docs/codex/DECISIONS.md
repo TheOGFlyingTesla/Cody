@@ -129,6 +129,22 @@ Append durable product, architecture, safety, or operating decisions. Factual co
   documentation, and behavioral tests.
 - Supersedes: The less explicit task-mesh language in standard 0.1.0.
 
+### 2026-08-24 — Route models and effort by task shape
+
+- Decision: Standard 0.3.0 keeps Sol Medium as the persistent authority,
+  synthesis, P0/P1, and release owner; makes Terra Medium the default
+  class-level writer and independent reviewer; and limits Luna to routine
+  operations, exact-oracle edits, and deterministic proof at explicitly chosen
+  effort. Higher effort is bounded escalation, not a default layer.
+- Reason: Total cost includes failed repairs, repeated causal work, elapsed
+  time, escaped defects, and Sol rework. API price ratios are directional only;
+  they are not evidence of Codex subscription quota.
+- Owner: Project owner.
+- Affected scope: Routing contract, skill and managed instructions, migration,
+  plugin runtime, documentation, and behavioral validation.
+- Supersedes: The role/effort assignments in “Public routing preserves the
+  proven coordinator topology”; its authority and visibility boundaries remain.
+
 Use this entry shape:
 
 ```text

@@ -125,9 +125,9 @@
       "outcome": "pass",
       "observed_choices": [
         "Kept the coordinator as the primary coordinator and release owner while preserving project-owner approvals.",
-        "Used one bounded worker for the mechanically specified Green/Amber slice under coordinator control.",
-        "Required the reviewer or coordinator to review every worker conclusion and resulting diff; no worker accepted Red, privacy/security, P0/P1, destructive, or release decisions.",
-        "Recorded exact usage when exposed and otherwise labeled it unavailable while measuring packet/output bytes, turns, compactions, repair rounds, handoff size, and duplicated context."
+        "Used Terra Medium for the class-level Green/Amber repair and an independent Terra review when needed.",
+        "Used Luna High only for deterministic proof after the implementation invariant was fixed; Luna accepted no architecture, privacy/security, P0/P1, or release decisions.",
+        "Recorded exact usage when exposed and otherwise labeled it unavailable while measuring first-pass acceptance, repeated causal failures, repair rounds, elapsed time, escaped defects, and coordinator rework."
       ]
     },
     {
@@ -135,9 +135,9 @@
       "outcome": "pass",
       "observed_choices": [
         "Kept one durable visible root, created one visible Sol coordinator per bounded initiative, and required every child packet to name its exact parent task ID and host.",
-        "Routed a simple bounded slice root to Sol to Luna and a fixed multi-stage Green/Amber slice root to Sol to Terra to Luna with no full-history fork.",
+        "Routed routine operations from Sol to Luna and class-level work from Sol to Terra, adding Luna deterministic proof only when useful, with no full-history fork.",
         "Returned SCOPE_CHANGE to Sol when Terra discovered Red work or authority/risk drift; Sol retained final release and P0/P1 authority.",
-        "Dispatched exactly one low-context Luna waiter for repeated checks and fanned its typed terminal report directly to the coordinator.",
+        "Dispatched exactly one low-context Luna Low/Medium waiter for repeated checks and fanned its typed terminal report directly to the coordinator.",
         "Failed before mutation when a deploy pin mismatched and exposed only the approved correction path.",
         "Stopped on provider or external-runtime ambiguity rather than assuming a target."
       ]
@@ -160,7 +160,8 @@
     "Use required direct native task fan-in, preserve one durable visible root, and keep critical Sol, optional Terra, and Luna delivery visible without making the project owner relay messages.",
     "Use the smallest safe orientation tier and escalate automatically on stale, conflicting, wrong-target, or unclear-risk evidence.",
     "Keep STATUS compact and heartbeats silent when state is unchanged.",
-    "Use bounded workers for execution and long-running observation while the coordinator retains judgment and release authority; project owner retains consequential approvals.",
+    "Use Terra Medium for class-level writing and review, Luna Low/Medium for routine operations and waiting, and Luna High for exact-oracle edits or deterministic proof while Sol retains judgment and release authority.",
+    "Skip unnecessary layers, set model and effort explicitly, and treat an avoidable extra repair round as a cost rather than a saving.",
     "Keep compaction enabled, but rotate oversized coordinators instead of repeatedly restoring them into polling loops."
   ]
 }

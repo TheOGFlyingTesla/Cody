@@ -1358,6 +1358,7 @@ def upgrade(repo: Path, *, check: bool) -> OperationResult:
         )
     if inspection.installed_version in {
         "0.1.0",
+        "0.2.0",
         "3.0.0",
         "3.1.0",
         "3.2.0",

@@ -2,7 +2,7 @@
 
 ![Cody coordinating three bounded work streams](assets/cody-social-preview.jpg)
 
-![Version](https://img.shields.io/badge/version-v0.2.0-7c3aed)
+![Version](https://img.shields.io/badge/version-v0.3.0-7c3aed)
 ![License](https://img.shields.io/badge/license-MIT-2563eb)
 
 Cody is a **Codex plugin** that turns one task into the home base for a
@@ -77,23 +77,29 @@ task where you invoke Cody is the long-lived root coordinator. For a bounded
 initiative it creates one visible Sol coordinator, which then uses the smallest
 useful worker setup:
 
-- **Sol Medium** is the visible initiative coordinator. Sol owns requirements, planning,
-  architecture and product judgment, risk classification, synthesis, exact-diff
-  review, P0/P1 decisions, and release control.
-- **Luna High** is the default scout, worker, executor, reviewer helper, and
-  waiter. A simple bounded slice routes directly **Sol → Luna**.
-- **Terra Extra High** is an optional junior coordinator for a fixed
-  multi-stage Green/Amber boundary. That route is **Sol → Terra → Luna**. Terra
-  decomposes only the supplied boundary and returns `SCOPE_CHANGE` when the work
-  becomes Red or exceeds its authority.
+- **Sol Medium** is the persistent coordinator. Sol owns requirements,
+  authority, risk, architecture and product judgment, synthesis, P0/P1
+  decisions, and release control. Sol Low is for compact low-risk synthesis;
+  Sol High is reserved for hard judgment when Medium is not enough.
+- **Terra Medium** is the default class-level writer and independent reviewer
+  for ordinary multi-file repairs, refactors, runtime integration with a known
+  invariant, and bounded debugging. Terra High is for uncertain causes,
+  interacting state machines, or a failed class-level repair.
+- **Luna Low/Medium** handles waiting, monitoring, artifact publication,
+  repetitive operations, formatting, and cheap inventory. **Luna High** runs
+  deterministic proof, dogfood/evals, and tightly specified mechanical edits
+  with an exact oracle.
 
-The complete visible hierarchy is **root → Sol → Luna** for a simple bounded
-slice, or **root → Sol → Terra → Luna** when Terra's decomposition materially
-saves context. Terra is not inserted by default.
+Simple deterministic work can use **root → Sol → Luna**. Class-level repair
+normally uses **root → Sol → Terra**, followed by Luna proof when useful. The
+default repair chain is Sol invariant → Terra RED→GREEN repair → independent
+Terra review when needed → Luna production-shaped proof → Sol disposition.
 
-This saves tokens by giving each worker only the context it needs. Sol receives
-compact results for review, repeated waiting goes to one low-context Luna task,
-and simple work skips Terra entirely.
+This saves tokens by giving each worker only the context it needs and skipping
+unnecessary layers. A cheaper worker that creates another repair round is not a
+saving. Cody tracks first-pass acceptance, repeated causal failures, repair
+rounds, elapsed time, escaped defects, and coordinator rework when evidence is
+available.
 
 Model availability is checked before dispatch. Missing evidence or an
 unavailable required model fails closed with `SCOPE_CHANGE`; Cody never silently
@@ -110,7 +116,7 @@ access secrets, change billing, or contact real people.
 
 The machine-checkable [routing contract](references/model-routing-contract.json)
 defines the exact orchestration topology. Substitution is unsupported in
-coordinator standard v0.2.0, which ships inside Cody plugin v0.2.0.
+coordinator standard v0.3.0, which ships inside Cody plugin v0.3.0.
 
 ## Quick start
 

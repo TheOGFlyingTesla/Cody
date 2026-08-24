@@ -20,7 +20,7 @@ from typing import Any, Iterable, Sequence
 MANIFEST_NAME = "release_manifest.json"
 CHECKSUM_NAME = "SHA256SUMS"
 STANDARD_NAME = "cody-coordinator"
-STANDARD_VERSION = "0.2.0"
+STANDARD_VERSION = "0.3.0"
 EXCLUDED_NAMES = {"__pycache__"}
 IGNORED_DIRECTORIES = {".git"}
 IGNORED_ROOT_PATHS = {".github", "docs/codex"}

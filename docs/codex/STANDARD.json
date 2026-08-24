@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "standard_name": "cody-coordinator",
-  "standard_version": "0.2.0",
+  "standard_version": "0.3.0",
   "project_id": "b0899bb2-17be-421b-a1b8-6be2325e1646",
   "project_slug": "cody",
   "installed_at": "2026-08-15T21:50:03Z",
-  "last_validated_at": "2026-08-20T22:52:49Z",
+  "last_validated_at": "2026-08-24T15:16:10Z",
   "risk_profiles": [],
   "migrations": [
     {
@@ -21,6 +21,13 @@
       "run_id": "0de2fcc5-98d0-4173-8b9a-ea46a2c29714",
       "completed_at": "2026-08-20T22:52:49Z",
       "record_path": "docs/codex/MIGRATIONS/20260820T225249Z-0de2fcc5-98d0-4173-8b9a-ea46a2c29714.report.md"
+    },
+    {
+      "source_version": "0.2.0",
+      "destination_version": "0.3.0",
+      "run_id": "ba40c67d-ef6d-46dc-bf92-bbcd1cac8139",
+      "completed_at": "2026-08-24T15:16:10Z",
+      "record_path": "docs/codex/MIGRATIONS/20260824T151610Z-ba40c67d-ef6d-46dc-bf92-bbcd1cac8139.report.md"
     }
   ]
 }

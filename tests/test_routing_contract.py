@@ -37,11 +37,70 @@ class RoutingContractTests(unittest.TestCase):
     def test_contract_structures_sol_and_terra_authority_boundaries(self) -> None:
         boundaries = routing_contract.load_contract()["authority_boundaries"]
         self.assertIn("privacy_security_and_identity", boundaries["retained_by_sol"])
-        self.assertIn("destructive_decisions", " ".join(boundaries["forbidden_for_terra"]))
+        self.assertIn("open_ended_architecture", boundaries["forbidden_for_terra"])
+        self.assertIn("ambiguous_repair", boundaries["forbidden_for_luna"])
+        self.assertIn("class_level_runtime_design", boundaries["forbidden_for_luna"])
         self.assertEqual(
-            ["red_work", "authority_drift", "risk_drift", "inseparable_judgment"],
+            [
+                "red_authority_decision",
+                "authority_drift",
+                "risk_drift",
+                "inseparable_sol_judgment",
+            ],
             boundaries["terra_scope_change_triggers"],
         )
+
+    def test_task_shape_effort_profiles_and_measurement_are_explicit(self) -> None:
+        contract = routing_contract.load_contract()
+        profiles = contract["effort_profiles"]
+        self.assertIn("compact_low_risk_synthesis", profiles["primary_coordinator"]["low"])
+        self.assertIn("hard_architecture", profiles["primary_coordinator"]["high"])
+        self.assertIn("ordinary_multi_file_repair", profiles["junior_coordinator"]["medium"])
+        self.assertIn("failed_class_level_repair", profiles["junior_coordinator"]["high"])
+        self.assertIn("waiting", profiles["bounded_worker"]["low"])
+        self.assertIn("deterministic_focused_proof", profiles["bounded_worker"]["high"])
+        self.assertEqual("unavailable", contract["selection_rules"]["exact_quota_when_unexposed"])
+        self.assertEqual(
+            "directional-only-not-subscription-quota",
+            contract["selection_rules"]["api_price_ratios"],
+        )
+        self.assertEqual(
+            [
+                "first_pass_acceptance",
+                "repeated_causal_failures",
+                "repair_rounds",
+                "elapsed_time",
+                "escaped_defects",
+                "coordinator_rework",
+            ],
+            contract["measurement"],
+        )
+
+    def test_effort_and_evidence_boundary_drift_fails_closed(self) -> None:
+        effort_drift = copy.deepcopy(routing_contract.load_contract())
+        effort_drift["roles"][2]["allowed_reasoning_efforts"].append("xhigh")
+        effort_drift["effort_profiles"]["bounded_worker"]["xhigh"] = ["routine"]
+        with self.assertRaises(routing_contract.ContractError):
+            routing_contract.resolve_route("simple", ["gpt-5.6-sol"], effort_drift)
+
+        evidence_drift = copy.deepcopy(routing_contract.load_contract())
+        evidence_drift["evidence_boundary"]["policy_basis"] = "blanket capability claim"
+        with self.assertRaises(routing_contract.ContractError):
+            routing_contract.resolve_route("simple", ["gpt-5.6-sol"], evidence_drift)
+
+    def test_default_repair_chain_keeps_judgment_and_proof_separate(self) -> None:
+        chain = routing_contract.load_contract()["default_repair_chain"]
+        self.assertEqual(
+            [
+                ("primary_coordinator", "medium"),
+                ("junior_coordinator", "medium"),
+                ("junior_coordinator", "medium"),
+                ("bounded_worker", "high"),
+                ("primary_coordinator", "medium"),
+            ],
+            [(stage["role_id"], stage["reasoning_effort"]) for stage in chain],
+        )
+        self.assertIn("when_needed", chain[2]["stage"])
 
     def test_contract_requires_visible_tasks_and_direct_upward_fan_in(self) -> None:
         mesh = routing_contract.load_contract()["task_mesh"]
@@ -123,17 +182,28 @@ class RoutingContractTests(unittest.TestCase):
         self.assertEqual(
             [
                 ("primary_coordinator", "Sol Medium"),
-                ("junior_coordinator", "Terra Extra High"),
+                ("junior_coordinator", "Terra Medium"),
                 ("bounded_worker", "Luna High"),
             ],
             [(item["role"], item["model"]) for item in result["assignments"]],
         )
         self.assertIn("release", result["assignments"][0]["authority"])
-        self.assertIn("fixed Green/Amber", result["assignments"][1]["authority"])
+        self.assertIn("class-level implementation", result["assignments"][1]["authority"])
         self.assertEqual(
-            ["medium", "xhigh", "high"],
+            ["medium", "medium", "high"],
             [item["reasoning_effort"] for item in result["assignments"]],
         )
+
+    def test_routine_and_complex_routes_select_declared_effort(self) -> None:
+        available = ["gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"]
+        routine = routing_contract.resolve_route("routine-operations", available)
+        complex_repair = routing_contract.resolve_route("complex-repair", available)
+        self.assertEqual(
+            [("Sol Medium", "medium"), ("Luna Medium", "medium")],
+            [(item["model"], item["reasoning_effort"]) for item in routine["assignments"]],
+        )
+        self.assertEqual("Terra High", complex_repair["assignments"][1]["model"])
+        self.assertEqual("Luna High", complex_repair["assignments"][2]["model"])
 
     def test_missing_named_model_returns_scope_change_without_substitution(self) -> None:
         result = routing_contract.resolve_route(
@@ -142,7 +212,7 @@ class RoutingContractTests(unittest.TestCase):
 
         self.assertFalse(result["ok"])
         self.assertEqual("named_model_unavailable", result["code"])
-        self.assertEqual(["Terra Extra High"], result["unavailable_models"])
+        self.assertEqual(["Terra Medium"], result["unavailable_models"])
         self.assertEqual("report-unavailable-and-return-scope-change", result["action"])
         self.assertEqual("none-selected", result["substitution"])
 

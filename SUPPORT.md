@@ -1,6 +1,6 @@
 # Support
 
-Cody plugin v0.2.0 is a community preview release and ships coordinator standard v0.2.0.
+Cody plugin v0.3.0 is a community preview release and ships coordinator standard v0.3.0.
 Start with the
 [README](README.md), [Quick start](docs/QUICKSTART.md),
 [Configuration](docs/CONFIGURATION.md), and [Limitations](docs/LIMITATIONS.md).

@@ -21,9 +21,9 @@ Restart Codex after installation so the plugin and its skill are loaded.
 Invoke `$cody-codex-coordinator:cody-coordinator` in the task you want to use
 as the project's home base. Keep talking to that task as the root coordinator.
 For a bounded initiative it creates one visible Sol coordinator. Sol sends
-focused work directly to Luna, or adds Terra when coordinating several pieces
-will genuinely save context. Every child reports back to its parent, so you do
-not carry messages between tasks.
+class-level writing and review to Terra, and routine operations or deterministic
+proof to Luna. Simple exact-oracle work can skip Terra. Every child reports back
+to its parent, so you do not carry messages between tasks.
 
 Plugin-installed skills use the plugin namespace. Cody resolves its own
 installed `SKILL_ROOT`, so its helper scripts do not depend on your project's
@@ -74,12 +74,11 @@ Where do we stand?
 The coordinator should inspect first, keep one active work item, and report
 authority or evidence blockers instead of guessing.
 
-For a critical simple implementation slice, the visible route is root → Sol →
-Luna. For a fixed multi-stage Green/Amber outcome, the visible route is root →
-Sol → Terra → Luna. Sol still reviews the evidence and every resulting diff;
-Terra is used only when its decomposition saves more context than it costs.
-This keeps the expensive coordinator context compact while workers receive only
-the information their slice needs.
+For deterministic work, the visible route can be root → Sol → Luna. A normal
+class-level repair uses root → Sol → Terra, with Luna running focused proof when
+useful. Sol still owns the invariant, authority, final disposition, and release.
+This keeps coordinator context compact while each worker receives only what its
+slice needs.
 
 ## 6. Recover deliberately
 

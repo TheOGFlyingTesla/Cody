@@ -1,6 +1,6 @@
 # Limitations
 
-Cody plugin v0.2.0 ships coordinator standard v0.2.0. The following limits are
+Cody plugin v0.3.0 ships coordinator standard v0.3.0. The following limits are
 intentional and should be treated as part of the current contract.
 
 - The source checkout is not automatically a generated release bundle.
@@ -8,7 +8,7 @@ intentional and should be treated as part of the current contract.
   it should not be pointed at an arbitrary source tree.
 - The standard runtime and public project version are separate concepts: the
   repository's current coordinator standard is recorded by its own tooling,
-  while the public plugin is v0.2.0.
+  while the public plugin is v0.3.0.
 - Windows is not a blanket guarantee for secure mutation or installation; the
   implementation may fail closed where filesystem ownership or descriptor
   primitives are unavailable.

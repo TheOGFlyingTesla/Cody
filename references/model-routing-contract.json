@@ -1,26 +1,29 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "roles": [
     {
       "id": "primary_coordinator",
       "model": "gpt-5.6-sol",
-      "label": "Sol Medium",
-      "reasoning_effort": "medium",
-      "authority": "requirements, risk classification, exact-diff review, final synthesis, and release"
+      "label": "Sol",
+      "default_reasoning_effort": "medium",
+      "allowed_reasoning_efforts": ["low", "medium", "high", "xhigh", "max"],
+      "authority": "requirements, authority and risk classification, architecture and product judgment, final synthesis, P0/P1 adjudication, and release"
     },
     {
       "id": "junior_coordinator",
       "model": "gpt-5.6-terra",
-      "label": "Terra Extra High",
-      "reasoning_effort": "xhigh",
-      "authority": "fixed Green/Amber decomposition, supplied acceptance oracle, and one structured synthesis"
+      "label": "Terra",
+      "default_reasoning_effort": "medium",
+      "allowed_reasoning_efforts": ["low", "medium", "high", "xhigh", "max"],
+      "authority": "class-level implementation, bounded causal debugging, behavior-preserving refactoring, runtime integration with a known invariant, and independent exact-diff review"
     },
     {
       "id": "bounded_worker",
       "model": "gpt-5.6-luna",
-      "label": "Luna High",
-      "reasoning_effort": "high",
-      "authority": "bounded execution, focused proof, and typed terminal reporting"
+      "label": "Luna",
+      "default_reasoning_effort": "medium",
+      "allowed_reasoning_efforts": ["low", "medium", "high", "max"],
+      "authority": "waiting, monitoring, repetitive operations, deterministic focused proof, dogfood or eval execution, and tightly specified mechanical edits with an exact oracle"
     }
   ],
   "authority_boundaries": {
@@ -28,34 +31,107 @@
       "requirements_and_risk_classification",
       "architecture_and_product_judgment",
       "privacy_security_and_identity",
+      "schema_and_data_integrity_judgment",
       "concurrency_and_destructive_decisions",
       "p0_p1_adjudication",
-      "exact_diff_review",
       "final_synthesis",
       "release"
     ],
     "forbidden_for_terra": [
-      "red_work",
-      "architecture_and_product_judgment",
-      "privacy_security_and_identity",
-      "concurrency_and_destructive_decisions",
+      "open_ended_architecture",
+      "privacy_security_and_identity_judgment",
+      "p0_p1_adjudication",
+      "release"
+    ],
+    "forbidden_for_luna": [
+      "open_ended_architecture",
+      "ambiguous_repair",
+      "class_level_runtime_design",
+      "privacy_security_and_identity_judgment",
       "p0_p1_adjudication",
       "release"
     ],
     "terra_scope_change_triggers": [
-      "red_work",
+      "red_authority_decision",
       "authority_drift",
       "risk_drift",
-      "inseparable_judgment"
+      "inseparable_sol_judgment"
     ]
   },
+  "effort_profiles": {
+    "primary_coordinator": {
+      "low": ["compact_low_risk_synthesis"],
+      "medium": ["persistent_coordination", "requirements", "authority", "risk", "synthesis", "p0_p1_adjudication", "release"],
+      "high": ["hard_architecture", "production_or_release_judgment", "security_privacy_identity", "schema_data_integrity", "concurrency"],
+      "xhigh": ["exceptional_quality_first_decision"],
+      "max": ["hardest_quality_first_decision"]
+    },
+    "junior_coordinator": {
+      "low": ["low_risk_mapping", "mechanical_review_with_judgment"],
+      "medium": ["ordinary_multi_file_repair", "behavior_preserving_refactor", "known_invariant_runtime_integration", "bounded_causal_debugging", "independent_exact_diff_review"],
+      "high": ["multi_component_state_machine", "uncertain_causal_mechanism", "failed_class_level_repair"],
+      "xhigh": ["bounded_hard_problem_after_high_gap"],
+      "max": ["exceptional_bounded_quality_first_problem"]
+    },
+    "bounded_worker": {
+      "low": ["waiting", "monitoring", "artifact_publication", "repetitive_shell_or_computer_use", "formatting", "cheap_inventory"],
+      "medium": ["routine_bounded_operations"],
+      "high": ["deterministic_focused_proof", "dogfood_or_eval_execution", "exact_oracle_mechanical_edit"],
+      "max": ["hard_fully_specified_deterministic_slice_after_high_gap"]
+    }
+  },
   "routes": {
+    "compact-synthesis": {
+      "role_ids": ["primary_coordinator"],
+      "reasoning_efforts": ["low"]
+    },
+    "routine-operations": {
+      "role_ids": ["primary_coordinator", "bounded_worker"],
+      "reasoning_efforts": ["medium", "medium"]
+    },
     "simple": {
-      "role_ids": ["primary_coordinator", "bounded_worker"]
+      "role_ids": ["primary_coordinator", "bounded_worker"],
+      "reasoning_efforts": ["medium", "high"]
     },
     "multi-stage": {
-      "role_ids": ["primary_coordinator", "junior_coordinator", "bounded_worker"]
+      "role_ids": ["primary_coordinator", "junior_coordinator", "bounded_worker"],
+      "reasoning_efforts": ["medium", "medium", "high"]
+    },
+    "complex-repair": {
+      "role_ids": ["primary_coordinator", "junior_coordinator", "bounded_worker"],
+      "reasoning_efforts": ["medium", "high", "high"]
+    },
+    "high-risk-judgment": {
+      "role_ids": ["primary_coordinator"],
+      "reasoning_efforts": ["high"]
     }
+  },
+  "default_repair_chain": [
+    {"stage": "define_invariant_authority_and_stop_conditions", "role_id": "primary_coordinator", "reasoning_effort": "medium"},
+    {"stage": "red_to_green_class_repair", "role_id": "junior_coordinator", "reasoning_effort": "medium"},
+    {"stage": "independent_exact_diff_review_when_needed", "role_id": "junior_coordinator", "reasoning_effort": "medium"},
+    {"stage": "production_shaped_focused_proof", "role_id": "bounded_worker", "reasoning_effort": "high"},
+    {"stage": "final_disposition", "role_id": "primary_coordinator", "reasoning_effort": "medium"}
+  ],
+  "selection_rules": {
+    "skip_unnecessary_layers": true,
+    "explicit_model_and_reasoning_effort": true,
+    "cheaper_worker_repair_round_is_not_saving": true,
+    "exact_quota_when_unexposed": "unavailable",
+    "api_price_ratios": "directional-only-not-subscription-quota"
+  },
+  "measurement": [
+    "first_pass_acceptance",
+    "repeated_causal_failures",
+    "repair_rounds",
+    "elapsed_time",
+    "escaped_defects",
+    "coordinator_rework"
+  ],
+  "evidence_boundary": {
+    "proof_failure": "useful execution evidence is not proof that the worker damaged code",
+    "unavailable_model_identity": "cannot support a model-capability conclusion",
+    "policy_basis": "task-shape risk and repeated-repair economics, not a blanket claim that Luna is incapable"
   },
   "task_mesh": {
     "critical_delivery_owner": "visible-task",
@@ -86,7 +162,7 @@
   "unavailable_named_model_policy": {
     "code": "named_model_unavailable",
     "action": "report-unavailable-and-return-scope-change",
-    "substitution": "unsupported-in-v0.2.0; no route is selected"
+    "substitution": "unsupported-in-v0.3.0; no route is selected"
   },
   "live_observation": {
     "required_fields": ["route", "available_models", "assignments"],

@@ -2,11 +2,11 @@
 
 ## Choose the smallest sound shape
 
-Use Sol for requirements, decisions, packets, synthesis, review, and release.
-Route authorized implementation slices, including simple slices, to Luna High.
-Use read-only workers for uncertainty, risky paths, logs, or test discovery. Use
-parallel workers only when outcomes are independent and write sets do not
-overlap; sequence work when ownership is uncertain.
+Use Sol for requirements, authority, risk, architecture/product judgment,
+synthesis, P0/P1 adjudication, and release. Route class-level implementation and
+independent review to Terra. Use Luna after judgment is fixed for routine
+operations, deterministic proof, or an exact-oracle mechanical edit. Use
+parallel workers only when outcomes and write sets are independent.
 
 Each worker packet includes:
 
@@ -43,33 +43,40 @@ coordinator must correct the packet or managed starting state.
 
 Use `/plan` when requirements, ownership, or validation need to be explicit. Use the persistent goal mechanism for long-running work that must survive compaction. Keep goals concrete and mark them complete only after validation and review gates pass.
 
-Route by capability and role. Use
-[the executable routing contract](model-routing-contract.json) as the one
-source for model names, roles, routes, unavailable-model handling, and the
-live-observation schema. The declared named topology is Sol Medium as primary
-coordinator, reviewer, and release owner; Terra Extra High as junior
-coordinator only for a fixed multi-stage Green/Amber boundary; and Luna High
-as the bounded scout, worker, executor, and waiter. A simple slice is Sol
-Medium → Luna High. A suitable multi-stage slice is Sol Medium → Terra Extra
-High → Luna High, with Terra receiving a compact no-history packet.
+Route by capability and role. The executable
+[routing contract](model-routing-contract.json) is the source for model families,
+reasoning efforts, task classes, routes, authority, and measurement. Sol Medium
+is the persistent coordinator and release owner. Sol Low is only for compact
+low-risk synthesis. Use Sol High for hard architecture, production/release,
+security/privacy/identity, schema/data-integrity, or concurrency judgment when
+Medium is insufficient; XHigh/Max are exceptional quality-first escalation.
 
-Terra may decompose only the supplied Green/Amber boundary, dispatch bounded
-Luna work, enforce the supplied acceptance oracle, and return one structured
-synthesis. Terra returns `SCOPE_CHANGE` to Sol immediately for Red work,
-risk/authority drift, or implementation judgment that cannot be separated from
-the packet. Sol retains requirements, risk classification, architecture/product
-judgment, privacy/security/identity review, concurrency and destructive
-decisions, P0/P1 adjudication, exact-diff review, final synthesis, and release.
+Terra Medium is the default class-level writer and independent reviewer for
+ordinary multi-file repairs, behavior-preserving refactors, known-invariant
+runtime integration, and bounded causal debugging. Use Terra High when several
+components or state machines interact, the cause remains uncertain, or a
+class-level repair fails. Terra XHigh/Max are bounded escalation, not routine
+coordination. Terra returns `SCOPE_CHANGE` when authority or risk drifts,
+evidence conflicts, or Sol-owned judgment becomes inseparable.
 
-Model names express this topology, not authority. Before dispatch, choose the
-declared route and pass every model the native surface actually reports to
+Luna Low/Medium handles waiting, monitoring, artifact publication, repetitive
+shell/computer-use, formatting, and cheap inventory. Luna High handles
+deterministic focused proof, dogfood/eval execution, and tightly specified
+mechanical edits with an exact oracle. Luna never owns open-ended architecture,
+ambiguous repair, class-level runtime design, privacy/security judgment, P0/P1
+adjudication, or release. Luna Max is exceptional and only for a hard fully
+specified deterministic slice after a proved High capability gap.
+
+Model names express this topology, not authority. Set both model and reasoning
+effort explicitly. Before dispatch, choose the declared route and pass every
+model the native surface actually reports to
 `$SKILL_ROOT/scripts/routing_contract.py` with repeated `--available` options.
 If availability evidence cannot be observed, report
 `availability_evidence_required` and return `SCOPE_CHANGE`; do not treat missing
 evidence as observed unavailability. If a named model is observed unavailable,
 report its name and return `SCOPE_CHANGE`; no route is selected. Never use a
 nearest-capable fallback or a silent substitution. Substitution is unsupported
-in v0.2.0; changing the declared topology requires a future contract revision.
+in v0.3.0; changing the declared topology requires a future contract revision.
 An unavailable capability never grants a stronger worker or coordinator role.
 Model choice never broadens authority.
 
@@ -99,11 +106,22 @@ result only when the operator supplies a provenance-bearing native observer.
 
 ## Risk and review
 
-- **Green:** Sol writes the packet; Luna High implements and runs focused proof; Sol reviews the compact diff and evidence.
-- **Amber:** Sol fixes the boundary and acceptance oracle; Luna High implements the mechanically testable slice; a risk-appropriate reviewer may add evidence, but Sol verifies the result.
-- **Red:** Sol owns diagnosis, invariants, security/transaction judgment, exact-diff review, and release. Luna may implement only a causally understood, mechanically specified repair slice.
+- **Green:** Luna High handles deterministic proof or an exact-oracle edit;
+  Terra Medium handles any implementation judgment still required.
+- **Amber:** Terra Medium owns the fixed class-level repair and review. Use Terra
+  High when components interact or the causal mechanism remains uncertain;
+  Luna runs deterministic proof after judgment is fixed.
+- **Red:** Sol owns authority, invariants, security/transaction judgment, P0/P1,
+  and release. Terra performs bounded causal work and the class repair only
+  after Sol fixes the acceptance contract; Luna runs the resulting proof.
 
-Use the write/review loop: coordinator packet → worker implementation and proof → reviewer exact-diff review → precise repair packet when needed → worker repair and proof → repeat while each round closes a named finding and makes concrete, evidence-backed progress. There is no arbitrary repair-round limit. Stop, reslice, or escalate when the same causal failure repeats without progress, a class-level repair fails again, scope or authority changes, evidence conflicts, or judgment can no longer be separated from implementation.
+Default repair is Sol invariant/authority/stop conditions → Terra RED→GREEN
+class repair → independent Terra exact-diff review when needed → Luna
+production-shaped focused proof → Sol final disposition. Skip unnecessary
+layers. A cheaper worker that causes another repair round is not a saving.
+Continue only while each round closes a named causal gap; stop, reslice, or
+escalate on repeated causal failure, failed class repair, authority drift, or
+conflicting evidence.
 
 Sol reviews 100% of Terra conclusions and every resulting diff. Terra never
 accepts a release gate or substitutes its synthesis for Sol's exact-diff review.
@@ -114,9 +132,9 @@ reslices. Reconcile first when interrupted state or durable evidence conflicts.
 ## Task mesh, waiting, and consultation
 
 Use a visible hub-and-spoke mesh: root/portfolio coordinator → one visible Sol
-task per bounded initiative; Sol → visible Terra only when coordination
-materially reduces context, otherwise visible Luna directly; Terra → visible
-Luna. Workers do not form a peer message bus. Every child packet names its exact
+task per bounded initiative; Sol → visible Terra for class-level work or visible
+Luna directly for routine deterministic work; Terra → visible Luna for focused
+proof when useful. Workers do not form a peer message bus. Every child packet names its exact
 parent task ID and host and sends state deltas directly to that parent. Check-ins
 are event-driven and typed: `READY`, `READY_FOR_REVIEW`, `BLOCKED`,
 `SCOPE_CHANGE`, `FAILED`, `LIVE_TERMINAL`, or `COMPLETE`. Unchanged state is
@@ -154,7 +172,8 @@ wait for the project owner to ask for status.
 
 Prefer a native blocking/event wait and keep coordinators idle between events.
 If repeated checks or an uncertain-duration
-wait is unavoidable, dispatch exactly one fresh low-context read-only Luna High
+wait is unavoidable, dispatch exactly one fresh low-context read-only Luna Low
+or Medium
 waiter with exact targets, safety boundaries, a wall-clock horizon, and one
 typed terminal report. It receives no full-history fork and no mutation or
 release authority. Sol may make one initial read and one terminal spot-check;
@@ -170,7 +189,13 @@ rather than a full transcript by default.
 
 ## Context, efficiency, and fan-in
 
-Keep routine packets near 1,000–2,000 tokens and link durable evidence instead of copying it. Compaction is short-term pressure relief; after roughly 20–30 turns or two compactions, checkpoint and continue from a fresh task at a safe boundary. Measure actual usage when exposed; otherwise record stable proxies such as packet/output bytes, turns, compactions, repair rounds, and handoff size. A cheaper route that causes reslicing, duplicated context, or coordinator rework is not efficient.
+Keep routine packets near 1,000–2,000 tokens and link durable evidence instead
+of copying it. Measure first-pass acceptance, repeated causal failures, repair
+rounds, elapsed time, escaped defects, and coordinator rework. Use exact usage
+only when exposed; otherwise mark it unavailable and use stable proxies. Public
+API price ratios are directional only and are never Codex subscription quota.
+Compaction is short-term pressure relief; after roughly 20–30 turns or two
+compactions, checkpoint and continue from a fresh task at a safe boundary.
 
 Luna reports to Terra when Terra dispatched it, otherwise directly to Sol;
 Terra reports to Sol; Sol reports to root. The receiving coordinator reviews

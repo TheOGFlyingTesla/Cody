@@ -4,6 +4,34 @@ All notable public-project changes are recorded here. Cody is currently in
 preview, so this log describes the repository surface rather than promising a
 stable API.
 
+## [0.3.0] — 2026-08-24
+
+### Task-shaped model routing
+
+### Changed
+
+- Sol Medium remains the persistent coordinator, requirements/authority/risk
+  owner, synthesizer, P0/P1 adjudicator, and release owner.
+- Terra Medium is now the default class-level writer and independent reviewer;
+  Terra High is reserved for interacting state machines, uncertain causes, or
+  a failed class-level repair.
+- Luna Low/Medium owns waiting and repetitive operations, while Luna High owns
+  deterministic proof, dogfood/evals, and exact-oracle mechanical edits. Luna
+  no longer receives ambiguous or class-level repair by default.
+- The default repair chain is Sol invariant → Terra RED→GREEN repair →
+  independent Terra review when needed → Luna production-shaped proof → Sol
+  final disposition. Unnecessary layers are skipped.
+- Routing evidence records first-pass acceptance, repeated causal failures,
+  repair rounds, elapsed time, escaped defects, and coordinator rework. Exact
+  quota is marked unavailable when the surface does not expose it; public API
+  price ratios are never represented as Codex subscription quota.
+
+### Version boundary
+
+- Public standards `0.1.0` and `0.2.0`, plus listed legacy versions `3.2.0`
+  through `3.2.6`, can explicitly upgrade to standard `0.3.0`.
+- Cody plugin `0.3.0` ships coordinator standard `0.3.0`.
+
 ## [0.2.0] — 2026-08-21
 
 ### Visible task hierarchy and required upward fan-in

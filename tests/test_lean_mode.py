@@ -22,10 +22,10 @@ class LeanModeContractTests(unittest.TestCase):
         self.context.cleanup()
 
     def test_public_release_identity_is_single_coordinator_skill(self) -> None:
-        self.assertEqual("0.2.0\n", (SKILL_ROOT / "VERSION").read_text(encoding="utf-8"))
+        self.assertEqual("0.3.0\n", (SKILL_ROOT / "VERSION").read_text(encoding="utf-8"))
         package = importlib.import_module("coordinator_standard")
         self.assertEqual("cody-coordinator", package.STANDARD_NAME)
-        self.assertEqual("0.2.0", package.STANDARD_VERSION)
+        self.assertEqual("0.3.0", package.STANDARD_VERSION)
 
     def test_skill_and_managed_contract_expose_lean_routing_and_escalation(self) -> None:
         skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -94,15 +94,14 @@ class LeanModeContractTests(unittest.TestCase):
             "approval-independent task startup",
             "no interactive approval dependency",
             "never ask the project owner to watch background tasks for approval dialogs",
-            "causally understood, mechanically specified repair slice",
             "there is no arbitrary repair-round limit",
             "each round makes concrete, evidence-backed progress",
             "each round closes a named finding",
             "structured decision memo",
-            "measure actual usage when exposed",
-            "otherwise record stable proxies",
-            "optional consultation",
-            "final review",
+            "first-pass acceptance",
+            "otherwise mark it unavailable",
+            "chatgpt consultation is optional",
+            "independent terra exact-diff review when needed",
             "luna reports to terra when terra dispatched it, otherwise directly to sol",
             "p0/p1 findings block completion",
         ):
@@ -156,15 +155,20 @@ class LeanModeContractTests(unittest.TestCase):
         )
 
         for required in (
-            "sol medium → luna high",
-            "sol medium → terra extra high → luna high",
-            "terra extra high",
+            "sol medium",
+            "terra medium",
+            "default class-level writer",
+            "terra high",
+            "luna low/medium",
+            "luna high",
+            "default repair",
+            "a cheaper worker that causes another repair round is not a saving",
             "terra returns `scope_change`",
             "sol retains",
             "governs codex task orchestration only",
             "sol reviews 100% of terra conclusions and every resulting diff",
             "sends state deltas directly to that parent",
-            "exactly one fresh low-context read-only luna high waiter",
+            "exactly one fresh low-context read-only luna low or medium waiter",
             "no full-history fork",
             "approved correction path",
             "external-runtime or provider ambiguity fails closed",
@@ -212,7 +216,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.3.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 
@@ -244,7 +248,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.3.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 
@@ -276,7 +280,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.3.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 
@@ -348,7 +352,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.3.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 
@@ -380,7 +384,7 @@ class LeanModeContractTests(unittest.TestCase):
         self.assertTrue(checked.changed)
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.3.0", agents_path.read_bytes())
         self.assertTrue(self.operations.doctor(repo).ok)
         self.assertFalse(self.operations.upgrade(repo, check=True).changed)
 

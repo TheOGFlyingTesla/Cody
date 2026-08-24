@@ -35,30 +35,32 @@ A proven pre-effect tooling failure may continue with a materially corrected att
 
 Write durable status only at meaningful state transitions. One owner writes the active truth; registries and dashboards link to it instead of copying narratives. Prefer one worker and one reviewer, bounded tool output, visible task ownership for critical work, required direct upward callbacks, event-driven check-ins, and structured memos instead of copied transcripts.
 
-Treat model routing as measured resource control. The executable
-`model-routing-contract.json` declares Sol Medium as primary coordinator,
-reviewer, and release owner; a simple packet is Sol Medium → Luna High. For a
-fixed multi-stage Green/Amber packet, the route is Sol Medium → Terra Extra High
-→ Luna High, where Terra is a bounded junior coordinator and Luna performs
-bounded scout, worker, executor, or waiter work. Terra returns `SCOPE_CHANGE`
-for Red discovery or risk/authority drift. Model names never broaden authority:
-unavailable named models are reported and no route is selected. Substitution is
-unsupported in v0.2.0; changing the declared topology requires a future contract
-revision rather than an ad hoc approval. This topology
-governs Codex task orchestration only, never application or provider-runtime
-model routing. Sol reviews 100% of Terra conclusions and every resulting diff.
+Treat model routing as measured resource control. Sol Medium is the persistent
+judgment, synthesis, P0/P1, and release owner. Terra Medium is the default
+class-level writer and independent reviewer; Terra High is for interacting
+state machines, uncertain causes, or a failed class repair. Luna Low/Medium
+handles waiting and repetitive operations, while Luna High runs deterministic
+proof, dogfood/evals, and exact-oracle edits. Luna never owns ambiguous runtime
+repair, architecture, privacy/security judgment, P0/P1, or release. Escalate
+Sol or Terra effort only when representative evidence shows the lower setting
+lacks necessary judgment. Set model and effort explicitly. Model names never
+broaden authority, and this topology governs Codex task orchestration only.
 
 Count prompt and synthesis overhead, retries, rejected packets, duplicated
-context, waiting samples, optional consultation, and final review by Sol together.
-Record exact token or credit usage when exposed; otherwise mark it unavailable
-and measure packet/output bytes, turns, reasoning level, compactions, elapsed
-time, repair rounds, and reloaded coordinator context. Store a compact
-`routing_efficiency` receipt with the topology, usage availability, proxies,
-repairs, disagreements, incidents, and outcome. Keep the route only when total
-consumption falls without increasing defects, gate disagreement, or coordinator
-rework.
+context, waiting, consultation, and final Sol review together. Measure
+first-pass acceptance, repeated causal failures, repair rounds, elapsed time,
+escaped defects, and coordinator rework. Record exact tokens or credits only
+when exposed; otherwise mark them unavailable and use stable proxies. Public
+API prices and ratios are directional evidence only, never Codex subscription
+quota. Store one compact `routing_efficiency` receipt and keep a route only when
+total consumption falls without increasing defects or Sol rework.
 
-Do not impose a numeric repair-round cutoff. Continue review and repair while the failing set shrinks or new proof closes a named finding. Reslice or escalate when the same causal failure repeats without progress, a class-level repair fails again, or the packet becomes ambiguous.
+Do not impose a numeric repair-round cutoff. Default repair is Sol invariant →
+Terra RED→GREEN class repair → independent Terra review when needed → Luna
+production-shaped proof → Sol disposition. Skip unnecessary layers. Reslice or
+escalate when the same causal failure repeats, a class repair fails again, or
+the packet becomes ambiguous. A cheaper worker that creates another repair
+round is not a saving.
 
 Count any post-dispatch interactive approval request as a setup failure. Background work starts from a managed, exact, approval-independent state; stale identity returns `BLOCKED` rather than waiting for the project owner.
 
@@ -66,7 +68,7 @@ Count any post-dispatch interactive approval request as a setup failure. Backgro
 
 Waiting is execution, not coordination. Prefer a native blocking/event wait.
 When only polling is available or the wait may span multiple checks, create
-exactly one fresh low-context read-only Luna High waiter. It receives no broad
+exactly one fresh low-context read-only Luna Low/Medium waiter. It receives no broad
 project history, mutation authority, or release authority; verifies only named
 targets; uses native waits or adaptive backoff; enforces a wall-clock horizon;
 and returns one compact `READY_FOR_REVIEW`, `BLOCKED`, `FAILED`, or `COMPLETE`

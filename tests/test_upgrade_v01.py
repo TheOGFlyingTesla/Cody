@@ -19,10 +19,13 @@ class UpgradeV01Tests(unittest.TestCase):
     def tearDown(self) -> None:
         self.context.cleanup()
 
-    def test_explicit_upgrade_from_010_to_020_is_supported_and_idempotent(self) -> None:
+    def test_explicit_upgrade_from_010_to_030_is_supported_and_idempotent(self) -> None:
         self._exercise_upgrade("0.1.0")
 
-    def test_explicit_legacy_326_migration_to_public_020_is_supported(self) -> None:
+    def test_explicit_upgrade_from_020_to_030_is_supported_and_idempotent(self) -> None:
+        self._exercise_upgrade("0.2.0")
+
+    def test_explicit_legacy_326_migration_to_public_030_is_supported(self) -> None:
         self._exercise_upgrade("3.2.6")
 
     def _exercise_upgrade(self, source_version: str) -> None:
@@ -54,11 +57,11 @@ class UpgradeV01Tests(unittest.TestCase):
 
         applied = self.operations.upgrade(repo, check=False)
         self.assertTrue(applied.ok, applied.blockers)
-        self.assertIn(b"standard=0.2.0", agents_path.read_bytes())
+        self.assertIn(b"standard=0.3.0", agents_path.read_bytes())
         upgraded = json.loads(standard_path.read_text(encoding="utf-8"))
-        self.assertEqual("0.2.0", upgraded["standard_version"])
+        self.assertEqual("0.3.0", upgraded["standard_version"])
         self.assertEqual(source_version, upgraded["migrations"][-1]["source_version"])
-        self.assertEqual("0.2.0", upgraded["migrations"][-1]["destination_version"])
+        self.assertEqual("0.3.0", upgraded["migrations"][-1]["destination_version"])
         self.assertTrue(self.operations.doctor(repo).ok)
         repeated = self.operations.upgrade(repo, check=True)
         self.assertTrue(repeated.ok, repeated.blockers)
